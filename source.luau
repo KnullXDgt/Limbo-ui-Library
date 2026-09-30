@@ -3318,25 +3318,20 @@ function Limbo:CreateWindow(config)
         end
 
 
+        DropdownList.Parent = ContentFrame
+        DropdownList.ZIndex = 50
+
         local csConn = nil
         local function ToggleDropdown()
             dropdownData.Open = not dropdownData.Open
             if dropdownData.Open then
-                local cfW    = ContentFrame.AbsoluteSize.X
-                local halfCF = math.floor(cfW / 2)
-                local rightW = cfW - halfCF - 4
-                local targetH = math.floor(Main.AbsoluteSize.Y - 16)
-                DropdownList.Position = UDim2.new(0, 138 + halfCF + rightW, 0, 8)
-                DropdownList.Size = UDim2.new(0, 0, 0, targetH)
-                DropdownList.Visible = true
-                TweenService:Create(DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0, rightW, 0, targetH),
-                    Position = UDim2.new(0, 138 + halfCF, 0, 8)
-                }):Play()
-                -- Close any other open dropdown first
                 if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
 
-                -- Stores close fn for this dropdown
+                DropdownList.Position = UDim2.new(0.46, 0, 0, 4)
+                DropdownList.Size = UDim2.new(0.54, -6, 1, -8)
+                DropdownList.ZIndex = 50
+                DropdownList.Visible = true
+
                 Limbo._activeDropdownClose = function()
                     if not dropdownData.Open then return end
                     dropdownData.Open = false
@@ -3344,39 +3339,26 @@ function Limbo:CreateWindow(config)
                     DropdownList.Visible = false
                     Limbo._activeDropdownClose = nil
                     if csConn then csConn:Disconnect(); csConn = nil end
-                    local dOvr = Main:FindFirstChild("DropOverlay")
+                    local dOvr = ContentFrame:FindFirstChild("DropOverlay")
                     if dOvr then dOvr:Destroy() end
                 end
 
-                -- Transparent overlay: blocks other UI + auto-closes on tap
                 local overlay = Instance.new("TextButton")
                 overlay.Name = "DropOverlay"
                 overlay.BackgroundTransparency = 1
                 overlay.BorderSizePixel = 0
                 overlay.Size = UDim2.new(1, 0, 1, 0)
-                overlay.ZIndex = 9
+                overlay.ZIndex = 49
                 overlay.Text = ""
                 overlay.AutoButtonColor = false
-                overlay.Parent = Main
+                overlay.Parent = ContentFrame
                 csConn = overlay.Activated:Connect(function()
                     if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
                 end)
             else
-                local cfW3 = ContentFrame.AbsoluteSize.X
-                local halfCF3 = math.floor(cfW3 / 2)
-                local rightW3 = cfW3 - halfCF3 - 4
-                ResetSearch()
-                Limbo._activeDropdownClose = nil
-                TweenService:Create(DropdownList, TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
-                    Size = UDim2.new(0, 0, 0, DropdownList.Size.Y.Offset),
-                    Position = UDim2.new(0, 138 + halfCF3 + rightW3, 0, 8)
-                }):Play()
-                task.delay(0.18, function()
-                    DropdownList.Visible = false
-                    if csConn then csConn:Disconnect(); csConn = nil end
-                    local dOvr = Main:FindFirstChild("DropOverlay")
-                    if dOvr then dOvr:Destroy() end
-                end)
+                if Limbo._activeDropdownClose then
+                    Limbo._activeDropdownClose()
+                end
             end
         end
 
