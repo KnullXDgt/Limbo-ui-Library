@@ -1001,7 +1001,15 @@ function Limbo:CreateWindow(config)
     local Draggable = config.Draggable ~= false
     local Resizable = config.Resizable or config.Resize or false
     local MinimizeKey = config.MinimizeKey or Enum.KeyCode.RightShift
-    if config.ConfigFolder then ConfigFolder = config.ConfigFolder end
+    local rawGame = config.Subtitle or config.Folder or "FishIt"
+    local gameClean = rawGame:gsub("%s+", ""):gsub("[^%w]", "")
+    if gameClean == "" then gameClean = "FishIt" end
+
+    if config.ConfigFolder then
+        ConfigFolder = config.ConfigFolder
+    else
+        ConfigFolder = "Limbo" .. gameClean .. "/Config"
+    end
     local MinimizeButton = config.MinimizeButton or false
     local MinimizeButtonImage = config.MinimizeButton_Image or "rbxassetid://16932740082"
     local Badges = config.Badges or {}
@@ -2477,39 +2485,35 @@ function Limbo:CreateWindow(config)
         ToggleTitle.BackgroundTransparency = 0.999
         ToggleTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ToggleTitle.BorderSizePixel = 0
-        ToggleTitle.Position = UDim2.new(0, 10, 0, 10)
-        ToggleTitle.Size = UDim2.new(1, -100, 0, 13)
+        local hasContent = content and tostring(content) ~= ""
+        ToggleTitle.Position = hasContent and UDim2.new(0, 10, 0, 6) or UDim2.new(0, 10, 0.5, -7)
+        ToggleTitle.Size = UDim2.new(1, -60, 0, 14)
         ToggleTitle.Name = "ToggleTitle"
         ToggleTitle.Parent = Toggle
 
-        local ToggleContent = Instance.new("TextLabel")
-        ToggleContent.Font = Enum.Font.GothamBold
-        ToggleContent.Text = content
-        ToggleContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-        ToggleContent.TextSize = 13
-        ToggleContent.TextTransparency = 0.6
-        ToggleContent.TextXAlignment = Enum.TextXAlignment.Left
-        ToggleContent.TextYAlignment = Enum.TextYAlignment.Bottom
-        ToggleContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        ToggleContent.BackgroundTransparency = 0.999
-        ToggleContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        ToggleContent.BorderSizePixel = 0
-        ToggleContent.Position = UDim2.new(0, 10, 0, 23)
-        ToggleContent.Size = UDim2.new(1, -100, 0, 12)
-        ToggleContent.Name = "ToggleContent"
-        ToggleContent.Parent = Toggle
+        local ToggleContent = nil
+        local cardHeight = 38
 
-        local textSize =
-            TextService:GetTextSize(
-            content,
-            12,
-            Enum.Font.GothamBold,
-            Vector2.new(ContentScroll.AbsoluteSize.X - 120, math.huge)
-        )
+        if hasContent then
+            ToggleContent = Instance.new("TextLabel")
+            ToggleContent.Font = Enum.Font.Gotham
+            ToggleContent.Text = content
+            ToggleContent.TextColor3 = Color3.fromRGB(180, 180, 190)
+            ToggleContent.TextSize = 11
+            ToggleContent.TextTransparency = 0.35
+            ToggleContent.TextXAlignment = Enum.TextXAlignment.Left
+            ToggleContent.TextYAlignment = Enum.TextYAlignment.Top
+            ToggleContent.BackgroundTransparency = 1
+            ToggleContent.BorderSizePixel = 0
+            ToggleContent.Position = UDim2.new(0, 10, 0, 22)
+            ToggleContent.Size = UDim2.new(1, -60, 0, 14)
+            ToggleContent.TextTruncate = Enum.TextTruncate.AtEnd
+            ToggleContent.Name = "ToggleContent"
+            ToggleContent.Parent = Toggle
+            cardHeight = 44
+        end
 
-        ToggleContent.Size = UDim2.new(1, -100, 0, textSize.Y)
-        ToggleContent.TextWrapped = true
-        Toggle.Size = UDim2.new(1, 0, 0, math.max(46, textSize.Y + 33))
+        Toggle.Size = UDim2.new(1, 0, 0, cardHeight)
 
         local ToggleButton = Instance.new("TextButton")
         ToggleButton.Font = Enum.Font.SourceSans
