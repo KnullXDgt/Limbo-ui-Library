@@ -14,7 +14,7 @@ local HttpService = game:GetService("HttpService")
 local TextService = game:GetService("TextService")
 local RunService = game:GetService("RunService")
 
-local ConfigFolder = "LimboFishIt"
+local ConfigFolder = "LimboConfig"
 
 local function CircleClick(Button, X, Y)
     spawn(
@@ -1001,9 +1001,9 @@ function Limbo:CreateWindow(config)
     local Draggable = config.Draggable ~= false
     local Resizable = config.Resizable or config.Resize or false
     local MinimizeKey = config.MinimizeKey or Enum.KeyCode.RightShift
-    local rawGame = config.Subtitle or config.Folder or "FishIt"
+    local rawGame = config.Subtitle or config.Folder or (game.Name ~= "" and game.Name) or "Game"
     local gameClean = rawGame:gsub("%s+", ""):gsub("[^%w]", "")
-    if gameClean == "" then gameClean = "FishIt" end
+    if gameClean == "" then gameClean = "Game" end
 
     if config.ConfigFolder then
         ConfigFolder = config.ConfigFolder

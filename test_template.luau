@@ -33,7 +33,6 @@ local Window = Limbo:CreateWindow({
     Draggable             = true,
     Resizable             = true,
     ToggleButton          = true,
-    ConfigFolder          = "LimboFishIt",
     Watermark             = LIMBO_WATERMARK,
     WatermarkTransparency = 0.88,
     WatermarkSize         = 285,
