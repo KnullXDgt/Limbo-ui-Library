@@ -5016,8 +5016,6 @@ function Limbo:CreateWindow(config)
 
         local success, err = pcall(function()
             if #Players:GetPlayers() <= 1 then
-                LocalPlayer:Kick("\n[Limbo HUB] Rejoining server...")
-                task.wait()
                 TeleportService:Teleport(placeId, LocalPlayer)
             else
                 TeleportService:TeleportToPlaceInstance(placeId, jobId, LocalPlayer)
@@ -5638,6 +5636,7 @@ function Limbo:CreateWindow(config)
     function Window:Show()
         DropShadowHolder.Visible = true
         task.spawn(function()
+            task.wait(0.5)
             pcall(function()
                 if isfile(AutoloadFile) then
                     local autoName = readfile(AutoloadFile)
@@ -5659,6 +5658,7 @@ function Limbo:CreateWindow(config)
                                         end
                                     end
                                 end)
+                                task.wait(0.04)
                             end
                             CurrentConfigName = autoName
                             updateCfgStatus()
