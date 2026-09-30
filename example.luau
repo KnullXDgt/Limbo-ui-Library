@@ -891,7 +891,7 @@ end
 
 -- 2. Load the Library
 local Limbo = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/KnullXDgt/Limbo-ui-Library/main/source.luau?t=" .. tostring(os.time())
+    "https://raw.githubusercontent.com/KnullXDgt/Limbo-ui-Library/main/source.luau"
 ))()
 
 -- 3. Window Configuration
