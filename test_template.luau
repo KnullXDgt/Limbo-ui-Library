@@ -183,19 +183,6 @@ Window:AddParagraph(InfoTab, {
     }
 })
 
-Window:AddSingleButton(InfoTab, "Official Website", function()
-    local copy = setclipboard or toclipboard
-    if copy then
-        copy("https://limbohub.my.id")
-        Limbo:Notify({
-            Title = "Limbo HUB",
-            Content = "Website link copied",
-            Icon = LIMBO_LOGO,
-            Delay = 2.5
-        })
-    end
-end)
-
 -- 5. Tab Main
 local MainTab = Window:CreateTab("Main", "house")
 local Section = Window:AddCollapsible(MainTab, "Automation Features", true)
