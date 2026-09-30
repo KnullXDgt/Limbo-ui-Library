@@ -4890,7 +4890,93 @@ function Limbo:CreateWindow(config)
     
     local ConfigTabContainer, SwitchToConfigTab = CreateTabButton("Configuration", "settings", true)
     
-    -- Config tab setup
+    -- Helper Utilities (Rejoin & Server Hop)
+    local function doRejoin()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local placeId = game.PlaceId
+        local jobId = game.JobId
+
+        local success, err = pcall(function()
+            if #Players:GetPlayers() <= 1 then
+                LocalPlayer:Kick("\n[Limbo HUB] Rejoining server...")
+                task.wait()
+                TeleportService:Teleport(placeId, LocalPlayer)
+            else
+                TeleportService:TeleportToPlaceInstance(placeId, jobId, LocalPlayer)
+            end
+        end)
+
+        if not success then
+            pcall(function()
+                TeleportService:Teleport(placeId, LocalPlayer)
+            end)
+        end
+    end
+
+    local function doServerHop()
+        local placeId = game.PlaceId
+        local best, bestPlayers
+        local cursor = ""
+        local lookupError
+
+        for _ = 1, 3 do
+            local ok, body = pcall(function()
+                local url = ("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100"):format(placeId)
+                if cursor ~= "" then url = url .. "&cursor=" .. cursor end
+                return game:GetService("HttpService"):JSONDecode(game:HttpGet(url))
+            end)
+            if not ok or not body then
+                lookupError = body
+                break
+            end
+            for _, s in ipairs(body.data or {}) do
+                if s.id ~= game.JobId and s.playing and s.playing < s.maxPlayers then
+                    if not bestPlayers or s.playing < bestPlayers then
+                        bestPlayers = s.playing
+                        best = s.id
+                    end
+                end
+            end
+            cursor = body.nextPageCursor or ""
+            if cursor == "" then break end
+        end
+
+        if best then
+            local ok, err = pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, best, game:GetService("Players").LocalPlayer)
+            end)
+            if not ok then
+                MakeNotify({
+                    Title = "Limbo HUB",
+                    Content = "Server hop failed: " .. tostring(err),
+                    Delay = 4,
+                })
+            end
+        else
+            MakeNotify({
+                Title = "Limbo HUB",
+                Content = lookupError and "Could not fetch public servers." or "No available public server was found.",
+                Delay = 4,
+            })
+        end
+    end
+
+    -- Section 1 (Pertama): Utilities
+    local UtilSection = CreateCollapsible(ConfigTabContainer, "Utilities", true)
+
+    CreateButton(UtilSection, "Rejoin Server", "Rejoin to Current server", "refresh-cw", function()
+        MakeNotify({ Title = "Rejoin", Description = "Connecting", Content = "Rejoining current server...", Delay = 2.5 })
+        doRejoin()
+    end)
+
+    CreateButton(UtilSection, "Server Hop", "Teleport to server with fewest players", "mouse-pointer-click", function()
+        MakeNotify({ Title = "Server Hop", Description = "Searching", Content = "Searching for lowest player server...", Delay = 2.5 })
+        doServerHop()
+    end)
+
+    -- Section 2 (Kedua): Configuration
     local CurrentConfigName = ""
     local SelectedConfigName = ""
     local AutoloadFile = ConfigFolder .. "/Autoload.txt"
