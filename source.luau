@@ -3602,6 +3602,10 @@ function Limbo:CreateWindow(config)
             if callback then pcall(callback, dropdownData.Value) end
         end
 
+        function dropdownFunc:Select(value)
+            return dropdownFunc:Set(value)
+        end
+
         function dropdownFunc:Refresh(newOptions, newValue)
             for _, child in ListScroll:GetChildren() do
                 if child:IsA("Frame") then
@@ -4647,7 +4651,7 @@ function Limbo:CreateWindow(config)
         return keybindFunc
     end
     
-    local function CreateButtonGrid(tabContainer, btn1Config, btn2Config)
+    local function CreateHStack(tabContainer)
         tabContainer = unwrapContainer(tabContainer)
         if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
 
@@ -4655,7 +4659,7 @@ function Limbo:CreateWindow(config)
         GridFrame.BackgroundTransparency = 1
         GridFrame.Size = UDim2.new(1, 0, 0, 36)
         GridFrame.BorderSizePixel = 0
-        GridFrame.Name = "ButtonGrid"
+        GridFrame.Name = "HStack"
         GridFrame.Parent = tabContainer
 
         local GridLayout = Instance.new("UIListLayout")
@@ -4664,7 +4668,34 @@ function Limbo:CreateWindow(config)
         GridLayout.Padding = UDim.new(0, 6)
         GridLayout.Parent = GridFrame
 
-        local function makeHalfBtn(cfg, order)
+        local row = {
+            Instance = GridFrame,
+            Container = GridFrame,
+            Buttons = {}
+        }
+
+        local function rebalance()
+            local count = #row.Buttons
+            if count == 0 then return end
+            local totalGap = 6 * (count - 1)
+            local widthScale = 1 / count
+            local offsetPerBtn = -math.floor(totalGap / count)
+            for _, b in ipairs(row.Buttons) do
+                b.Size = UDim2.new(widthScale, offsetPerBtn, 1, 0)
+            end
+        end
+
+        function row:Button(titleOrCfg, content, iconId, callback)
+            local cfg = titleOrCfg
+            if type(titleOrCfg) ~= "table" then
+                cfg = {
+                    Title = titleOrCfg,
+                    Desc = content,
+                    Icon = iconId,
+                    Callback = callback
+                }
+            end
+
             local Btn = Instance.new("TextButton")
             Btn.Font = Enum.Font.GothamBold
             Btn.Text = cfg.Title or "Button"
@@ -4673,10 +4704,9 @@ function Limbo:CreateWindow(config)
             Btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Btn.BackgroundTransparency = 0.92
             Btn.BorderSizePixel = 0
-            Btn.Size = UDim2.new(0.5, -3, 1, 0)
-            Btn.LayoutOrder = order
+            Btn.Size = UDim2.new(1, 0, 1, 0)
             Btn.AutoButtonColor = true
-            Btn.Name = "GridBtn"
+            Btn.Name = "HBtn"
             Btn.Parent = GridFrame
 
             local BtnCorner = Instance.new("UICorner")
@@ -4696,14 +4726,26 @@ function Limbo:CreateWindow(config)
                     cfg.Callback()
                 end)
             end
+
+            table.insert(row.Buttons, Btn)
+            rebalance()
+            task.wait(0.05)
+            UpdateContentSize()
             return Btn
         end
+        row.AddButton = row.Button
 
-        makeHalfBtn(btn1Config or {}, 1)
-        makeHalfBtn(btn2Config or {}, 2)
-
-        task.wait(0.1)
+        task.wait(0.05)
         UpdateContentSize()
+        return row
+    end
+
+    local function CreateButtonGrid(tabContainer, btn1Config, btn2Config)
+        local row = CreateHStack(tabContainer)
+        if not row then return end
+        if btn1Config then row:Button(btn1Config) end
+        if btn2Config then row:Button(btn2Config) end
+        return row
     end
 
     local function AddWelcomeCard(tabContainer)
@@ -5345,6 +5387,12 @@ function Limbo:CreateWindow(config)
 
     -- Window Methods
     local Window = {}
+    Window.UIElements = {
+        Main = DropShadowHolder,
+        DropShadowHolder = DropShadowHolder,
+        Container = Main,
+        ScreenGui = ScreenGui,
+    }
 
     local function getRawContainer(c)
         if type(c) == "table" and c.Container then
@@ -5425,8 +5473,9 @@ function Limbo:CreateWindow(config)
         wrapper.Button = wrapper.AddButton
 
         function wrapper:HStack(...)
-            return wrapper
+            return CreateHStack(rawFrame)
         end
+        wrapper.AddHStack = wrapper.HStack
 
         function wrapper:AddParagraph(titleOrConfig, content, buttons)
             return CreateParagraph(rawFrame, titleOrConfig, content, buttons)
@@ -5500,13 +5549,9 @@ function Limbo:CreateWindow(config)
         wrapper.CreateKeybind       = wrapper.AddKeybind
         wrapper.CreateImageBox      = wrapper.AddImageBox
 
-        local mt = {
-            __index = function(t, k)
-                if rawget(wrapper, k) then return rawget(wrapper, k) end
-                return rawFrame[k]
-            end
-        }
-        return setmetatable(wrapper, mt)
+        wrapper.Instance = rawFrame
+        wrapper.Parent = rawFrame
+        return wrapper
     end
     
     function Window:CreateTab(tabNameOrCfg, iconId)
