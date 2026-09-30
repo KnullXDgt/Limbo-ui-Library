@@ -1,4 +1,4 @@
--- Test Template Limbo UI Library (Full Limbo Theme)
+-- Test Template Limbo UI Library (Full Limbo Theme - Neon Magenta #FF00E0)
 local Limbo = loadfile("/root/FishitWork/Limbo-ui-Library/source.luau")()
 
 local Window = Limbo:CreateWindow({
@@ -19,7 +19,7 @@ local Window = Limbo:CreateWindow({
 })
 
 -- Create tabs (Sidebar kiri)
-local MainTab = Window:CreateTab("Main", "home")
+local MainTab = Window:CreateTab("Main", "house")
 local TeleportTab = Window:CreateTab("Teleport", "map-pin")
 local SettingsTab = Window:CreateTab("Settings", "settings")
 
@@ -53,7 +53,7 @@ Window:AddButtonGrid(Section,
             Limbo:Notify({
                 Title = "Limbo Hub",
                 Subtitle = "Automation",
-                Content = "Notifikasi dengan penanda Ungu Limbo aktif!",
+                Content = "Notifikasi dengan penanda Neon Magenta Limbo!",
                 Delay = 3
             })
         end

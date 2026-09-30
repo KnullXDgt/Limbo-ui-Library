@@ -296,7 +296,7 @@ local ConfigSystem = {
         ["Limbo"] = Color3.fromHex("#FF00E0"),
         ["Darker"] = Color3.fromHex("#FF00E0"),
         ["Magenta"] = Color3.fromHex("#FF00E0"),
-        ["Purple"] = Color3.fromHex("#A000FF"),
+        ["Purple"] = Color3.fromHex("#FF00E0"),
     },
     CurrentTheme = "Limbo",
     ThemeElements = {},
@@ -580,7 +580,7 @@ local function MakeNotify(NotifyConfig)
     NotifyConfig.Title = NotifyConfig.Title or "Notification"
     NotifyConfig.Description = NotifyConfig.Description or ""
     NotifyConfig.Content = NotifyConfig.Content or "Content"
-    NotifyConfig.Color = NotifyConfig.Color or Color3.fromHex("#A000FF")
+    NotifyConfig.Color = NotifyConfig.Color or Color3.fromHex("#FF00E0")
     NotifyConfig.Time = NotifyConfig.Time or 0.5
     NotifyConfig.Delay = NotifyConfig.Delay or 5
 
@@ -1026,10 +1026,7 @@ function Limbo:CreateWindow(config)
     Main.Name = "Main"
     Main.Parent = DropShadow
 
-    local UIStroke = Instance.new("UIStroke")
-    UIStroke.Color = Color3.fromHex("#2A2A2A")
-    UIStroke.Thickness = 1
-    UIStroke.Parent = Main
+    -- No UIStroke on Main squircle image to avoid rectangular black outer corners
 
     -- Background image (customizable, shown only on selected theme)
     local BgImageId    = config.BackgroundImage       or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420"
@@ -2012,7 +2009,7 @@ function Limbo:CreateWindow(config)
         ButtonStroke.Parent = ToggleBtn
 
         local ButtonGradient = Instance.new("UIGradient")
-        ButtonGradient.Color = ColorSequence.new(Color3.fromHex("#FF00E0"), Color3.fromHex("#A000FF"))
+        ButtonGradient.Color = ColorSequence.new(Color3.fromHex("#FF00E0"), Color3.fromHex("#FF00E0"))
         ButtonGradient.Parent = ButtonStroke
 
         local ButtonImage = Instance.new("ImageLabel")
