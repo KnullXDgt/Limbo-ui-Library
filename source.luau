@@ -991,6 +991,181 @@ local function setupCloseModal(closeBtn, main, screenGui)
     end)
 end
 
+local function setupKeySystemModal(ksConfig, screenGui, dropShadowHolder, onComplete)
+    if not ksConfig or type(ksConfig) ~= "table" then
+        if onComplete then onComplete() end
+        return
+    end
+
+    local keyFile = "LimboHUB/saved_key.txt"
+    if ksConfig.SaveKey and isfile and isfile(keyFile) then
+        local saved = readfile(keyFile):gsub("%s+", "")
+        if saved ~= "" and ksConfig.KeyValidator and ksConfig.KeyValidator(saved) then
+            if onComplete then onComplete() end
+            return
+        end
+    end
+
+    dropShadowHolder.Visible = false
+
+    local KeyHolder = Instance.new("Frame")
+    KeyHolder.Name = "KeySystemHolder"
+    KeyHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+    KeyHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+    KeyHolder.Size = UDim2.fromOffset(360, 220)
+    KeyHolder.BackgroundColor3 = Color3.fromHex("#141414")
+    KeyHolder.BorderSizePixel = 0
+    KeyHolder.ZIndex = 50000
+    KeyHolder.Parent = screenGui
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 10)
+    Corner.Parent = KeyHolder
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromHex("#2A2A2A")
+    Stroke.Thickness = 1
+    Stroke.Parent = KeyHolder
+
+    local Pad = Instance.new("UIPadding")
+    Pad.PaddingLeft = UDim.new(0, 16)
+    Pad.PaddingRight = UDim.new(0, 16)
+    Pad.PaddingTop = UDim.new(0, 14)
+    Pad.PaddingBottom = UDim.new(0, 14)
+    Pad.Parent = KeyHolder
+
+    local VList = Instance.new("UIListLayout")
+    VList.FillDirection = Enum.FillDirection.Vertical
+    VList.Padding = UDim.new(0, 10)
+    VList.SortOrder = Enum.SortOrder.LayoutOrder
+    VList.Parent = KeyHolder
+
+    local TopRow = Instance.new("Frame")
+    TopRow.BackgroundTransparency = 1
+    TopRow.Size = UDim2.new(1, 0, 0, 24)
+    TopRow.LayoutOrder = 1
+    TopRow.Parent = KeyHolder
+
+    local TopLayout = Instance.new("UIListLayout")
+    TopLayout.FillDirection = Enum.FillDirection.Horizontal
+    TopLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    TopLayout.Padding = UDim.new(0, 8)
+    TopLayout.Parent = TopRow
+
+    local Logo = Instance.new("ImageLabel")
+    Logo.Image = "rbxassetid://97957114633547"
+    Logo.Size = UDim2.fromOffset(20, 20)
+    Logo.BackgroundTransparency = 1
+    Logo.Parent = TopRow
+
+    local Title = Instance.new("TextLabel")
+    Title.Text = ksConfig.Title or "Limbo Hub Access"
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 14
+    Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Title.BackgroundTransparency = 1
+    Title.Size = UDim2.new(1, -30, 1, 0)
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = TopRow
+
+    local Note = Instance.new("TextLabel")
+    Note.Text = ksConfig.Note or "Enter a valid key to access Limbo Hub."
+    Note.Font = Enum.Font.Gotham
+    Note.TextSize = 11
+    Note.TextColor3 = Color3.fromRGB(160, 160, 170)
+    Note.BackgroundTransparency = 1
+    Note.TextWrapped = true
+    Note.TextXAlignment = Enum.TextXAlignment.Left
+    Note.Size = UDim2.new(1, 0, 0, 32)
+    Note.LayoutOrder = 2
+    Note.Parent = KeyHolder
+
+    local InputBox = Instance.new("TextBox")
+    InputBox.PlaceholderText = "Paste your key here..."
+    InputBox.Text = ""
+    InputBox.Font = Enum.Font.GothamBold
+    InputBox.TextSize = 12
+    InputBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+    InputBox.PlaceholderColor3 = Color3.fromRGB(110, 110, 120)
+    InputBox.BackgroundColor3 = Color3.fromHex("#1C1C1C")
+    InputBox.BorderSizePixel = 0
+    InputBox.Size = UDim2.new(1, 0, 0, 36)
+    InputBox.ClearTextOnFocus = false
+    InputBox.LayoutOrder = 3
+    InputBox.Parent = KeyHolder
+    Instance.new("UICorner", InputBox).CornerRadius = UDim.new(0, 6)
+    local InpStroke = Instance.new("UIStroke", InputBox)
+    InpStroke.Color = Color3.fromHex("#2E2E2E")
+    InpStroke.Thickness = 1
+
+    local BtnRow = Instance.new("Frame")
+    BtnRow.BackgroundTransparency = 1
+    BtnRow.Size = UDim2.new(1, 0, 0, 32)
+    BtnRow.LayoutOrder = 4
+    BtnRow.Parent = KeyHolder
+
+    local BLayout = Instance.new("UIListLayout")
+    BLayout.FillDirection = Enum.FillDirection.Horizontal
+    BLayout.Padding = UDim.new(0, 8)
+    BLayout.Parent = BtnRow
+
+    local GetKeyBtn = Instance.new("TextButton")
+    GetKeyBtn.Text = "Get Key"
+    GetKeyBtn.Font = Enum.Font.GothamBold
+    GetKeyBtn.TextSize = 12
+    GetKeyBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
+    GetKeyBtn.BackgroundColor3 = Color3.fromHex("#232323")
+    GetKeyBtn.Size = UDim2.new(0.5, -4, 1, 0)
+    GetKeyBtn.Parent = BtnRow
+    Instance.new("UICorner", GetKeyBtn).CornerRadius = UDim.new(0, 6)
+
+    local SubmitBtn = Instance.new("TextButton")
+    SubmitBtn.Text = "Submit Key"
+    SubmitBtn.Font = Enum.Font.GothamBold
+    SubmitBtn.TextSize = 12
+    SubmitBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+    SubmitBtn.BackgroundColor3 = Color3.fromHex("#2A2A2A")
+    SubmitBtn.Size = UDim2.new(0.5, -4, 1, 0)
+    SubmitBtn.Parent = BtnRow
+    Instance.new("UICorner", SubmitBtn).CornerRadius = UDim.new(0, 6)
+
+    GetKeyBtn.Activated:Connect(function()
+        local copy = setclipboard or toclipboard
+        if copy and ksConfig.URL then
+            copy(ksConfig.URL)
+            MakeNotify({
+                Title = "Limbo HUB",
+                Content = "Key URL copied to clipboard!",
+                Delay = 3
+            })
+        end
+    end)
+
+    SubmitBtn.Activated:Connect(function()
+        local key = InputBox.Text:gsub("%s+", "")
+        if key == "" then
+            MakeNotify({ Title = "Key System", Content = "Please enter a key first!", Delay = 2 })
+            return
+        end
+        SubmitBtn.Text = "Verifying..."
+        task.spawn(function()
+            local valid = ksConfig.KeyValidator and ksConfig.KeyValidator(key)
+            if valid then
+                if ksConfig.SaveKey and writefile then
+                    if makefolder and not isfolder("LimboHUB") then makefolder("LimboHUB") end
+                    writefile(keyFile, key)
+                end
+                KeyHolder:Destroy()
+                dropShadowHolder.Visible = true
+                if onComplete then onComplete() end
+            else
+                SubmitBtn.Text = "Submit Key"
+                MakeNotify({ Title = "Key System", Content = "Invalid key! Please try again.", Delay = 3 })
+            end
+        end)
+    end)
+end
+
 function Limbo:CreateWindow(config)
     config = config or {}
     local Title = config.Title or "Limbo UI"
@@ -2335,21 +2510,19 @@ function Limbo:CreateWindow(config)
 
         if btnList and type(btnList) == "table" and #btnList > 0 then
             for idx, btnData in ipairs(btnList) do
-                local btnH = btnData.Height or 28
-                local isFull = btnData.FullWidth == true
-                local titleW = TextService:GetTextSize(btnData.Title or "Button", btnData.TextSize or 12, Enum.Font.GothamBold, Vector2.new(1000, 1000)).X
-                local btnW = btnData.Width or (titleW + 28)
+                local btnH = btnData.Height or 26 -- Sleek slim 26px height (Ale standard)
+                local isFull = btnData.FullWidth ~= false
 
                 local ActionBtn = Instance.new("Frame")
                 ActionBtn.BackgroundColor3 = Color3.fromHex("#2A2A2A")
-                ActionBtn.Size = isFull and UDim2.new(1, 0, 0, btnH) or UDim2.fromOffset(btnW, btnH)
+                ActionBtn.Size = isFull and UDim2.new(1, 0, 0, btnH) or UDim2.fromOffset(btnData.Width or 160, btnH)
                 ActionBtn.BorderSizePixel = 0
                 ActionBtn.LayoutOrder = 10 + idx
                 ActionBtn.Name = "ActionBtn"
                 ActionBtn.Parent = Paragraph
 
                 local btnCorner = Instance.new("UICorner")
-                btnCorner.CornerRadius = UDim.new(0, btnData.Radius or 6)
+                btnCorner.CornerRadius = UDim.new(0, btnData.Radius or 5)
                 btnCorner.Parent = ActionBtn
 
                 local btnStroke = Instance.new("UIStroke")
