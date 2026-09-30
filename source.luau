@@ -2411,8 +2411,16 @@ function Limbo:CreateWindow(config)
     end
 
     -- Element Creation Functions
+    local function unwrapContainer(c)
+        if type(c) == "table" and c.Container then
+            return c.Container
+        end
+        return c
+    end
+
     local function CreateSingleButton(tabContainer, title, callback)
-        if not tabContainer or not tabContainer:IsA("Frame") then return end
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
 
         local BtnFrame = Instance.new("Frame")
         BtnFrame.BackgroundColor3 = Color3.fromHex("#1C1C1C")
@@ -2467,7 +2475,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateParagraph(tabContainer, titleOrConfig, content, buttons)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -2597,7 +2606,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateButton(tabContainer, title, content, iconId, callback)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -2714,7 +2724,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateToggle(tabContainer, title, content, defaultValue, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -2939,7 +2950,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateInput(tabContainer, title, content, placeholder, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3057,7 +3069,8 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateDropdown(tabContainer, title, content, options, multi, defaultValue, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3600,7 +3613,8 @@ function Limbo:CreateWindow(config)
         callback,
         elementId,
         showKnob)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3884,7 +3898,8 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateImageBox(tabContainer, title, content, imageId, size, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         
@@ -4025,7 +4040,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateTextHeader(tabContainer, title)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -4063,7 +4079,8 @@ function Limbo:CreateWindow(config)
 
     -- FIXED: Renamed from CreateSection to CreateDivider
     local function CreateDivider(tabContainer, title)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         
@@ -4121,7 +4138,8 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateColorPicker(tabContainer, title, content, defaultColor, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -4384,7 +4402,8 @@ function Limbo:CreateWindow(config)
         return colorPickerFunc
     end
     local function CreateKeybind(tabContainer, title, content, defaultKey, callback, elementId)
-        if not tabContainer or not tabContainer:IsA("Frame") then
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -4597,7 +4616,8 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateButtonGrid(tabContainer, btn1Config, btn2Config)
-        if not tabContainer or not tabContainer:IsA("Frame") then return end
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
 
         local GridFrame = Instance.new("Frame")
         GridFrame.BackgroundTransparency = 1
@@ -4654,8 +4674,75 @@ function Limbo:CreateWindow(config)
         UpdateContentSize()
     end
 
+    local function AddWelcomeCard(tabContainer)
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
+        local LP = game:GetService("Players").LocalPlayer
+        local WC = Instance.new("Frame")
+        WC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        WC.BackgroundTransparency = 0.935
+        WC.BorderSizePixel = 0
+        WC.Size = UDim2.new(1, 0, 0, 88)
+        WC.LayoutOrder = 0
+        WC.Name = "WelcomeCard"
+        WC.Parent = tabContainer
+        Instance.new("UICorner", WC).CornerRadius = UDim.new(0, 4)
+
+        local AF = Instance.new("Frame")
+        AF.BackgroundColor3 = Color3.fromRGB(50, 50, 65)
+        AF.BorderSizePixel = 0
+        AF.Position = UDim2.new(0, 14, 0.5, -28)
+        AF.Size = UDim2.new(0, 56, 0, 56)
+        AF.Parent = WC
+        Instance.new("UICorner", AF).CornerRadius = UDim.new(1, 0)
+
+        local AI = Instance.new("ImageLabel")
+        AI.Size = UDim2.new(1, 0, 1, 0)
+        AI.BackgroundTransparency = 1
+        AI.BorderSizePixel = 0
+        AI.Parent = AF
+        Instance.new("UICorner", AI).CornerRadius = UDim.new(1, 0)
+
+        task.spawn(function()
+            local ok, img = pcall(function()
+                return game:GetService("Players"):GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+            end)
+            if ok and img then AI.Image = img end
+        end)
+
+        local NL = Instance.new("TextLabel")
+        NL.Font = Enum.Font.GothamBold
+        do
+            local _n = LP.Name
+            local _m = #_n > 3 and _n:sub(1, #_n - 3) .. "***" or "***"
+            NL.Text = "Hey, " .. _m .. "!"
+        end
+        NL.TextColor3 = Color3.fromRGB(240, 240, 255)
+        NL.TextSize = 14
+        NL.TextXAlignment = Enum.TextXAlignment.Left
+        NL.BackgroundTransparency = 1
+        NL.BorderSizePixel = 0
+        NL.Size = UDim2.new(1, -96, 0, 20)
+        NL.Position = UDim2.new(0, 82, 0, 24)
+        NL.Parent = WC
+
+        local SL = Instance.new("TextLabel")
+        SL.Font = Enum.Font.GothamBold
+        SL.Text = "Welcome to Limbo Hub"
+        SL.TextColor3 = Color3.fromRGB(255, 255, 255)
+        SL.TextTransparency = 0.6
+        SL.TextSize = 12
+        SL.TextXAlignment = Enum.TextXAlignment.Left
+        SL.BackgroundTransparency = 1
+        SL.BorderSizePixel = 0
+        SL.Size = UDim2.new(1, -96, 0, 16)
+        SL.Position = UDim2.new(0, 82, 0, 50)
+        SL.Parent = WC
+    end
+
     local function CreateCollapsible(tabContainer, title, defaultOpen)
-        if not tabContainer or not tabContainer:IsA("Frame") then return end
+        tabContainer = unwrapContainer(tabContainer)
+        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
         defaultOpen = defaultOpen == true
 
         local SectionFrame = Instance.new("Frame")
@@ -5439,80 +5526,19 @@ function Limbo:CreateWindow(config)
     }
     
     function Window:AddParagraph(tabContainer, titleOrConfig, content, buttons)
-        return CreateParagraph(tabContainer, titleOrConfig, content, buttons)
+        return CreateParagraph(getRawContainer(tabContainer), titleOrConfig, content, buttons)
     end
 
     function Window:AddSingleButton(tabContainer, title, callback)
-        return CreateSingleButton(tabContainer, title, callback)
+        return CreateSingleButton(getRawContainer(tabContainer), title, callback)
     end
 
     function Window:AddTextHeader(tabContainer, title)
-        return CreateTextHeader(tabContainer, title)
+        return CreateTextHeader(getRawContainer(tabContainer), title)
     end
 
     function Window:AddWelcomeCard(tabContainer)
-        if not tabContainer or not tabContainer:IsA("Frame") then return end
-        local LP = game:GetService("Players").LocalPlayer
-        local WC = Instance.new("Frame")
-        WC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        WC.BackgroundTransparency = 0.935
-        WC.BorderSizePixel = 0
-        WC.Size = UDim2.new(1, 0, 0, 88)
-        WC.LayoutOrder = 0
-        WC.Name = "WelcomeCard"
-        WC.Parent = tabContainer
-        Instance.new("UICorner", WC).CornerRadius = UDim.new(0, 4)
-
-        local AF = Instance.new("Frame")
-        AF.BackgroundColor3 = Color3.fromRGB(50, 50, 65)
-        AF.BorderSizePixel = 0
-        AF.Position = UDim2.new(0, 14, 0.5, -28)
-        AF.Size = UDim2.new(0, 56, 0, 56)
-        AF.Parent = WC
-        Instance.new("UICorner", AF).CornerRadius = UDim.new(1, 0)
-
-        local AI = Instance.new("ImageLabel")
-        AI.Size = UDim2.new(1, 0, 1, 0)
-        AI.BackgroundTransparency = 1
-        AI.BorderSizePixel = 0
-        AI.Parent = AF
-        Instance.new("UICorner", AI).CornerRadius = UDim.new(1, 0)
-
-        task.spawn(function()
-            local ok, img = pcall(function()
-                return game:GetService("Players"):GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
-            end)
-            if ok and img then AI.Image = img end
-        end)
-
-        local NL = Instance.new("TextLabel")
-        NL.Font = Enum.Font.GothamBold
-        do
-            local _n = LP.Name
-            local _m = #_n > 3 and _n:sub(1, #_n - 3) .. "***" or "***"
-            NL.Text = "Hey, " .. _m .. "!"
-        end
-        NL.TextColor3 = Color3.fromRGB(240, 240, 255)
-        NL.TextSize = 14
-        NL.TextXAlignment = Enum.TextXAlignment.Left
-        NL.BackgroundTransparency = 1
-        NL.BorderSizePixel = 0
-        NL.Size = UDim2.new(1, -96, 0, 20)
-        NL.Position = UDim2.new(0, 82, 0, 24)
-        NL.Parent = WC
-
-        local SL = Instance.new("TextLabel")
-        SL.Font = Enum.Font.GothamBold
-        SL.Text = "Welcome to Limbo Hub"
-        SL.TextColor3 = Color3.fromRGB(255, 255, 255)
-        SL.TextTransparency = 0.6
-        SL.TextSize = 12
-        SL.TextXAlignment = Enum.TextXAlignment.Left
-        SL.BackgroundTransparency = 1
-        SL.BorderSizePixel = 0
-        SL.Size = UDim2.new(1, -96, 0, 16)
-        SL.Position = UDim2.new(0, 82, 0, 50)
-        SL.Parent = WC
+        return AddWelcomeCard(getRawContainer(tabContainer))
     end
     
     function Window:AddButton(tabContainer, title, content, iconId, callback)
