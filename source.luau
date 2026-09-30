@@ -779,7 +779,7 @@ local function MakeNotify(NotifyConfig)
 
             if NotifyConfig.Subtitle and NotifyConfig.Subtitle ~= "" then
                 local SubLabel = Instance.new("TextLabel")
-                SubLabel.Font = Enum.Font.Gotham
+                SubLabel.Font = Enum.Font.GothamBold
                 SubLabel.Text = "• " .. tostring(NotifyConfig.Subtitle)
                 SubLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
                 SubLabel.TextSize = 11
@@ -830,17 +830,17 @@ local function MakeNotify(NotifyConfig)
             ImageLabel.Size = UDim2.new(1, -8, 1, -8)
             ImageLabel.Parent = Close
 
-            TextLabel2.Font = Enum.Font.Gotham
+            TextLabel2.Font = Enum.Font.GothamBold
             TextLabel2.Text = NotifyConfig.Content
             TextLabel2.TextSize = 12
             TextLabel2.TextXAlignment = Enum.TextXAlignment.Left
             TextLabel2.TextYAlignment = Enum.TextYAlignment.Top
             TextLabel2.BackgroundTransparency = 1
-            TextLabel2.TextColor3 = Color3.fromRGB(220, 220, 230)
-            TextLabel2.TextTransparency = 0.15
+            TextLabel2.TextColor3 = Color3.fromRGB(240, 240, 245)
+            TextLabel2.TextTransparency = 0.1
             TextLabel2.BorderSizePixel = 0
-            TextLabel2.Position = UDim2.new(0, 12, 0, 36)
-            TextLabel2.Size = UDim2.new(1, -24, 0, 0)
+            TextLabel2.Position = UDim2.new(0, 14, 0, 36)
+            TextLabel2.Size = UDim2.new(1, -28, 0, 0)
             TextLabel2.AutomaticSize = Enum.AutomaticSize.Y
             TextLabel2.TextWrapped = true
             TextLabel2.Parent = NotifyFrameReal
@@ -848,8 +848,8 @@ local function MakeNotify(NotifyConfig)
             local contentHeight = TextService:GetTextSize(
                 NotifyConfig.Content or "",
                 12,
-                Enum.Font.Gotham,
-                Vector2.new(280, math.huge)
+                Enum.Font.GothamBold,
+                Vector2.new(270, math.huge)
             ).Y
             NotifyFrame.Size = UDim2.new(1, 0, 0, math.max(62, contentHeight + 46))
 
@@ -1511,9 +1511,9 @@ function Limbo:CreateWindow(config)
     SearchIcon.Image = ResolveIcon("scan-qr-code") or "rbxassetid://105409149549927"
     SearchIcon.ImageColor3 = Color3.fromHex("#B5B5B5")
     SearchIcon.BackgroundTransparency = 1
-    SearchIcon.Position = UDim2.new(0, 7, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, 8, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
-    SearchIcon.Size = UDim2.new(0, 15, 0, 15)
+    SearchIcon.Size = UDim2.new(0, 14, 0, 14)
     SearchIcon.ZIndex = 22
     SearchIcon.Parent = SearchBar
 
@@ -1527,8 +1527,8 @@ function Limbo:CreateWindow(config)
     SearchTextBox.TextXAlignment = Enum.TextXAlignment.Left
     SearchTextBox.BackgroundTransparency = 1
     SearchTextBox.BorderSizePixel = 0
-    SearchTextBox.Position = UDim2.new(0, 22, 0, 0)
-    SearchTextBox.Size = UDim2.new(1, -24, 1, 0)
+    SearchTextBox.Position = UDim2.new(0, 28, 0, 0)
+    SearchTextBox.Size = UDim2.new(1, -32, 1, 0)
     SearchTextBox.ClearTextOnFocus = false
     SearchTextBox.ZIndex = 21
     SearchTextBox.Parent = SearchBar
@@ -1983,8 +1983,8 @@ function Limbo:CreateWindow(config)
     ContentScroll.BorderColor3 = Color3.fromRGB(0, 0, 0)
     ContentScroll.BorderSizePixel = 0
     ContentScroll.ClipsDescendants = true
-    ContentScroll.Position = UDim2.new(0, 0, 0, 6)
-    ContentScroll.Size = UDim2.new(1, 0, 1, -6)
+    ContentScroll.Position = UDim2.new(0, 8, 0, 6)
+    ContentScroll.Size = UDim2.new(1, -16, 1, -12)
     ContentScroll.Name = "ContentScroll"
     ContentScroll.Parent = ContentFrame
 
@@ -4859,6 +4859,13 @@ function Limbo:CreateWindow(config)
         Layout.Padding = UDim.new(0, 8)
         Layout.SortOrder = Enum.SortOrder.LayoutOrder
         Layout.Parent = TabContentContainer
+
+        local ContainerPad = Instance.new("UIPadding")
+        ContainerPad.PaddingLeft = UDim.new(0, 4)
+        ContainerPad.PaddingRight = UDim.new(0, 4)
+        ContainerPad.PaddingTop = UDim.new(0, 4)
+        ContainerPad.PaddingBottom = UDim.new(0, 10)
+        ContainerPad.Parent = TabContentContainer
 
         Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
             function()
