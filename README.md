@@ -88,9 +88,9 @@ FishingSection:Button({
     Icon     = "mouse-pointer-click",
     Callback = function()
         Window:Notify({
-            Title   = "Action",
-            Content = "Routine executed successfully!",
-            Delay   = 3,
+            Title    = "Action",
+            Content  = "Routine executed successfully!",
+            Duration = 3,
         })
     end,
 })
@@ -159,4 +159,4 @@ Window:Show()
 - `Input:Set(string)`
 - `Paragraph:SetTitle(string)` / `Paragraph:SetDesc(string)` / `Paragraph:Set(string)`
 - `Window:SelectTab(tabIndexOrName)`
-- `Window:Notify({ Title, Content, Delay, Color, Icon })`
+- `Window:Notify({ Title, Content, Duration, Color, Icon })`

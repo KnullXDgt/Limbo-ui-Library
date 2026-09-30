@@ -48,9 +48,9 @@ local CommunityCard = InfoTab:Paragraph({
                 if copy then
                     copy("https://discord.gg/GtDHsXGJ4g")
                     Window:Notify({
-                        Title   = "Limbo HUB",
-                        Content = "Discord invite link copied to clipboard!",
-                        Delay   = 3,
+                        Title    = "Limbo HUB",
+                        Content  = "Discord invite link copied to clipboard!",
+                        Duration = 3,
                     })
                 end
             end
@@ -185,9 +185,9 @@ ActionRow:Button({
     Title    = "Teleport Now",
     Callback = function()
         Window:Notify({
-            Title   = "Teleport",
-            Content = "Teleporting to " .. tostring(LocationDropdown.Value) .. "...",
-            Delay   = 2.5,
+            Title    = "Teleport",
+            Content  = "Teleporting to " .. tostring(LocationDropdown.Value) .. "...",
+            Duration = 2.5,
         })
     end,
 })
@@ -204,9 +204,9 @@ ActionRow:Button({
             "Secret Cave"
         }, "Spawn Island")
         Window:Notify({
-            Title   = "Locations",
-            Content = "Location catalog refreshed!",
-            Delay   = 2,
+            Title    = "Locations",
+            Content  = "Location catalog refreshed!",
+            Duration = 2,
         })
     end,
 })
@@ -257,9 +257,10 @@ MiscSec:Divider("Advanced Automation Parameters")
 MiscSec:SingleButton("Execute Deep Diagnostic", function()
     print("Diagnostics initiated...")
     Window:Notify({
-        Title   = "Diagnostics",
-        Content = "All systems functioning with zero memory leaks.",
-        Delay   = 3,
+        Title    = "Diagnostics",
+        Content  = "All systems functioning with zero memory leaks.",
+        Duration = 3,
+        Color    = Color3.fromRGB(70, 220, 90),
     })
 end)
 
@@ -268,14 +269,17 @@ end)
 Window:Show()
 
 -- Global Notification Popups:
+-- Supports Title, Content (or Description), Duration (or Delay), Color, Icon
 Window:Notify({
-    Title   = "Limbo HUB",
-    Content = "Fish It Automation Suite Loaded Successfully!",
-    Icon    = "rbxassetid://97957114633547",
-    Delay   = 3.5,
+    Title    = "Limbo HUB",
+    Content  = "Fish It Automation Suite Loaded Successfully!",
+    Icon     = "rbxassetid://97957114633547",
+    Duration = 3.5,
+    Color    = Color3.fromHex("#FF00E0"),
 })
 
--- Quick Reference to Window Methods:
+-- Quick Reference to Window & Notification Methods:
+-- Window:Notify({ Title = "...", Content = "...", Duration = 3, Color = Color3.fromRGB(...) })
 -- Window:SelectTab(1)
 -- Window:SelectTab("Main")
 -- Window:Toggle()
