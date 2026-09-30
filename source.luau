@@ -3319,15 +3319,10 @@ function Limbo:CreateWindow(config)
                 -- Close any other open dropdown first
                 if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
 
-                DropdownList.Position = UDim2.new(1, -10, 0, 46)
-                DropdownList.Size = UDim2.new(0, 0, 1, -52)
+                DropdownList.Position = UDim2.new(1, -190, 0, 46)
+                DropdownList.Size = UDim2.new(0, 180, 1, -52)
                 DropdownList.ZIndex = 50
                 DropdownList.Visible = true
-
-                TweenService:Create(DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0, 175, 1, -52),
-                    Position = UDim2.new(1, -185, 0, 46)
-                }):Play()
 
                 -- Stores close fn for this dropdown
                 Limbo._activeDropdownClose = function()
@@ -3335,16 +3330,10 @@ function Limbo:CreateWindow(config)
                     dropdownData.Open = false
                     ResetSearch()
                     Limbo._activeDropdownClose = nil
-                    TweenService:Create(DropdownList, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
-                        Size = UDim2.new(0, 0, 1, -52),
-                        Position = UDim2.new(1, -10, 0, 46)
-                    }):Play()
-                    task.delay(0.15, function()
-                        DropdownList.Visible = false
-                        if csConn then csConn:Disconnect(); csConn = nil end
-                        local dOvr = Main:FindFirstChild("DropOverlay")
-                        if dOvr then dOvr:Destroy() end
-                    end)
+                    DropdownList.Visible = false
+                    if csConn then csConn:Disconnect(); csConn = nil end
+                    local dOvr = Main:FindFirstChild("DropOverlay")
+                    if dOvr then dOvr:Destroy() end
                 end
 
                 -- Transparent overlay: blocks other UI + auto-closes on tap
