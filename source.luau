@@ -1227,7 +1227,7 @@ function Limbo:CreateWindow(config)
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Name = "LimboUI"
     ScreenGui.Parent = (gethui and gethui()) or CoreGui
 
@@ -3216,7 +3216,7 @@ function Limbo:CreateWindow(config)
         ListScroll.Size = UDim2.new(1, -10, 1, -50)
         ListScroll.Position = UDim2.new(0, 5, 0, 40)
         ListScroll.Name = "ListScroll"
-        ListScroll.ZIndex = 11
+        ListScroll.ZIndex = 52
         ListScroll.Parent = DropdownList
 
         local ListLayout = Instance.new("UIListLayout")
@@ -3230,7 +3230,7 @@ function Limbo:CreateWindow(config)
         SearchFrame.BorderSizePixel = 0
         SearchFrame.Size = UDim2.new(1, 0, 0, 34)
         SearchFrame.Position = UDim2.new(0, 0, 0, 0)
-        SearchFrame.ZIndex = 12
+        SearchFrame.ZIndex = 51
         SearchFrame.Name = "SearchFrame"
         SearchFrame.Parent = DropdownList
 
@@ -3371,7 +3371,7 @@ function Limbo:CreateWindow(config)
             Option.Size = UDim2.new(1, -6, 0, 28)
             Option.Position = UDim2.new(0, 3, 0, 0)
             Option.Name = "Option"
-            Option.ZIndex = 12
+            Option.ZIndex = 53
             Option.Parent = ListScroll
 
             local OptionCorner = Instance.new("UICorner")
@@ -3389,7 +3389,7 @@ function Limbo:CreateWindow(config)
             OptionButton.BorderSizePixel = 0
             OptionButton.Size = UDim2.new(1, 0, 1, 0)
             OptionButton.Name = "OptionButton"
-            OptionButton.ZIndex = 13
+            OptionButton.ZIndex = 54
             OptionButton.Parent = Option
 
             local OptionText = Instance.new("TextLabel")
@@ -3405,7 +3405,7 @@ function Limbo:CreateWindow(config)
             OptionText.Position = UDim2.new(0, 10, 0, 0)
             OptionText.Size = UDim2.new(1, -20, 1, 0)
             OptionText.Name = "OptionText"
-            OptionText.ZIndex = 14
+            OptionText.ZIndex = 55
             OptionText.Parent = Option
 
             local ChooseFrame = Instance.new("Frame")
@@ -3416,14 +3416,14 @@ function Limbo:CreateWindow(config)
             ChooseFrame.Position = UDim2.new(0, 2, 0.5, 0)
             ChooseFrame.Size = UDim2.new(0, 0, 0, 0)
             ChooseFrame.Name = "ChooseFrame"
-            ChooseFrame.ZIndex = 15
+            ChooseFrame.ZIndex = 56
             ChooseFrame.Parent = Option
 
             local ChooseStroke = Instance.new("UIStroke")
             ChooseStroke.Color = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
             ChooseStroke.Thickness = 1.6
             ChooseStroke.Transparency = 0.999
-            ChooseStroke.ZIndex = 16
+            ChooseStroke.ZIndex = 57
             ChooseStroke.Parent = ChooseFrame
 
             local ChooseCorner = Instance.new("UICorner")
@@ -3446,28 +3446,24 @@ function Limbo:CreateWindow(config)
                 ConfigSystem.DropdownOptionFrames[optionId].IsSelected = isSelected
 
                 if isSelected then
-                    TweenService:Create(ChooseStroke, TweenInfo.new(0.2), {Transparency = 0}):Play()
-                    TweenService:Create(ChooseFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 1, 0, 12)}):Play()
-                    TweenService:Create(Option, TweenInfo.new(0.2), {BackgroundTransparency = 0.935}):Play()
-                    TweenService:Create(
-                        OptionText,
-                        TweenInfo.new(0.2),
-                        {TextColor3 = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]}
-                    ):Play()
+                    ChooseFrame.Visible = true
+                    ChooseFrame.Size = UDim2.new(0, 3, 0, 16)
+                    Option.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
+                    Option.BackgroundTransparency = 0
+                    OptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    OptionText.Font = Enum.Font.GothamBold
                 else
-                    TweenService:Create(ChooseStroke, TweenInfo.new(0.2), {Transparency = 0.999}):Play()
-                    TweenService:Create(ChooseFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-                    TweenService:Create(Option, TweenInfo.new(0.2), {BackgroundTransparency = 0.999}):Play()
-                    TweenService:Create(OptionText, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(230, 230, 230)}):Play(
-
-                    )
+                    ChooseFrame.Visible = false
+                    ChooseFrame.Size = UDim2.new(0, 0, 0, 0)
+                    Option.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
+                    Option.BackgroundTransparency = 0.3
+                    OptionText.TextColor3 = Color3.fromRGB(180, 180, 190)
+                    OptionText.Font = Enum.Font.Gotham
                 end
             end
 
             OptionButton.Activated:Connect(
                 function()
-                    CircleClick(OptionButton, Mouse.X, Mouse.Y)
-
                     if dropdownData.Multi then
                         local index = table.find(dropdownData.Value, optionName)
                         if index then
@@ -3477,48 +3473,35 @@ function Limbo:CreateWindow(config)
                         end
                         UpdateOptionVisual()
                     else
+                        dropdownData.Value = optionName
                         for _, child in ListScroll:GetChildren() do
                             if child:IsA("Frame") and child.Name == "Option" then
                                 local childOptionText = child:FindFirstChild("OptionText")
-                                if childOptionText and childOptionText.Text ~= optionName then
-                                    local childChooseFrame = child:FindFirstChild("ChooseFrame")
-                                    local childChooseStroke =
-                                        childChooseFrame and childChooseFrame:FindFirstChild("UIStroke")
-
-                                    if childChooseStroke then
-                                        TweenService:Create(
-                                            childChooseStroke,
-                                            TweenInfo.new(0.2),
-                                            {Transparency = 0.999}
-                                        ):Play()
+                                local childChooseFrame = child:FindFirstChild("ChooseFrame")
+                                local isThis = childOptionText and childOptionText.Text == optionName
+                                if isThis then
+                                    child.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
+                                    child.BackgroundTransparency = 0
+                                    childOptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                                    childOptionText.Font = Enum.Font.GothamBold
+                                    if childChooseFrame then
+                                        childChooseFrame.Visible = true
+                                        childChooseFrame.Size = UDim2.new(0, 3, 0, 16)
+                                    end
+                                else
+                                    child.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
+                                    child.BackgroundTransparency = 0.3
+                                    if childOptionText then
+                                        childOptionText.TextColor3 = Color3.fromRGB(180, 180, 190)
+                                        childOptionText.Font = Enum.Font.Gotham
                                     end
                                     if childChooseFrame then
-                                        TweenService:Create(
-                                            childChooseFrame,
-                                            TweenInfo.new(0.2),
-                                            {Size = UDim2.new(0, 0, 0, 0)}
-                                        ):Play()
-                                    end
-                                    TweenService:Create(child, TweenInfo.new(0.2), {BackgroundTransparency = 0.999}):Play(
-
-                                    )
-                                    TweenService:Create(
-                                        childOptionText,
-                                        TweenInfo.new(0.2),
-                                        {TextColor3 = Color3.fromRGB(230, 230, 230)}
-                                    ):Play()
-
-                                    for id, data in pairs(ConfigSystem.DropdownOptionFrames) do
-                                        if data.Frame == child then
-                                            data.IsSelected = false
-                                        end
+                                        childChooseFrame.Visible = false
+                                        childChooseFrame.Size = UDim2.new(0, 0, 0, 0)
                                     end
                                 end
                             end
                         end
-
-                        dropdownData.Value = optionName
-                        UpdateOptionVisual()
                     end
 
                     UpdateSelectedDisplay()

@@ -948,6 +948,13 @@ Window:AddParagraph(InfoTab, {
 -- 5. Tab Main (Skeleton Lengkap Persis Fish It 2.0.7)
 local MainTab = Window:CreateTab("Main", "house")
 
+-- Section 0: Fish Catalog & Target
+local FishCatalogSection = Window:AddCollapsible(MainTab, "Fish Target (872 Fishes)", true)
+
+Window:AddDropdown(FishCatalogSection, "Select Fish Target", "Pilih target ikan dari katalog (872 ikan)", ALL_FISH_NAMES, false, "1x1x1x1 Shark", function(val)
+    print(LIMBO_TAG .. " Selected Fish Target:", val)
+end, "Dropdown_TargetFish")
+
 -- Section 1: Support Features
 local SupportSection = Window:AddCollapsible(MainTab, "Support Features", true)
 
@@ -977,10 +984,6 @@ end, "Toggle_AutoCast")
 Window:AddToggle(FishingSection, "Auto Reel", "Otomatis menarik pancingan saat ikan strike", true, function(state)
     print(LIMBO_TAG .. " Auto Reel:", state)
 end, "Toggle_AutoReel")
-
-Window:AddDropdown(FishingSection, "Select Fish Target", "Pilih target ikan dari katalog (872 ikan)", ALL_FISH_NAMES, false, "1x1x1x1 Shark", function(val)
-    print(LIMBO_TAG .. " Selected Fish Target:", val)
-end, "Dropdown_TargetFish")
 
 Window:AddToggle(FishingSection, "Auto Shake", "Otomatis menyelesaikan minigame goyangan", true, function(state)
     print(LIMBO_TAG .. " Auto Shake:", state)
