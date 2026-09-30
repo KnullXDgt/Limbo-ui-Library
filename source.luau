@@ -2944,24 +2944,7 @@ function Limbo:CreateWindow(config)
         }
 
         function toggleFunc:Set(value)
-            state = value
-            local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
-            pcall(function()
-                if value then
-                    ToggleTitle.TextColor3 = themeColor
-                    ToggleCircle.Position = UDim2.new(1, -15, 0.5, -7)
-                    ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    FeatureFrame.BackgroundColor3 = themeColor
-                    FeatureFrame.BackgroundTransparency = 0
-                else
-                    ToggleTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
-                    ToggleCircle.Position = UDim2.new(0, 1, 0.5, -7)
-                    ToggleCircle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-                    FeatureFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-                    FeatureFrame.BackgroundTransparency = 0.2
-                end
-            end)
-            if callback then pcall(callback, value) end
+            SetState(value == true, true)
         end
 
         if elementId then
