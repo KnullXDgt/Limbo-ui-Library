@@ -1,6 +1,6 @@
 --[[
     Limbo Hub UI Library Template
-    Pure UI Template (Clean & Independent)
+    Architecture & Features Skeleton aligned with Fish It 2.0.7
 ]]
 
 local GAME_NAME       = "Fish It"
@@ -50,6 +50,7 @@ Window:AddParagraph(InfoTab, {
     Buttons = {
         {
             Title = "Copy Discord Link",
+            FullWidth = true, -- Full width seperti diawal!
             Height = 32,
             Radius = 6,
             Callback = function()
@@ -70,43 +71,101 @@ Window:AddParagraph(InfoTab, {
     }
 })
 
--- 5. Tab Main
+-- 5. Tab Main (Skeleton Lengkap Persis Fish It 2.0.7)
 local MainTab = Window:CreateTab("Main", "house")
-local Section = Window:AddCollapsible(MainTab, "Automation Features", true)
 
-Window:AddToggle(Section, "Auto Farm", "Otomatis farming koin di area", false, function(state)
-    print(LIMBO_TAG .. " Auto Farm set to:", state)
-end, "Toggle_AutoFarm")
+-- Section 1: Support Features
+local SupportSection = Window:AddCollapsible(MainTab, "Support Features", true)
 
-Window:AddToggle(Section, "Auto Equip Rod", "Otomatis pegang pancingan saat tangan kosong", true, function(state)
-    print(LIMBO_TAG .. " Auto Equip Rod set to:", state)
+Window:AddToggle(SupportSection, "Auto Equip Rod", "Otomatis pegang pancingan saat tangan kosong", true, function(state)
+    print(LIMBO_TAG .. " Auto Equip Rod:", state)
 end, "Toggle_AutoEquipRod")
 
-Window:AddSlider(Section, "Speed Multiplier", "Atur kecepatan jalan", 16, 100, 24, function(value)
-    print(LIMBO_TAG .. " Speed set to:", value)
-end, "Slider_Speed")
+Window:AddToggle(SupportSection, "Anti Drown", "Mencegah karakter tenggelam dan kehabisan oksigen", true, function(state)
+    print(LIMBO_TAG .. " Anti Drown:", state)
+end, "Toggle_AntiDrown")
 
-Window:AddInput(Section, "Webhook URL", "Discord Webhook untuk notifikasi", "https://discord.com/api/...", function(value)
-    print(LIMBO_TAG .. " Webhook input:", value)
-end, "Input_Webhook")
+Window:AddToggle(SupportSection, "Walk On Water", "Berjalan di atas permukaan air laut", false, function(state)
+    print(LIMBO_TAG .. " Walk On Water:", state)
+end, "Toggle_WalkOnWater")
 
-Window:AddDropdown(Section, "Select Mode", "Pilih metode operasi", {"Legit", "Blatant", "Instant", "Ultra"}, false, "Legit", function(value)
-    print(LIMBO_TAG .. " Selected mode:", value)
-end, "Dropdown_Mode")
+Window:AddToggle(SupportSection, "Freeze Character", "Mengunci posisi karakter agar tidak terseret arus", false, function(state)
+    print(LIMBO_TAG .. " Freeze Character:", state)
+end, "Toggle_FreezeCharacter")
+
+-- Section 2: Auto Fishing (Legit Mode)
+local FishingSection = Window:AddCollapsible(MainTab, "Auto Fishing (Legit)", true)
+
+Window:AddToggle(FishingSection, "Auto Cast", "Otomatis melempar umpan ke air", true, function(state)
+    print(LIMBO_TAG .. " Auto Cast:", state)
+end, "Toggle_AutoCast")
+
+Window:AddToggle(FishingSection, "Auto Reel", "Otomatis menarik pancingan saat ikan strike", true, function(state)
+    print(LIMBO_TAG .. " Auto Reel:", state)
+end, "Toggle_AutoReel")
+
+Window:AddToggle(FishingSection, "Auto Shake", "Otomatis menyelesaikan minigame goyangan", true, function(state)
+    print(LIMBO_TAG .. " Auto Shake:", state)
+end, "Toggle_AutoShake")
+
+Window:AddSlider(FishingSection, "Cast Delay", "Jeda waktu antara lemparan pancing", 0, 5, 1, function(value)
+    print(LIMBO_TAG .. " Cast Delay:", value)
+end, "Slider_CastDelay")
+
+-- Section 3: Instant Catch Mode
+local InstantSection = Window:AddCollapsible(MainTab, "Instant Catch (Blatant)", false)
+
+Window:AddToggle(InstantSection, "Instant Catch", "Menangkap ikan langsung seketika saat melempar", false, function(state)
+    print(LIMBO_TAG .. " Instant Catch:", state)
+end, "Toggle_InstantCatch")
+
+Window:AddSlider(InstantSection, "Catch Delay", "Jeda tangkap instan (detik)", 0, 3, 0.5, function(value)
+    print(LIMBO_TAG .. " Instant Catch Delay:", value)
+end, "Slider_CatchDelay")
+
+-- Section 4: Auto Sell Items
+local SellSection = Window:AddCollapsible(MainTab, "Auto Sell Items", false)
+
+Window:AddToggle(SellSection, "Auto Sell", "Otomatis menjual ikan dan hasil tangkapan", false, function(state)
+    print(LIMBO_TAG .. " Auto Sell:", state)
+end, "Toggle_AutoSell")
+
+Window:AddDropdown(SellSection, "Sell Mode", "Pilih metode penjualan otomatis", {"Delay Mode", "Inventory Count"}, false, "Inventory Count", function(val)
+    print(LIMBO_TAG .. " Sell Mode:", val)
+end, "Dropdown_SellMode")
+
+Window:AddInput(SellSection, "Sell Target Count", "Jumlah ikan di tas sebelum auto sell", "100", function(val)
+    print(LIMBO_TAG .. " Sell Target Count:", val)
+end, "Input_SellTarget")
+
+-- Section 5: Craft Minigame
+local CraftSection = Window:AddCollapsible(MainTab, "Craft Minigame", false)
+
+Window:AddToggle(CraftSection, "Auto Perfect Craft", "Otomatis menyelesaikan minigame craft 100% perfect", false, function(state)
+    print(LIMBO_TAG .. " Auto Perfect Craft:", state)
+end, "Toggle_AutoPerfectCraft")
+
+Window:AddSlider(CraftSection, "Craft Delay", "Jeda klik perfect craft", 0.05, 0.5, 0.1, function(val)
+    print(LIMBO_TAG .. " Craft Delay:", val)
+end, "Slider_CraftDelay")
 
 -- 6. Tab Teleport
 local TeleportTab = Window:CreateTab("Teleport", "map-pin")
 local TpSection = Window:AddCollapsible(TeleportTab, "Waypoints", true)
-Window:AddDropdown(TpSection, "Select Location", "Pilih lokasi teleportasi", {"Spawn Point", "Arena 1", "Shop Area", "Secret Zone"}, false, "Spawn Point", function(val)
+Window:AddDropdown(TpSection, "Select Location", "Pilih lokasi teleportasi", {"Spawn Point", "Moosewood Island", "Roslit Bay", "Sunken Ship", "Ancient Jungle"}, false, "Spawn Point", function(val)
     print(LIMBO_TAG .. " Teleport selected:", val)
 end, "Dropdown_Location")
 
 -- 7. Tab Settings
 local SettingsTab = Window:CreateTab("Settings", "settings")
-local SettingsSection = Window:AddCollapsible(SettingsTab, "Safety", true)
+local SettingsSection = Window:AddCollapsible(SettingsTab, "Safety & Performance", true)
 Window:AddToggle(SettingsSection, "Anti AFK", "Mencegah kick 20 menit dari Roblox", true, function(st)
     print(LIMBO_TAG .. " Anti AFK:", st)
 end, "Toggle_AntiAFK")
+
+Window:AddToggle(SettingsSection, "Potato Graphics", "Menghapus partikel dan render berat untuk hemat RAM", false, function(st)
+    print(LIMBO_TAG .. " Potato Graphics:", st)
+end, "Toggle_PotatoGraphics")
 
 -- 8. Show Window & Loaded Feedback
 Window:Show()

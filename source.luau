@@ -5382,7 +5382,7 @@ function Limbo:CreateWindow(config)
         { Title = "Clear Autoload", Callback = doClearAutoload }
     )
 
-    CreateButton(CfgSection, "Reset All Elements", "Reset all elements to default", "rbxassetid://107150227368485", function()
+    CreateButton(CfgSection, "Reset All Elements", "Reset all elements to default", "mouse-pointer-click", function()
         for id, element in pairs(AllElements) do
             pcall(function()
                 if element.Type == "Toggle" then
