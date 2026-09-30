@@ -613,10 +613,12 @@ local function MakeNotify(NotifyConfig)
     local NotifyConfig = NotifyConfig or {}
     NotifyConfig.Title = NotifyConfig.Title or "Notification"
     NotifyConfig.Description = NotifyConfig.Description or ""
-    NotifyConfig.Content = NotifyConfig.Content or "Content"
+    NotifyConfig.Content = (NotifyConfig.Content and tostring(NotifyConfig.Content) ~= "" and tostring(NotifyConfig.Content))
+        or (NotifyConfig.Description and tostring(NotifyConfig.Description) ~= "" and tostring(NotifyConfig.Description))
+        or "Notification"
     NotifyConfig.Color = NotifyConfig.Color or Color3.fromHex("#FF00E0")
     NotifyConfig.Time = NotifyConfig.Time or 0.5
-    NotifyConfig.Delay = NotifyConfig.Delay or 5
+    NotifyConfig.Delay = tonumber(NotifyConfig.Delay or NotifyConfig.Duration) or 4
 
     local NotifyFunction = {}
 
