@@ -5372,30 +5372,79 @@ function Limbo:CreateWindow(config)
         local wrapper = {}
         wrapper.Container = rawFrame
 
-        function wrapper:AddSection(title, defaultOpen)
-            local secFrame = CreateCollapsible(rawFrame, title, defaultOpen)
-            return wrapContainer(secFrame)
+        function wrapper:AddSection(titleOrCfg, defaultOpen)
+            if type(titleOrCfg) == "table" then
+                local title = titleOrCfg.Title or titleOrCfg.title or "Section"
+                local opened = (titleOrCfg.Opened ~= nil and titleOrCfg.Opened) or (titleOrCfg.opened ~= nil and titleOrCfg.opened) or (titleOrCfg.Box and false) or defaultOpen
+                local secFrame = CreateCollapsible(rawFrame, title, opened)
+                return wrapContainer(secFrame)
+            else
+                local secFrame = CreateCollapsible(rawFrame, titleOrCfg, defaultOpen)
+                return wrapContainer(secFrame)
+            end
         end
         wrapper.AddCollapsible = wrapper.AddSection
+        wrapper.Section = wrapper.AddSection
 
-        function wrapper:AddToggle(title, content, defaultValue, callback, elementId)
-            return CreateToggle(rawFrame, title, content, defaultValue, callback, elementId)
+        function wrapper:AddToggle(titleOrCfg, content, defaultValue, callback, elementId)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateToggle(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Value or cfg.Default, cfg.Callback, cfg.Flag or cfg.Id)
+            else
+                return CreateToggle(rawFrame, titleOrCfg, content, defaultValue, callback, elementId)
+            end
         end
-        function wrapper:AddSlider(title, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
-            return CreateSlider(rawFrame, title, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+        wrapper.Toggle = wrapper.AddToggle
+
+        function wrapper:AddSlider(titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateSlider(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Min or cfg.minValue or 0, cfg.Max or cfg.maxValue or 100, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id, cfg.showKnob ~= false)
+            else
+                return CreateSlider(rawFrame, titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+            end
         end
-        function wrapper:AddDropdown(title, content, options, multi, defaultValue, callback, elementId)
-            return CreateDropdown(rawFrame, title, content, options, multi, defaultValue, callback, elementId)
+        wrapper.Slider = wrapper.AddSlider
+
+        function wrapper:AddDropdown(titleOrCfg, content, options, multi, defaultValue, callback, elementId)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateDropdown(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Values or cfg.options, cfg.Multi or cfg.multi, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id)
+            else
+                return CreateDropdown(rawFrame, titleOrCfg, content, options, multi, defaultValue, callback, elementId)
+            end
         end
-        function wrapper:AddInput(title, content, placeholder, callback, elementId)
-            return CreateInput(rawFrame, title, content, placeholder, callback, elementId)
+        wrapper.Dropdown = wrapper.AddDropdown
+
+        function wrapper:AddInput(titleOrCfg, content, placeholder, callback, elementId)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateInput(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Placeholder or cfg.placeholder, cfg.Callback, cfg.Flag or cfg.Id)
+            else
+                return CreateInput(rawFrame, titleOrCfg, content, placeholder, callback, elementId)
+            end
         end
-        function wrapper:AddButton(title, content, iconId, callback)
-            return CreateButton(rawFrame, title, content, iconId, callback)
+        wrapper.Input = wrapper.AddInput
+
+        function wrapper:AddButton(titleOrCfg, content, iconId, callback)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateButton(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Icon or cfg.iconId or "mouse-pointer-click", cfg.Callback)
+            else
+                return CreateButton(rawFrame, titleOrCfg, content, iconId, callback)
+            end
         end
+        wrapper.Button = wrapper.AddButton
+
+        function wrapper:HStack(...)
+            return wrapper
+        end
+
         function wrapper:AddParagraph(titleOrConfig, content, buttons)
             return CreateParagraph(rawFrame, titleOrConfig, content, buttons)
         end
+        wrapper.Paragraph = wrapper.AddParagraph
+
         function wrapper:AddSingleButton(title, callback)
             return CreateSingleButton(rawFrame, title, callback)
         end
@@ -5408,12 +5457,28 @@ function Limbo:CreateWindow(config)
         function wrapper:AddDivider(title)
             return CreateDivider(rawFrame, title)
         end
-        function wrapper:AddColorPicker(title, content, defaultColor, callback, elementId)
-            return CreateColorPicker(rawFrame, title, content, defaultColor, callback, elementId)
+        wrapper.Divider = wrapper.AddDivider
+
+        function wrapper:AddColorPicker(titleOrCfg, content, defaultColor, callback, elementId)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateColorPicker(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Color or cfg.defaultColor, cfg.Callback, cfg.Flag or cfg.Id)
+            else
+                return CreateColorPicker(rawFrame, titleOrCfg, content, defaultColor, callback, elementId)
+            end
         end
-        function wrapper:AddKeybind(title, content, defaultKey, callback, elementId)
-            return CreateKeybind(rawFrame, title, content, defaultKey, callback, elementId)
+        wrapper.ColorPicker = wrapper.AddColorPicker
+
+        function wrapper:AddKeybind(titleOrCfg, content, defaultKey, callback, elementId)
+            if type(titleOrCfg) == "table" then
+                local cfg = titleOrCfg
+                return CreateKeybind(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Key or cfg.defaultKey, cfg.Callback, cfg.Flag or cfg.Id)
+            else
+                return CreateKeybind(rawFrame, titleOrCfg, content, defaultKey, callback, elementId)
+            end
         end
+        wrapper.Keybind = wrapper.AddKeybind
+
         function wrapper:AddButtonGrid(btn1Config, btn2Config)
             return CreateButtonGrid(rawFrame, btn1Config, btn2Config)
         end
