@@ -1,25 +1,26 @@
--- Test Template Limbo UI Library (Updated)
+-- Test Template Limbo UI Library (Full Featured)
 local Limbo = loadfile("/root/FishitWork/Limbo-ui-Library/source.luau")()
 
 local Window = Limbo:CreateWindow({
     Title                 = "Limbo Hub",
     Subtitle              = "Fish It",
+    Version               = "v2.0.7",
+    ShowExecutor          = true,
     Theme                 = "Darker",
     Center                = true,
     Draggable             = true,
     Resizable             = true,
     ToggleButton          = true,
     ConfigFolder          = "LimboFishIt",
-    Watermark             = "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png",
-    WatermarkTransparency = 0.94,
-    WatermarkSize         = 285,
+    Background            = "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png",
+    BackgroundImageTransparency = 0.90,
     Icon                  = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420",
 })
 
 -- Create tabs (Sidebar kiri)
-local MainTab = Window:CreateTab("Main", "rbxassetid://10723345518")
-local TeleportTab = Window:CreateTab("Teleport", "rbxassetid://10709782497")
-local SettingsTab = Window:CreateTab("Settings", "rbxassetid://10734950309")
+local MainTab = Window:CreateTab("Main", "home")
+local TeleportTab = Window:CreateTab("Teleport", "map-pin")
+local SettingsTab = Window:CreateTab("Settings", "settings")
 
 -- Collapsible Section di Tab Main
 local Section = Window:AddCollapsible(MainTab, "Automation Features", true)
@@ -46,22 +47,23 @@ end, "Dropdown_Mode")
 
 Window:AddButtonGrid(Section,
     {
-        Title = "Say Hello",
+        Title = "Test Notif",
         Callback = function()
             Limbo:Notify({
                 Title = "Limbo Hub",
-                Content = "Hello from Baseplate Test!",
+                Subtitle = "Automation",
+                Content = "Notifikasi dengan Logo Limbo aktif!",
                 Color = Color3.fromRGB(120, 220, 120),
                 Delay = 3
             })
         end
     },
     {
-        Title = "Reset UI",
+        Title = "Click Me",
         Callback = function()
             Limbo:Notify({
                 Title = "Limbo Hub",
-                Content = "Reset button clicked.",
+                Content = "Testing button click.",
                 Color = Color3.fromRGB(220, 120, 120),
                 Delay = 3
             })
@@ -86,3 +88,14 @@ Window:AddToggle(SettingsSection, "Show Real-Ping", "Menampilkan panel ping dan 
 end, "Toggle_RealPing")
 
 Window:Show()
+
+-- Tampilkan test notif saat awal load
+task.delay(0.5, function()
+    Limbo:Notify({
+        Title = "Limbo Hub",
+        Subtitle = "Loaded",
+        Content = "Limbo UI Library ready!",
+        Color = Color3.fromRGB(160, 0, 255),
+        Delay = 3
+    })
+end)
