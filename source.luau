@@ -1042,6 +1042,45 @@ function Limbo:CreateWindow(config)
     DropShadowHolder.Parent = ScreenGui
     DropShadowHolder.Visible = true
 
+    local UIScaleObj = Instance.new("UIScale")
+    UIScaleObj.Scale = 1
+    UIScaleObj.Parent = DropShadowHolder
+
+    local AutoScale = config.AutoScale ~= false
+    local CurrentCamera = workspace.CurrentCamera
+
+    local function UpdateAutoScale()
+        if not AutoScale then return end
+        local camera = CurrentCamera or workspace.CurrentCamera
+        if not camera then return end
+        local ViewportSize = camera.ViewportSize
+        local Margin = 20
+        local WindowWidth = Size.X.Offset > 0 and Size.X.Offset or 470
+        local WindowHeight = Size.Y.Offset > 0 and Size.Y.Offset or 270
+
+        local AvailableWidth = ViewportSize.X - (Margin * 2)
+        local AvailableHeight = ViewportSize.Y - (Margin * 2)
+
+        local ScaleX = AvailableWidth / WindowWidth
+        local ScaleY = AvailableHeight / WindowHeight
+
+        local RequiredScale = math.min(ScaleX, ScaleY)
+        -- Clamp batas aman untuk Split 6:
+        -- Minimal 0.68x (font 13px -> ~9px, tetap tajam dan mudah dibaca)
+        -- Maksimal 1.0x (tidak zoom in berlebihan di PC/layar besar)
+        local FinalScale = math.clamp(RequiredScale, 0.68, 1.0)
+
+        local current = UIScaleObj.Scale
+        if math.abs(FinalScale - current) > 0.03 then
+            TweenService:Create(UIScaleObj, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Scale = FinalScale }):Play()
+        end
+    end
+
+    if CurrentCamera then
+        CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(UpdateAutoScale)
+    end
+    task.defer(UpdateAutoScale)
+
     if Center then
         DropShadowHolder.Position = UDim2.new(0.5, -Size.X.Offset / 2, 0.5, -Size.Y.Offset / 2)
     end
@@ -3470,43 +3509,48 @@ function Limbo:CreateWindow(config)
         SliderContent.Name = "SliderContent"
         SliderContent.Parent = Slider
 
-        local textSize =
-            TextService:GetTextSize(
-            content,
-            12,
-            Enum.Font.GothamBold,
-            Vector2.new(ContentScroll.AbsoluteSize.X - 80, math.huge)
-        )
+        local hasDesc = content and tostring(content) ~= ""
+        SliderTitle.Position = hasDesc and UDim2.new(0, 10, 0, 6) or UDim2.new(0, 10, 0, 8)
+        SliderTitle.Size = UDim2.new(1, -60, 0, 14)
 
-        SliderContent.Size = UDim2.new(1, -60, 0, textSize.Y)
-        SliderContent.TextWrapped = true
+        if hasDesc then
+            SliderContent.Position = UDim2.new(0, 10, 0, 20)
+            SliderContent.Size = UDim2.new(1, -60, 0, 12)
+            SliderContent.TextSize = 11
+            SliderContent.TextTruncate = Enum.TextTruncate.AtEnd
+            SliderContent.Visible = true
+        else
+            SliderContent.Visible = false
+        end
+
+        local trackY = hasDesc and 36 or 28
+        local cardH = hasDesc and 48 or 40
 
         local ValueDisplay = Instance.new("TextLabel")
         ValueDisplay.Font = Enum.Font.GothamBold
         ValueDisplay.Text = tostring(defaultValue or minValue)
-        ValueDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
-        ValueDisplay.TextSize = 14
+        ValueDisplay.TextColor3 = Color3.fromRGB(240, 240, 240)
+        ValueDisplay.TextSize = 12
         ValueDisplay.TextXAlignment = Enum.TextXAlignment.Right
         ValueDisplay.AnchorPoint = Vector2.new(1, 0)
         ValueDisplay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         ValueDisplay.BackgroundTransparency = 0.999
-        ValueDisplay.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ValueDisplay.BorderSizePixel = 0
-        ValueDisplay.Position = UDim2.new(1, -10, 0, 10)
-        ValueDisplay.Size = UDim2.new(0, 40, 0, 13)
+        ValueDisplay.Position = UDim2.new(1, -10, 0, 6)
+        ValueDisplay.Size = UDim2.new(0, 45, 0, 14)
         ValueDisplay.Name = "ValueDisplay"
         ValueDisplay.Parent = Slider
 
-        Slider.Size = UDim2.new(1, 0, 0, math.max(46, textSize.Y + 33 + 25))
+        Slider.Size = UDim2.new(1, 0, 0, cardH)
 
         local SliderFrame = Instance.new("Frame")
         SliderFrame.AnchorPoint = Vector2.new(0, 0)
-        SliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        SliderFrame.BackgroundTransparency = 0.5
+        SliderFrame.BackgroundColor3 = Color3.fromHex("#262626")
+        SliderFrame.BackgroundTransparency = 0
         SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
         SliderFrame.BorderSizePixel = 0
-        SliderFrame.Position = UDim2.new(0, 10, 0, textSize.Y + 33)
-        SliderFrame.Size = UDim2.new(1, -20, 0, 3)
+        SliderFrame.Position = UDim2.new(0, 10, 0, trackY)
+        SliderFrame.Size = UDim2.new(1, -20, 0, 4)
         SliderFrame.Name = "SliderFrame"
         SliderFrame.Parent = Slider
 
@@ -5388,6 +5432,24 @@ function Limbo:CreateWindow(config)
         if TabSwitchFns[tabName] then
             TabSwitchFns[tabName]()
         end
+    end
+
+    function Window:GetUIScale()
+        return UIScaleObj.Scale
+    end
+
+    function Window:SetUIScale(scale)
+        local clamped = math.clamp(tonumber(scale) or 1, 0.5, 1.5)
+        TweenService:Create(UIScaleObj, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Scale = clamped }):Play()
+        return Window
+    end
+
+    function Window:SetAutoScale(enabled)
+        AutoScale = enabled == true
+        if AutoScale then
+            UpdateAutoScale()
+        end
+        return Window
     end
 
     function Window:Toggle()
