@@ -2413,16 +2413,8 @@ function Limbo:CreateWindow(config)
     end
 
     -- Element Creation Functions
-    local function unwrapContainer(c)
-        if type(c) == "table" and c.Container then
-            return c.Container
-        end
-        return c
-    end
-
     local function CreateSingleButton(tabContainer, title, callback)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
+        if not tabContainer or not tabContainer:IsA("Frame") then return end
 
         local BtnFrame = Instance.new("Frame")
         BtnFrame.BackgroundColor3 = Color3.fromHex("#1C1C1C")
@@ -2477,8 +2469,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateParagraph(tabContainer, titleOrConfig, content, buttons)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -2640,8 +2631,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateButton(tabContainer, title, content, iconId, callback)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -2758,8 +2748,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateToggle(tabContainer, title, content, defaultValue, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -2984,8 +2973,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateInput(tabContainer, title, content, placeholder, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3103,8 +3091,7 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateDropdown(tabContainer, title, content, options, multi, defaultValue, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3651,8 +3638,7 @@ function Limbo:CreateWindow(config)
         callback,
         elementId,
         showKnob)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -3936,8 +3922,7 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateImageBox(tabContainer, title, content, imageId, size, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         
@@ -4078,8 +4063,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateTextHeader(tabContainer, title)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
 
@@ -4117,8 +4101,7 @@ function Limbo:CreateWindow(config)
 
     -- FIXED: Renamed from CreateSection to CreateDivider
     local function CreateDivider(tabContainer, title)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         
@@ -4176,8 +4159,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateColorPicker(tabContainer, title, content, defaultColor, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -4440,8 +4422,7 @@ function Limbo:CreateWindow(config)
         return colorPickerFunc
     end
     local function CreateKeybind(tabContainer, title, content, defaultKey, callback, elementId)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then
+        if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
         elementId = elementId or title
@@ -4654,8 +4635,7 @@ function Limbo:CreateWindow(config)
     end
     
     local function CreateHStack(tabContainer)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
+        if not tabContainer or not tabContainer:IsA("Frame") then return end
 
         local GridFrame = Instance.new("Frame")
         GridFrame.BackgroundTransparency = 1
@@ -4751,8 +4731,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function AddWelcomeCard(tabContainer)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
+        if not tabContainer or not tabContainer:IsA("Frame") then return end
         local LP = game:GetService("Players").LocalPlayer
         local WC = Instance.new("Frame")
         WC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -4817,8 +4796,7 @@ function Limbo:CreateWindow(config)
     end
 
     local function CreateCollapsible(tabContainer, title, defaultOpen)
-        tabContainer = unwrapContainer(tabContainer)
-        if not tabContainer or typeof(tabContainer) ~= "Instance" or not tabContainer:IsA("Frame") then return end
+        if not tabContainer or not tabContainer:IsA("Frame") then return end
         defaultOpen = defaultOpen == true
 
         local SectionFrame = Instance.new("Frame")
@@ -5396,166 +5374,152 @@ function Limbo:CreateWindow(config)
         ScreenGui = ScreenGui,
     }
 
-    local function getRawContainer(c)
-        if type(c) == "table" and c.Container then
-            return c.Container
-        end
-        return c
+    local function toFrame(c)
+        return (type(c) == "table" and c.Container) or c
     end
 
-    local function wrapContainer(containerFrame)
-        if not containerFrame then return nil end
-        local rawFrame = getRawContainer(containerFrame)
+    local ContainerMethods = {}
 
-        local wrapper = {}
-        wrapper.Container = rawFrame
-
-        function wrapper:AddSection(titleOrCfg, defaultOpen)
-            if type(titleOrCfg) == "table" then
-                local title = titleOrCfg.Title or titleOrCfg.title or "Section"
-                local opened = (titleOrCfg.Opened ~= nil and titleOrCfg.Opened) or (titleOrCfg.opened ~= nil and titleOrCfg.opened) or (titleOrCfg.Box and false) or defaultOpen
-                local secFrame = CreateCollapsible(rawFrame, title, opened)
-                return wrapContainer(secFrame)
-            else
-                local secFrame = CreateCollapsible(rawFrame, titleOrCfg, defaultOpen)
-                return wrapContainer(secFrame)
-            end
+    function ContainerMethods:Section(titleOrCfg, defaultOpen)
+        local title = titleOrCfg
+        local opened = defaultOpen
+        if type(titleOrCfg) == "table" then
+            title = titleOrCfg.Title or titleOrCfg.title or "Section"
+            opened = (titleOrCfg.Opened ~= nil and titleOrCfg.Opened) or (titleOrCfg.opened ~= nil and titleOrCfg.opened) or (titleOrCfg.Box and false) or defaultOpen
         end
-        wrapper.AddCollapsible = wrapper.AddSection
-        wrapper.Section = wrapper.AddSection
-
-        function wrapper:AddToggle(titleOrCfg, content, defaultValue, callback, elementId)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateToggle(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Value or cfg.Default, cfg.Callback, cfg.Flag or cfg.Id)
-            else
-                return CreateToggle(rawFrame, titleOrCfg, content, defaultValue, callback, elementId)
-            end
-        end
-        wrapper.Toggle = wrapper.AddToggle
-
-        function wrapper:AddSlider(titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateSlider(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Min or cfg.minValue or 0, cfg.Max or cfg.maxValue or 100, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id, cfg.showKnob ~= false)
-            else
-                return CreateSlider(rawFrame, titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
-            end
-        end
-        wrapper.Slider = wrapper.AddSlider
-
-        function wrapper:AddDropdown(titleOrCfg, content, options, multi, defaultValue, callback, elementId)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateDropdown(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Values or cfg.options, cfg.Multi or cfg.multi, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id)
-            else
-                return CreateDropdown(rawFrame, titleOrCfg, content, options, multi, defaultValue, callback, elementId)
-            end
-        end
-        wrapper.Dropdown = wrapper.AddDropdown
-
-        function wrapper:AddInput(titleOrCfg, content, placeholder, callback, elementId)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateInput(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Placeholder or cfg.placeholder, cfg.Callback, cfg.Flag or cfg.Id)
-            else
-                return CreateInput(rawFrame, titleOrCfg, content, placeholder, callback, elementId)
-            end
-        end
-        wrapper.Input = wrapper.AddInput
-
-        function wrapper:AddButton(titleOrCfg, content, iconId, callback)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateButton(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Icon or cfg.iconId or "mouse-pointer-click", cfg.Callback)
-            else
-                return CreateButton(rawFrame, titleOrCfg, content, iconId, callback)
-            end
-        end
-        wrapper.Button = wrapper.AddButton
-
-        function wrapper:HStack(...)
-            return CreateHStack(rawFrame)
-        end
-        wrapper.AddHStack = wrapper.HStack
-
-        function wrapper:AddParagraph(titleOrConfig, content, buttons)
-            return CreateParagraph(rawFrame, titleOrConfig, content, buttons)
-        end
-        wrapper.Paragraph = wrapper.AddParagraph
-
-        function wrapper:AddSingleButton(title, callback)
-            return CreateSingleButton(rawFrame, title, callback)
-        end
-        function wrapper:AddTextHeader(title)
-            return CreateTextHeader(rawFrame, title)
-        end
-        function wrapper:AddWelcomeCard()
-            return Window:AddWelcomeCard(rawFrame)
-        end
-        function wrapper:AddDivider(title)
-            return CreateDivider(rawFrame, title)
-        end
-        wrapper.Divider = wrapper.AddDivider
-
-        function wrapper:AddColorPicker(titleOrCfg, content, defaultColor, callback, elementId)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateColorPicker(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Color or cfg.defaultColor, cfg.Callback, cfg.Flag or cfg.Id)
-            else
-                return CreateColorPicker(rawFrame, titleOrCfg, content, defaultColor, callback, elementId)
-            end
-        end
-        wrapper.ColorPicker = wrapper.AddColorPicker
-
-        function wrapper:AddKeybind(titleOrCfg, content, defaultKey, callback, elementId)
-            if type(titleOrCfg) == "table" then
-                local cfg = titleOrCfg
-                return CreateKeybind(rawFrame, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Key or cfg.defaultKey, cfg.Callback, cfg.Flag or cfg.Id)
-            else
-                return CreateKeybind(rawFrame, titleOrCfg, content, defaultKey, callback, elementId)
-            end
-        end
-        wrapper.Keybind = wrapper.AddKeybind
-
-        function wrapper:AddButtonGrid(btn1Config, btn2Config)
-            return CreateButtonGrid(rawFrame, btn1Config, btn2Config)
-        end
-        function wrapper:AddImageBox(title, content, imageId, size, callback, elementId)
-            return CreateImageBox(rawFrame, title, content, imageId, size, callback, elementId)
-        end
-        function wrapper:AddLineSlider(title, content, minValue, maxValue, defaultValue, callback, elementId)
-            return CreateSlider(rawFrame, title, content, minValue, maxValue, defaultValue, callback, elementId, false)
-        end
-        function wrapper:AddMultiDropdown(title, content, options, defaultValue, callback, elementId)
-            return CreateDropdown(rawFrame, title, content, options, true, defaultValue, callback, elementId)
-        end
-
-        -- Aliases for Create...
-        wrapper.CreateSection       = wrapper.AddSection
-        wrapper.CreateCollapsible   = wrapper.AddSection
-        wrapper.CreateToggle        = wrapper.AddToggle
-        wrapper.CreateSlider        = wrapper.AddSlider
-        wrapper.CreateLineSlider    = wrapper.AddLineSlider
-        wrapper.CreateDropdown      = wrapper.AddDropdown
-        wrapper.CreateMultiDropdown = wrapper.AddMultiDropdown
-        wrapper.CreateInput         = wrapper.AddInput
-        wrapper.CreateButton        = wrapper.AddButton
-        wrapper.CreateButtonGrid    = wrapper.AddButtonGrid
-        wrapper.CreateParagraph     = wrapper.AddParagraph
-        wrapper.CreateSingleButton  = wrapper.AddSingleButton
-        wrapper.CreateTextHeader    = wrapper.AddTextHeader
-        wrapper.CreateWelcomeCard   = wrapper.AddWelcomeCard
-        wrapper.CreateDivider       = wrapper.AddDivider
-        wrapper.CreateColorPicker   = wrapper.AddColorPicker
-        wrapper.CreateKeybind       = wrapper.AddKeybind
-        wrapper.CreateImageBox      = wrapper.AddImageBox
-
-        wrapper.Instance = rawFrame
-        wrapper.Parent = rawFrame
-        return wrapper
+        local secFrame = CreateCollapsible(self.Container, title, opened)
+        local secObj = setmetatable({
+            Container = secFrame,
+            Instance = secFrame,
+            Title = title,
+            Type = "Section"
+        }, { __index = ContainerMethods })
+        return secObj
     end
-    
+    ContainerMethods.AddSection = ContainerMethods.Section
+    ContainerMethods.AddCollapsible = ContainerMethods.Section
+
+    function ContainerMethods:Toggle(titleOrCfg, content, defaultValue, callback, elementId)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateToggle(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Value or cfg.Default, cfg.Callback, cfg.Flag or cfg.Id)
+        else
+            return CreateToggle(self.Container, titleOrCfg, content, defaultValue, callback, elementId)
+        end
+    end
+    ContainerMethods.AddToggle = ContainerMethods.Toggle
+
+    function ContainerMethods:Slider(titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateSlider(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Min or cfg.minValue or 0, cfg.Max or cfg.maxValue or 100, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id, cfg.showKnob ~= false)
+        else
+            return CreateSlider(self.Container, titleOrCfg, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+        end
+    end
+    ContainerMethods.AddSlider = ContainerMethods.Slider
+
+    function ContainerMethods:Dropdown(titleOrCfg, content, options, multi, defaultValue, callback, elementId)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateDropdown(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Values or cfg.options, cfg.Multi or cfg.multi, cfg.Value or cfg.Default or cfg.defaultValue, cfg.Callback, cfg.Flag or cfg.Id)
+        else
+            return CreateDropdown(self.Container, titleOrCfg, content, options, multi, defaultValue, callback, elementId)
+        end
+    end
+    ContainerMethods.AddDropdown = ContainerMethods.Dropdown
+
+    function ContainerMethods:Input(titleOrCfg, content, placeholder, callback, elementId)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateInput(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Placeholder or cfg.placeholder, cfg.Callback, cfg.Flag or cfg.Id)
+        else
+            return CreateInput(self.Container, titleOrCfg, content, placeholder, callback, elementId)
+        end
+    end
+    ContainerMethods.AddInput = ContainerMethods.Input
+
+    function ContainerMethods:Button(titleOrCfg, content, iconId, callback)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateButton(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Icon or cfg.iconId or "mouse-pointer-click", cfg.Callback)
+        else
+            return CreateButton(self.Container, titleOrCfg, content, iconId, callback)
+        end
+    end
+    ContainerMethods.AddButton = ContainerMethods.Button
+
+    function ContainerMethods:Paragraph(titleOrConfig, content, buttons)
+        return CreateParagraph(self.Container, titleOrConfig, content, buttons)
+    end
+    ContainerMethods.AddParagraph = ContainerMethods.Paragraph
+
+    function ContainerMethods:HStack(...)
+        return CreateHStack(self.Container)
+    end
+    ContainerMethods.AddHStack = ContainerMethods.HStack
+
+    function ContainerMethods:ButtonGrid(btn1Config, btn2Config)
+        return CreateButtonGrid(self.Container, btn1Config, btn2Config)
+    end
+    ContainerMethods.AddButtonGrid = ContainerMethods.ButtonGrid
+
+    function ContainerMethods:ColorPicker(titleOrCfg, content, defaultColor, callback, elementId)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateColorPicker(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Color or cfg.defaultColor, cfg.Callback, cfg.Flag or cfg.Id)
+        else
+            return CreateColorPicker(self.Container, titleOrCfg, content, defaultColor, callback, elementId)
+        end
+    end
+    ContainerMethods.AddColorPicker = ContainerMethods.ColorPicker
+
+    function ContainerMethods:Keybind(titleOrCfg, content, defaultKey, callback, elementId)
+        if type(titleOrCfg) == "table" then
+            local cfg = titleOrCfg
+            return CreateKeybind(self.Container, cfg.Title, cfg.Desc or cfg.Content, cfg.Default or cfg.Key or cfg.defaultKey, cfg.Callback, cfg.Flag or cfg.Id)
+        else
+            return CreateKeybind(self.Container, titleOrCfg, content, defaultKey, callback, elementId)
+        end
+    end
+    ContainerMethods.AddKeybind = ContainerMethods.Keybind
+
+    function ContainerMethods:Divider(title)
+        return CreateDivider(self.Container, title)
+    end
+    ContainerMethods.AddDivider = ContainerMethods.Divider
+
+    function ContainerMethods:SingleButton(title, callback)
+        return CreateSingleButton(self.Container, title, callback)
+    end
+    ContainerMethods.AddSingleButton = ContainerMethods.SingleButton
+
+    function ContainerMethods:TextHeader(title)
+        return CreateTextHeader(self.Container, title)
+    end
+    ContainerMethods.AddTextHeader = ContainerMethods.TextHeader
+
+    function ContainerMethods:WelcomeCard()
+        return AddWelcomeCard(self.Container)
+    end
+    ContainerMethods.AddWelcomeCard = ContainerMethods.WelcomeCard
+
+    function ContainerMethods:ImageBox(title, content, imageId, size, callback, elementId)
+        return CreateImageBox(self.Container, title, content, imageId, size, callback, elementId)
+    end
+    ContainerMethods.AddImageBox = ContainerMethods.ImageBox
+
+    function ContainerMethods:LineSlider(title, content, minValue, maxValue, defaultValue, callback, elementId)
+        return CreateSlider(self.Container, title, content, minValue, maxValue, defaultValue, callback, elementId, false)
+    end
+    ContainerMethods.AddLineSlider = ContainerMethods.LineSlider
+
+    function ContainerMethods:MultiDropdown(title, content, options, defaultValue, callback, elementId)
+        return CreateDropdown(self.Container, title, content, options, true, defaultValue, callback, elementId)
+    end
+    ContainerMethods.AddMultiDropdown = ContainerMethods.MultiDropdown
+
+    -- CreateTab definition
     function Window:CreateTab(tabNameOrCfg, iconId)
         local tabName = tabNameOrCfg
         local icon = iconId
@@ -5571,7 +5535,13 @@ function Limbo:CreateWindow(config)
                 end
             end)
         end
-        return wrapContainer(container)
+        local tabObj = setmetatable({
+            Container = container,
+            Instance = container,
+            Title = tabName,
+            Type = "Tab"
+        }, { __index = ContainerMethods })
+        return tabObj
     end
     Window.AddTab = Window.CreateTab
     Window.Tab = Window.CreateTab
@@ -5596,7 +5566,11 @@ function Limbo:CreateWindow(config)
     end
 
     function Window:ConfigPanel(container)
-        return wrapContainer(container)
+        return setmetatable({
+            Container = toFrame(container),
+            Instance = toFrame(container),
+            Type = "ConfigPanel"
+        }, { __index = ContainerMethods })
     end
 
     Window.OpenButtonMain = {
@@ -5605,74 +5579,79 @@ function Limbo:CreateWindow(config)
     }
     
     function Window:AddParagraph(tabContainer, titleOrConfig, content, buttons)
-        return CreateParagraph(getRawContainer(tabContainer), titleOrConfig, content, buttons)
+        return CreateParagraph(toFrame(tabContainer), titleOrConfig, content, buttons)
     end
 
     function Window:AddSingleButton(tabContainer, title, callback)
-        return CreateSingleButton(getRawContainer(tabContainer), title, callback)
+        return CreateSingleButton(toFrame(tabContainer), title, callback)
     end
 
     function Window:AddTextHeader(tabContainer, title)
-        return CreateTextHeader(getRawContainer(tabContainer), title)
+        return CreateTextHeader(toFrame(tabContainer), title)
     end
 
     function Window:AddWelcomeCard(tabContainer)
-        return AddWelcomeCard(getRawContainer(tabContainer))
+        return AddWelcomeCard(toFrame(tabContainer))
     end
     
     function Window:AddButton(tabContainer, title, content, iconId, callback)
-        return CreateButton(getRawContainer(tabContainer), title, content, iconId, callback)
+        return CreateButton(toFrame(tabContainer), title, content, iconId, callback)
     end
     
     function Window:AddToggle(tabContainer, title, content, defaultValue, callback, elementId)
-        return CreateToggle(getRawContainer(tabContainer), title, content, defaultValue, callback, elementId)
+        return CreateToggle(toFrame(tabContainer), title, content, defaultValue, callback, elementId)
     end
     
     function Window:AddInput(tabContainer, title, content, placeholder, callback, elementId)
-        return CreateInput(getRawContainer(tabContainer), title, content, placeholder, callback, elementId)
+        return CreateInput(toFrame(tabContainer), title, content, placeholder, callback, elementId)
     end
     
     function Window:AddDropdown(tabContainer, title, content, options, multi, defaultValue, callback, elementId)
-        return CreateDropdown(getRawContainer(tabContainer), title, content, options, multi, defaultValue, callback, elementId)
+        return CreateDropdown(toFrame(tabContainer), title, content, options, multi, defaultValue, callback, elementId)
     end
     
     function Window:AddMultiDropdown(tabContainer, title, content, options, defaultValue, callback, elementId)
-        return CreateDropdown(getRawContainer(tabContainer), title, content, options, true, defaultValue, callback, elementId)
+        return CreateDropdown(toFrame(tabContainer), title, content, options, true, defaultValue, callback, elementId)
     end
     
     function Window:AddSlider(tabContainer, title, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
-        return CreateSlider(getRawContainer(tabContainer), title, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
+        return CreateSlider(toFrame(tabContainer), title, content, minValue, maxValue, defaultValue, callback, elementId, showKnob)
     end
     
     function Window:AddLineSlider(tabContainer, title, content, minValue, maxValue, defaultValue, callback, elementId)
-        return CreateSlider(getRawContainer(tabContainer), title, content, minValue, maxValue, defaultValue, callback, elementId, false)
+        return CreateSlider(toFrame(tabContainer), title, content, minValue, maxValue, defaultValue, callback, elementId, false)
     end
 
     function Window:AddImageBox(tabContainer, title, content, imageId, size, callback, elementId)
-        return CreateImageBox(getRawContainer(tabContainer), title, content, imageId, size, callback, elementId)
+        return CreateImageBox(toFrame(tabContainer), title, content, imageId, size, callback, elementId)
     end
 
     -- FIXED: Renamed from AddSection to AddDivider
     function Window:AddDivider(tabContainer, title)
-        return CreateDivider(getRawContainer(tabContainer), title)
+        return CreateDivider(toFrame(tabContainer), title)
     end
 
     function Window:AddCollapsible(tabContainer, title, defaultOpen)
-        local secFrame = CreateCollapsible(getRawContainer(tabContainer), title, defaultOpen)
-        return wrapContainer(secFrame)
+        local secFrame = CreateCollapsible(toFrame(tabContainer), title, defaultOpen)
+        return setmetatable({
+            Container = secFrame,
+            Instance = secFrame,
+            Title = title,
+            Type = "Section"
+        }, { __index = ContainerMethods })
     end
     Window.AddSection = Window.AddCollapsible
 
     function Window:AddButtonGrid(tabContainer, btn1Config, btn2Config)
-        return CreateButtonGrid(getRawContainer(tabContainer), btn1Config, btn2Config)
+        return CreateButtonGrid(toFrame(tabContainer), btn1Config, btn2Config)
     end
 
     function Window:AddColorPicker(tabContainer, title, content, defaultColor, callback, elementId)
-        return CreateColorPicker(getRawContainer(tabContainer), title, content, defaultColor, callback, elementId)
+        return CreateColorPicker(toFrame(tabContainer), title, content, defaultColor, callback, elementId)
     end
 
     function Window:AddKeybind(tabContainer, title, content, defaultKey, callback, elementId)
-        return CreateKeybind(getRawContainer(tabContainer), title, content, defaultKey, callback, elementId)
+        return CreateKeybind(toFrame(tabContainer), title, content, defaultKey, callback, elementId)
     end
 
     function Window:Notify(notifyConfig)
