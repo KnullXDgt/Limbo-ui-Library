@@ -1,6 +1,6 @@
 --[[
     Limbo Hub UI Library Template
-    Architecture & Keyless Auth Lifecycle aligned with Fish It 2.0.7 & WindUI Limbo
+    Pure UI Template (Clean & Independent)
 ]]
 
 local GAME_NAME       = "Fish It"
@@ -10,118 +10,6 @@ local LIMBO_LOGO      = "rbxassetid://97957114633547"
 local LIMBO_WATERMARK = "rbxassetid://74613200492285"
 local DISCORD_INVITE  = "https://discord.gg/GtDHsXGJ4g"
 
--- Backend Endpoints
-local LIMBO_BASE_URL          = "https://limbohub.my.id"
-local LIMBO_SESSION_ENDPOINT  = LIMBO_BASE_URL .. "/api/loader/session"
-local LIMBO_GET_KEY_URL       = LIMBO_BASE_URL .. "/get-key"
-
-local LimboPlayers = game:GetService("Players")
-local LimboHttpService = game:GetService("HttpService")
-local RbxAnalytics = game:FindService("RbxAnalyticsService")
-local LimboAccessScope = (getgenv and getgenv()) or _G
-
-local function limboRequestFunction()
-    local scope = (getgenv and getgenv()) or _G
-    local candidates = {
-        rawget(scope, "request"),
-        (syn and syn.request),
-        (http and http.request),
-        (fluxus and fluxus.request),
-        rawget(scope, "http_request"),
-    }
-    for _, candidate in ipairs(candidates) do
-        if type(candidate) == "function" then
-            return candidate
-        end
-    end
-    return nil
-end
-
-local function limboPostJson(url, payload)
-    local send = limboRequestFunction()
-    if not send then
-        return nil, "Your executor does not expose an HTTP request function."
-    end
-    local ok, response = pcall(send, {
-        Url = url,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = LimboHttpService:JSONEncode(payload),
-    })
-    if not ok then
-        return nil, "Network request failed: " .. tostring(response)
-    end
-    local body = (type(response) == "table" and (response.Body or response.body)) or response
-    if type(body) ~= "string" or body == "" then
-        return nil, "Empty response from the server."
-    end
-    local decoded
-    local decodeOk = pcall(function()
-        decoded = LimboHttpService:JSONDecode(body)
-    end)
-    if not decodeOk or type(decoded) ~= "table" then
-        return nil, "Unexpected server response."
-    end
-    return decoded, nil
-end
-
-local function limboDeviceId()
-    local parts = {}
-    if RbxAnalytics then
-        local ok, id = pcall(function() return RbxAnalytics:GetClientId() end)
-        if ok and type(id) == "string" and #id > 0 then
-            table.insert(parts, id)
-        end
-    end
-    local scope = (getgenv and getgenv()) or _G
-    for _, getter in ipairs({ "gethwid", "get_hwid" }) do
-        local fn = rawget(scope, getter)
-        if type(fn) == "function" then
-            local ok, val = pcall(fn)
-            if ok and type(val) == "string" and #val > 0 then
-                table.insert(parts, val)
-                break
-            end
-        end
-    end
-    return table.concat(parts, ":")
-end
-
--- Keyless / Session Authorization
-local function limboAuthorize()
-    local player = LimboPlayers.LocalPlayer
-    local robloxUserId = string.format("%.0f", player and player.UserId or 0)
-    local scope = (getgenv and getgenv()) or _G
-    local config = scope.LimboConfig or scope.Config or {}
-    local key = config.Key or config.key
-
-    local response, err = limboPostJson(LIMBO_SESSION_ENDPOINT, {
-        key = key,
-        robloxUserId = robloxUserId,
-        deviceId = limboDeviceId(),
-    })
-
-    if response and response.success then
-        if response.keyType == "keyless" then
-            print(string.format("%s Keyless access is active (server_keyless) - key window skipped.", LIMBO_TAG))
-            return { keyType = "keyless", needsKeyWindow = false, ticket = response.adapterTicket }
-        elseif response.keyType == "premium" then
-            print(string.format("%s Premium verified - key window skipped.", LIMBO_TAG))
-            return { keyType = "premium", needsKeyWindow = false, ticket = response.adapterTicket }
-        end
-    end
-
-    if response and (response.requiresKey or response.keyType == "none") then
-        print(string.format("%s Key required - showing key window.", LIMBO_TAG))
-        return { keyType = "none", needsKeyWindow = true }
-    end
-
-    -- Fallback jika offline/error
-    return { keyType = "keyless", needsKeyWindow = false }
-end
-
-local LimboSession = limboAuthorize()
-
 -- 1. Lifecycle Cleanup
 if getgenv().LimboHub and type(getgenv().LimboHub.Destroy) == "function" then
     pcall(function()
@@ -130,7 +18,7 @@ if getgenv().LimboHub and type(getgenv().LimboHub.Destroy) == "function" then
     task.wait(0.1)
 end
 
--- 2. Load Library & Validation
+-- 2. Load Library
 local Limbo = loadfile("/root/FishitWork/Limbo-ui-Library/source.luau")()
 assert(Limbo and type(Limbo.CreateWindow) == "function", LIMBO_TAG .. " library did not return its API")
 
@@ -154,7 +42,7 @@ local Window = Limbo:CreateWindow({
 
 getgenv().LimboHub = Window
 
--- 4. Tab Information (Persis WindUI Limbo & Fish It 2.0.7)
+-- 4. Tab Information
 local InfoTab = Window:CreateTab("Information", "info")
 
 Window:AddParagraph(InfoTab, {
