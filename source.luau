@@ -2963,12 +2963,15 @@ function Limbo:CreateWindow(config)
             return
         end
 
+        local hasDesc = content and tostring(content) ~= ""
+        local cleanDesc = hasDesc and tostring(content):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "") or ""
+
         local Input = Instance.new("Frame")
         Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Input.BackgroundTransparency = 0.935
         Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
         Input.BorderSizePixel = 0
-        Input.Size = UDim2.new(1, 0, 0, 64)
+        Input.Size = UDim2.new(1, 0, 0, (hasDesc and cleanDesc ~= "") and 76 or 54)
         Input.Name = "Input"
         Input.Parent = tabContainer
 
@@ -2980,16 +2983,17 @@ function Limbo:CreateWindow(config)
         InputTitle.Font = Enum.Font.GothamBold
         InputTitle.Text = title
         InputTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
-        InputTitle.TextSize = 14
+        InputTitle.TextSize = 13
         InputTitle.TextXAlignment = Enum.TextXAlignment.Left
-        InputTitle.BackgroundTransparency = 0.999
+        InputTitle.BackgroundTransparency = 1
         InputTitle.BorderSizePixel = 0
         InputTitle.Position = UDim2.new(0, 8, 0, 6)
         InputTitle.Size = UDim2.new(1, -16, 0, 14)
         InputTitle.Name = "InputTitle"
         InputTitle.Parent = Input
-        if content and content ~= "" then
-            local cleanDesc = tostring(content):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+
+        local frameY = 24
+        if hasDesc and cleanDesc ~= "" then
             local InputContent = Instance.new("TextLabel")
             InputContent.Font = Enum.Font.GothamBold
             InputContent.Text = cleanDesc
@@ -2997,22 +3001,25 @@ function Limbo:CreateWindow(config)
             InputContent.TextTransparency = 0.35
             InputContent.TextSize = 11
             InputContent.TextXAlignment = Enum.TextXAlignment.Left
+            InputContent.TextYAlignment = Enum.TextYAlignment.Top
             InputContent.BackgroundTransparency = 1
             InputContent.BorderSizePixel = 0
-            InputContent.Position = UDim2.new(0, 8, 0, 20)
-            InputContent.Size = UDim2.new(1, -16, 0, 12)
+            InputContent.Position = UDim2.new(0, 8, 0, 22)
+            InputContent.Size = UDim2.new(1, -16, 0, 13)
             InputContent.TextTruncate = Enum.TextTruncate.AtEnd
             InputContent.Name = "InputContent"
             InputContent.Parent = Input
+            frameY = 40
         end
+
         local InputFrame = Instance.new("Frame")
         InputFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         InputFrame.BackgroundTransparency = 0.95
         InputFrame.BorderSizePixel = 0
         InputFrame.ClipsDescendants = true
         InputFrame.AnchorPoint = Vector2.new(0, 0)
-        InputFrame.Position = UDim2.new(0, 6, 0, 28)
-        InputFrame.Size = UDim2.new(1, -12, 0, 30)
+        InputFrame.Position = UDim2.new(0, 8, 0, frameY)
+        InputFrame.Size = UDim2.new(1, -16, 0, 28)
         InputFrame.Name = "InputFrame"
         InputFrame.Parent = Input
 
