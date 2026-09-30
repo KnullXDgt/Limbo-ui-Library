@@ -3773,6 +3773,14 @@ function Limbo:CreateWindow(config)
             TouchInput = nil
         }
 
+        local function GetDecimals(num)
+            local str = tostring(num or 0)
+            local dot = str:find("%.")
+            return dot and (#str - dot) or 0
+        end
+
+        local decimals = math.max(GetDecimals(sliderData.Min), GetDecimals(sliderData.Max), GetDecimals(defaultValue or 0))
+
         local function Round(num, decimalPlaces)
             local mult = 10 ^ (decimalPlaces or 0)
             return math.floor(num * mult + 0.5) / mult
@@ -3780,11 +3788,16 @@ function Limbo:CreateWindow(config)
 
         local function SetValue(value, instant)
             value = math.clamp(value, sliderData.Min, sliderData.Max)
-            sliderData.Value = Round(value, 0)
+            sliderData.Value = Round(value, decimals)
 
-            ValueDisplay.Text = tostring(sliderData.Value)
+            if decimals > 0 then
+                ValueDisplay.Text = string.format("%." .. tostring(decimals) .. "f", sliderData.Value)
+            else
+                ValueDisplay.Text = tostring(math.floor(sliderData.Value + 0.5))
+            end
 
-            local percentage = (sliderData.Value - sliderData.Min) / (sliderData.Max - sliderData.Min)
+            local range = sliderData.Max - sliderData.Min
+            local percentage = range > 0 and math.clamp((sliderData.Value - sliderData.Min) / range, 0, 1) or 0
 
             if instant then
                 SliderFill.Size = UDim2.new(percentage, 0, 1, 0)
