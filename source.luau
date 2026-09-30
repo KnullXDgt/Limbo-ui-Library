@@ -5180,7 +5180,14 @@ function Limbo:CreateWindow(config)
             MakeNotify({ Title = "Config", Description = "Error", Content = "Enter or select a config name first!", Color = Color3.fromRGB(150,150,170), Delay = 3 })
             return
         end
-        local configData = {}
+        local autoName = ""
+        pcall(function()
+            if isfile(AutoloadFile) then autoName = readfile(AutoloadFile) end
+        end)
+        local configData = {
+            __autoload = (targetName == autoName),
+            __elements = {}
+        }
         for id, element in pairs(AllElements) do
             local val = nil
             if element.Type == "Toggle" then
@@ -5206,6 +5213,10 @@ function Limbo:CreateWindow(config)
             end
             if val ~= nil then
                 configData[id] = val
+                configData.__elements[id] = {
+                    __type = element.Type,
+                    value = val
+                }
             end
         end
         local notifyData = ConfigSystem:SaveConfig(targetName, configData)
