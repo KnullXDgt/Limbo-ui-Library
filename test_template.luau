@@ -1,4 +1,4 @@
--- Test Template Limbo UI Library (Full Featured)
+-- Test Template Limbo UI Library (Clean Limbo Theme)
 local Limbo = loadfile("/root/FishitWork/Limbo-ui-Library/source.luau")()
 
 local Window = Limbo:CreateWindow({
@@ -12,8 +12,9 @@ local Window = Limbo:CreateWindow({
     Resizable             = true,
     ToggleButton          = true,
     ConfigFolder          = "LimboFishIt",
-    Background            = "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png",
-    BackgroundImageTransparency = 0.90,
+    Watermark             = "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png",
+    WatermarkTransparency = 0.94,
+    WatermarkSize         = 285,
     Icon                  = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420",
 })
 
@@ -59,12 +60,13 @@ Window:AddButtonGrid(Section,
         end
     },
     {
-        Title = "Click Me",
+        Title = "Clear Notif",
         Callback = function()
             Limbo:Notify({
-                Title = "Limbo Hub",
-                Content = "Testing button click.",
-                Color = Color3.fromRGB(220, 120, 120),
+                Title = "Config",
+                Description = "Config cleared",
+                Content = "Semua pengaturan berhasil di-reset!",
+                Color = Color3.fromRGB(255, 100, 100),
                 Delay = 3
             })
         end
@@ -94,7 +96,8 @@ task.delay(0.5, function()
     Limbo:Notify({
         Title = "Limbo Hub",
         Subtitle = "Loaded",
-        Content = "Limbo UI Library ready!",
+        Description = "Ready",
+        Content = "Welcome to Limbo Hub v2.0.7",
         Color = Color3.fromRGB(160, 0, 255),
         Delay = 3
     })

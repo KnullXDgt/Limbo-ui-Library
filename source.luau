@@ -696,72 +696,65 @@ local function MakeNotify(NotifyConfig)
             Top.Name = "Top"
             Top.Parent = NotifyFrameReal
 
+            Top.Size = UDim2.new(1, -30, 0, 26)
+            Top.Position = UDim2.new(0, 10, 0, 8)
+
+            local TopLayout = Instance.new("UIListLayout")
+            TopLayout.FillDirection = Enum.FillDirection.Horizontal
+            TopLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            TopLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            TopLayout.Padding = UDim.new(0, 6)
+            TopLayout.Parent = Top
+
             local notifyIconUrl = ResolveIcon(NotifyConfig.Icon or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420")
-            local textOffset = 10
             if notifyIconUrl then
                 local NIcon = Instance.new("ImageLabel")
                 NIcon.Image = notifyIconUrl
                 NIcon.BackgroundTransparency = 1
-                NIcon.Size = UDim2.new(0, 18, 0, 18)
-                NIcon.AnchorPoint = Vector2.new(0, 0.5)
-                NIcon.Position = UDim2.new(0, 10, 0.5, 0)
+                NIcon.Size = UDim2.new(0, 16, 0, 16)
+                NIcon.LayoutOrder = 1
                 NIcon.Parent = Top
-                textOffset = 34
             end
 
             TextLabel.Font = Enum.Font.GothamBold
             TextLabel.Text = NotifyConfig.Title
             TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel.TextSize = 14
+            TextLabel.TextSize = 13
             TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel.BackgroundTransparency = 0.999
-            TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+            TextLabel.BackgroundTransparency = 1
             TextLabel.BorderSizePixel = 0
-            TextLabel.Size = UDim2.new(0, 0, 1, 0)
-            TextLabel.AutomaticSize = Enum.AutomaticSize.X
+            TextLabel.AutomaticSize = Enum.AutomaticSize.XY
+            TextLabel.LayoutOrder = 2
             TextLabel.Parent = Top
-            TextLabel.Position = UDim2.new(0, textOffset, 0, 0)
 
             if NotifyConfig.Subtitle and NotifyConfig.Subtitle ~= "" then
                 local SubLabel = Instance.new("TextLabel")
-                SubLabel.Font = Enum.Font.GothamBold
-                SubLabel.Text = NotifyConfig.Subtitle
+                SubLabel.Font = Enum.Font.Gotham
+                SubLabel.Text = "• " .. tostring(NotifyConfig.Subtitle)
                 SubLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
-                SubLabel.TextSize = 14
+                SubLabel.TextSize = 11
                 SubLabel.TextXAlignment = Enum.TextXAlignment.Left
-                SubLabel.BackgroundTransparency = 0.999
+                SubLabel.BackgroundTransparency = 1
                 SubLabel.BorderSizePixel = 0
-                SubLabel.AutomaticSize = Enum.AutomaticSize.X
-                SubLabel.Size = UDim2.new(0, 0, 1, 0)
+                SubLabel.AutomaticSize = Enum.AutomaticSize.XY
+                SubLabel.LayoutOrder = 3
                 SubLabel.Parent = Top
-                local tw = TextService:GetTextSize(NotifyConfig.Title or "", 14, Enum.Font.GothamBold, Vector2.new(math.huge, math.huge)).X
-                SubLabel.Position = UDim2.new(0, textOffset + tw + 8, 0, 0)
             end
 
-            UIStroke.Color = Color3.fromRGB(255, 255, 255)
-            UIStroke.Thickness = 0.3
-            UIStroke.Parent = TextLabel
-
-            UICorner1.Parent = Top
-            UICorner1.CornerRadius = UDim.new(0, 5)
-
-            TextLabel1.Font = Enum.Font.GothamBold
-            TextLabel1.Text = NotifyConfig.Description
-            TextLabel1.TextColor3 = NotifyConfig.Color
-            TextLabel1.TextSize = 14
-            TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
-            TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel1.BackgroundTransparency = 0.999
-            TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            TextLabel1.BorderSizePixel = 0
-            TextLabel1.Size = UDim2.new(1, 0, 1, 0)
-            TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
-            TextLabel1.Parent = Top
-
-            UIStroke1.Color = NotifyConfig.Color
-            UIStroke1.Thickness = 0.4
-            UIStroke1.Parent = TextLabel1
+            if NotifyConfig.Description and NotifyConfig.Description ~= "" and NotifyConfig.Description ~= NotifyConfig.Title then
+                TextLabel1.Font = Enum.Font.GothamBold
+                TextLabel1.Text = NotifyConfig.Description
+                TextLabel1.TextColor3 = NotifyConfig.Color
+                TextLabel1.TextSize = 12
+                TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
+                TextLabel1.BackgroundTransparency = 1
+                TextLabel1.BorderSizePixel = 0
+                TextLabel1.AutomaticSize = Enum.AutomaticSize.XY
+                TextLabel1.LayoutOrder = 4
+                TextLabel1.Parent = Top
+            else
+                TextLabel1.Visible = false
+            end
 
             Close.Font = Enum.Font.SourceSans
             Close.Text = ""
@@ -772,10 +765,10 @@ local function MakeNotify(NotifyConfig)
             Close.BackgroundTransparency = 0.999
             Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Close.BorderSizePixel = 0
-            Close.Position = UDim2.new(1, -5, 0.5, 0)
-            Close.Size = UDim2.new(0, 25, 0, 25)
+            Close.Position = UDim2.new(1, -6, 0, 20)
+            Close.Size = UDim2.new(0, 22, 0, 22)
             Close.Name = "Close"
-            Close.Parent = Top
+            Close.Parent = NotifyFrameReal
 
             ImageLabel.Image = "rbxassetid://9886659671"
             ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -783,34 +776,32 @@ local function MakeNotify(NotifyConfig)
             ImageLabel.BackgroundTransparency = 0.999
             ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
             ImageLabel.BorderSizePixel = 0
-            ImageLabel.Position = UDim2.new(0.49, 0, 0.5, 0)
+            ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
             ImageLabel.Size = UDim2.new(1, -8, 1, -8)
             ImageLabel.Parent = Close
 
-            TextLabel2.Font = Enum.Font.GothamBold
-            TextLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel2.TextSize = 13
+            TextLabel2.Font = Enum.Font.Gotham
             TextLabel2.Text = NotifyConfig.Content
+            TextLabel2.TextSize = 12
             TextLabel2.TextXAlignment = Enum.TextXAlignment.Left
             TextLabel2.TextYAlignment = Enum.TextYAlignment.Top
-            TextLabel2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel2.BackgroundTransparency = 0.999
-            TextLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel2.TextTransparency = 0.35
-            TextLabel2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+            TextLabel2.BackgroundTransparency = 1
+            TextLabel2.TextColor3 = Color3.fromRGB(220, 220, 230)
+            TextLabel2.TextTransparency = 0.15
             TextLabel2.BorderSizePixel = 0
-            TextLabel2.Position = UDim2.new(0, 10, 0, 27)
-            TextLabel2.Parent = NotifyFrameReal
-            TextLabel2.Size = UDim2.new(1, -20, 0, 13)
-
-            TextLabel2.Size = UDim2.new(1, -20, 0, 13 + (13 * (TextLabel2.TextBounds.X // TextLabel2.AbsoluteSize.X)))
+            TextLabel2.Position = UDim2.new(0, 12, 0, 36)
+            TextLabel2.Size = UDim2.new(1, -24, 0, 0)
+            TextLabel2.AutomaticSize = Enum.AutomaticSize.Y
             TextLabel2.TextWrapped = true
+            TextLabel2.Parent = NotifyFrameReal
 
-            if TextLabel2.AbsoluteSize.Y < 27 then
-                NotifyFrame.Size = UDim2.new(1, 0, 0, 65)
-            else
-                NotifyFrame.Size = UDim2.new(1, 0, 0, TextLabel2.AbsoluteSize.Y + 40)
-            end
+            local contentHeight = TextService:GetTextSize(
+                NotifyConfig.Content or "",
+                12,
+                Enum.Font.Gotham,
+                Vector2.new(280, math.huge)
+            ).Y
+            NotifyFrame.Size = UDim2.new(1, 0, 0, math.max(62, contentHeight + 46))
 
             local waitbruh = false
             function NotifyFunction:Close()
@@ -1014,8 +1005,8 @@ function Limbo:CreateWindow(config)
 
     local Main = Instance.new("Frame")
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    Main.BackgroundTransparency = 0.1
+    Main.BackgroundColor3 = Color3.fromHex("#0B0B0B")
+    Main.BackgroundTransparency = 0
     Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -1024,11 +1015,12 @@ function Limbo:CreateWindow(config)
     Main.Parent = DropShadow
 
     local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = Main
 
     local UIStroke = Instance.new("UIStroke")
-    UIStroke.Color = Color3.fromRGB(50, 50, 50)
-    UIStroke.Thickness = 1.6
+    UIStroke.Color = Color3.fromHex("#2A2A2A")
+    UIStroke.Thickness = 1
     UIStroke.Parent = Main
 
     -- Background image (customizable, shown only on selected theme)
@@ -1083,39 +1075,6 @@ function Limbo:CreateWindow(config)
         WMLabel.ZIndex = 0
         WMLabel.Parent = ImageWrapper
     end
-
-    local resolvedBg = ResolveIcon(Background)
-    if resolvedBg then
-        local BGImg = Instance.new("ImageLabel")
-        BGImg.Name = "WindowBackground"
-        BGImg.Size = UDim2.new(1, 0, 1, 0)
-        BGImg.Position = UDim2.new(0, 0, 0, 0)
-        BGImg.BackgroundTransparency = 1
-        BGImg.ImageTransparency = BackgroundImageTransparency
-        BGImg.ScaleType = Enum.ScaleType.Crop
-        BGImg.Image = resolvedBg
-        BGImg.ZIndex = 0
-        BGImg.Parent = ImageWrapper
-    end
-
-    local ThemeImage = Instance.new("ImageLabel")
-    ThemeImage.Name = "ThemeImage"
-    ThemeImage.Size = UDim2.new(1, 0, 1, 0)
-    ThemeImage.Position = UDim2.new(0, 0, 0, 0)
-    ThemeImage.BackgroundTransparency = 1
-    ThemeImage.ImageTransparency = 0.92
-    ThemeImage.ScaleType = Enum.ScaleType.Crop
-    ThemeImage.Image = BgImageId
-    ThemeImage.ZIndex = 0
-    ThemeImage.Visible = (ConfigSystem.CurrentTheme == BgImageTheme)
-    ThemeImage.Parent = ImageWrapper
-
-
-    table.insert(ConfigSystem.ThemeElements, {
-        Update = function()
-            ThemeImage.Visible = (ConfigSystem.CurrentTheme == BgImageTheme)
-        end
-    })
 
     local Top = Instance.new("Frame")
     Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
