@@ -2602,7 +2602,41 @@ function Limbo:CreateWindow(config)
 
         Paragraph.AutomaticSize = Enum.AutomaticSize.Y
         UpdateContentSize()
-        return Paragraph
+
+        local paraObj = {}
+        paraObj.Instance = Paragraph
+        paraObj.Title = ParagraphTitle
+        paraObj.Content = ParagraphContent
+
+        function paraObj:SetTitle(newTitle)
+            ParagraphTitle.Text = tostring(newTitle or "")
+            UpdateContentSize()
+        end
+
+        function paraObj:SetDesc(newDesc)
+            ParagraphContent.Text = tostring(newDesc or "")
+            UpdateContentSize()
+        end
+
+        function paraObj:Set(newDescOrTitle, maybeDesc)
+            if maybeDesc ~= nil then
+                paraObj:SetTitle(newDescOrTitle)
+                paraObj:SetDesc(maybeDesc)
+            else
+                paraObj:SetDesc(newDescOrTitle)
+            end
+        end
+
+        local mt = {
+            __index = function(t, k)
+                if rawget(paraObj, k) then return rawget(paraObj, k) end
+                return Paragraph[k]
+            end,
+            __newindex = function(t, k, v)
+                Paragraph[k] = v
+            end
+        }
+        return setmetatable(paraObj, mt)
     end
 
     local function CreateButton(tabContainer, title, content, iconId, callback)
