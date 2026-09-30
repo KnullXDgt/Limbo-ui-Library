@@ -1235,7 +1235,7 @@ function Limbo:CreateWindow(config)
     DropShadowHolder.ZIndex = 0
     DropShadowHolder.Name = "DropShadowHolder"
     DropShadowHolder.Parent = ScreenGui
-    DropShadowHolder.Visible = true
+    DropShadowHolder.Visible = false -- Orvion Gen 2 style: hidden until all tabs are built
 
     if Center then
         DropShadowHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -2834,22 +2834,23 @@ function Limbo:CreateWindow(config)
         local function ApplyToggleVisual(value, animated)
             CancelToggleTweens()
 
+            local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme] or Color3.fromHex("#FF00E0")
             local titleProps
             local circleProps
             local frameProps
 
             if value then
-                titleProps = {TextColor3 = Color3.fromRGB(240, 240, 240)}
+                titleProps = {TextColor3 = Color3.fromRGB(245, 245, 245)}
                 circleProps = {
                     Position = UDim2.new(1, -11, 0.5, 0),
-                    BackgroundColor3 = Color3.fromHex("#0B0B0B")
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 }
                 frameProps = {
-                    BackgroundColor3 = Color3.fromHex("#F2F2F2"),
+                    BackgroundColor3 = themeColor,
                     BackgroundTransparency = 0
                 }
             else
-                titleProps = {TextColor3 = Color3.fromRGB(230, 230, 230)}
+                titleProps = {TextColor3 = Color3.fromRGB(200, 200, 200)}
                 circleProps = {
                     Position = UDim2.new(0, 11, 0.5, 0),
                     BackgroundColor3 = Color3.fromHex("#808080")
@@ -2885,6 +2886,14 @@ function Limbo:CreateWindow(config)
                 end
             end
         end
+
+        table.insert(ConfigSystem.ThemeElements, {
+            Update = function(newColor)
+                if state then
+                    FeatureFrame.BackgroundColor3 = newColor
+                end
+            end
+        })
 
         local function SetState(value, fireCallback)
             state = value == true
@@ -3360,17 +3369,18 @@ function Limbo:CreateWindow(config)
 
         local function CreateOption(optionName)
             local Option = Instance.new("Frame")
-            Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            Option.BackgroundTransparency = 0.999
+            Option.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
+            Option.BackgroundTransparency = 0.2
             Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Option.BorderSizePixel = 0
-            Option.Size = UDim2.new(1, 0, 0, 30)
+            Option.Size = UDim2.new(1, -6, 0, 28)
+            Option.Position = UDim2.new(0, 3, 0, 0)
             Option.Name = "Option"
             Option.ZIndex = 12
             Option.Parent = ListScroll
 
             local OptionCorner = Instance.new("UICorner")
-            OptionCorner.CornerRadius = UDim.new(0, 3)
+            OptionCorner.CornerRadius = UDim.new(0, 5)
             OptionCorner.Parent = Option
 
             local OptionButton = Instance.new("TextButton")
@@ -3381,7 +3391,6 @@ function Limbo:CreateWindow(config)
             OptionButton.TextXAlignment = Enum.TextXAlignment.Left
             OptionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             OptionButton.BackgroundTransparency = 0.999
-            OptionButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
             OptionButton.BorderSizePixel = 0
             OptionButton.Size = UDim2.new(1, 0, 1, 0)
             OptionButton.Name = "OptionButton"
@@ -3391,16 +3400,15 @@ function Limbo:CreateWindow(config)
             local OptionText = Instance.new("TextLabel")
             OptionText.Font = Enum.Font.GothamBold
             OptionText.Text = optionName
-            OptionText.TextSize = 13
-            OptionText.TextColor3 = Color3.fromRGB(230, 230, 230)
+            OptionText.TextSize = 12
+            OptionText.TextColor3 = Color3.fromRGB(235, 235, 240)
             OptionText.TextXAlignment = Enum.TextXAlignment.Left
-            OptionText.TextYAlignment = Enum.TextYAlignment.Top
+            OptionText.TextYAlignment = Enum.TextYAlignment.Center
             OptionText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            OptionText.BackgroundTransparency = 0.999
-            OptionText.BorderColor3 = Color3.fromRGB(0, 0, 0)
+            OptionText.BackgroundTransparency = 1
             OptionText.BorderSizePixel = 0
-            OptionText.Position = UDim2.new(0, 8, 0, 8)
-            OptionText.Size = UDim2.new(1, -16, 0, 13)
+            OptionText.Position = UDim2.new(0, 10, 0, 0)
+            OptionText.Size = UDim2.new(1, -20, 1, 0)
             OptionText.Name = "OptionText"
             OptionText.ZIndex = 14
             OptionText.Parent = Option
