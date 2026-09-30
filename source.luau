@@ -654,7 +654,7 @@ local function MakeNotify(NotifyConfig)
             NotifyFrame.AnchorPoint = Vector2.new(0, 1)
             NotifyFrame.Position = UDim2.new(0, 0, 1, -(NotifyPosHeigh))
 
-            NotifyFrameReal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            NotifyFrameReal.BackgroundColor3 = Color3.fromHex("#141414")
             NotifyFrameReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
             NotifyFrameReal.BorderSizePixel = 0
             NotifyFrameReal.Position = UDim2.new(0, 400, 0, 0)
@@ -662,17 +662,26 @@ local function MakeNotify(NotifyConfig)
             NotifyFrameReal.Name = "NotifyFrameReal"
             NotifyFrameReal.Parent = NotifyFrame
 
+            UICorner.CornerRadius = UDim.new(0, 18)
             UICorner.Parent = NotifyFrameReal
+
+            local NotifyStroke = Instance.new("UIStroke")
+            NotifyStroke.Color = Color3.fromHex("#2A2A2A")
+            NotifyStroke.Thickness = 1
+            NotifyStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            NotifyStroke.Parent = NotifyFrameReal
 
             -- Accent pill kiri
             local AccentPill = Instance.new("Frame")
             AccentPill.BackgroundColor3 = NotifyConfig.Color
-            AccentPill.Size = UDim2.new(0, 3, 1, 0)
-            AccentPill.Position = UDim2.new(0, 0, 0, 0)
+            AccentPill.Size = UDim2.new(0, 3, 0.6, 0)
+            AccentPill.Position = UDim2.new(0, 6, 0.2, 0)
             AccentPill.BorderSizePixel = 0
             AccentPill.ZIndex = 4
             AccentPill.Parent = NotifyFrameReal
-            UICorner.CornerRadius = UDim.new(0, 8)
+            local PillCorner = Instance.new("UICorner")
+            PillCorner.CornerRadius = UDim.new(1, 0)
+            PillCorner.Parent = AccentPill
 
             DropShadowHolder.BackgroundTransparency = 1
             DropShadowHolder.BorderSizePixel = 0
@@ -2482,29 +2491,37 @@ function Limbo:CreateWindow(config)
 
         local FeatureFrame = Instance.new("Frame")
         FeatureFrame.AnchorPoint = Vector2.new(1, 0.5)
-        FeatureFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        FeatureFrame.BackgroundTransparency = 0.2
+        FeatureFrame.BackgroundColor3 = Color3.fromHex("#232323")
+        FeatureFrame.BackgroundTransparency = 0
         FeatureFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
         FeatureFrame.BorderSizePixel = 0
         FeatureFrame.Position = UDim2.new(1, -10, 0.5, 0)
-        FeatureFrame.Size = UDim2.new(0, 36, 0, 18)
+        FeatureFrame.Size = UDim2.fromOffset(40, 22)
         FeatureFrame.Name = "FeatureFrame"
         FeatureFrame.Parent = Toggle
 
         local FrameCorner = Instance.new("UICorner")
+        FrameCorner.CornerRadius = UDim.new(1, 0)
         FrameCorner.Parent = FeatureFrame
 
+        local FrameStroke = Instance.new("UIStroke")
+        FrameStroke.Color = Color3.fromHex("#2E2E2E")
+        FrameStroke.Thickness = 1
+        FrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        FrameStroke.Parent = FeatureFrame
+
         local ToggleCircle = Instance.new("Frame")
-        ToggleCircle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+        ToggleCircle.AnchorPoint = Vector2.new(0, 0.5)
+        ToggleCircle.BackgroundColor3 = defaultValue and Color3.fromHex("#0B0B0B") or Color3.fromHex("#808080")
         ToggleCircle.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ToggleCircle.BorderSizePixel = 0
-        ToggleCircle.Position = defaultValue and UDim2.new(1, -15, 0.5, -7) or UDim2.new(0, 1, 0.5, -7)
-        ToggleCircle.Size = UDim2.new(0, 14, 0, 14)
+        ToggleCircle.Position = defaultValue and UDim2.new(1, -19, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)
+        ToggleCircle.Size = UDim2.fromOffset(16, 16)
         ToggleCircle.Name = "ToggleCircle"
         ToggleCircle.Parent = FeatureFrame
 
         local CircleCorner = Instance.new("UICorner")
-        CircleCorner.CornerRadius = UDim.new(0, 15)
+        CircleCorner.CornerRadius = UDim.new(1, 0)
         CircleCorner.Parent = ToggleCircle
 
         table.insert(ConfigSystem.ToggleElements, Toggle)
@@ -2525,7 +2542,6 @@ function Limbo:CreateWindow(config)
         local function ApplyToggleVisual(value, animated)
             CancelToggleTweens()
 
-            local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
             local titleProps
             local circleProps
             local frameProps
@@ -2533,7 +2549,7 @@ function Limbo:CreateWindow(config)
             if value then
                 titleProps = {TextColor3 = Color3.fromHex("#FFFFFF")}
                 circleProps = {
-                    Position = UDim2.new(1, -15, 0.5, -7),
+                    Position = UDim2.new(1, -19, 0.5, 0),
                     BackgroundColor3 = Color3.fromHex("#0B0B0B")
                 }
                 frameProps = {
@@ -2543,7 +2559,7 @@ function Limbo:CreateWindow(config)
             else
                 titleProps = {TextColor3 = Color3.fromHex("#B5B5B5")}
                 circleProps = {
-                    Position = UDim2.new(0, 1, 0.5, -7),
+                    Position = UDim2.new(0, 3, 0.5, 0),
                     BackgroundColor3 = Color3.fromHex("#808080")
                 }
                 frameProps = {
@@ -2554,9 +2570,9 @@ function Limbo:CreateWindow(config)
 
             if animated then
                 local tweenInfo = TweenInfo.new(
-                    0.2,
-                    Enum.EasingStyle.Quad,
-                    Enum.EasingDirection.InOut
+                    0.22,
+                    Enum.EasingStyle.Back,
+                    Enum.EasingDirection.Out
                 )
                 activeTweens[1] = TweenService:Create(ToggleTitle, tweenInfo, titleProps)
                 activeTweens[2] = TweenService:Create(ToggleCircle, tweenInfo, circleProps)
