@@ -293,10 +293,11 @@ local ConfigSystem = {
     CurrentConfig = nil,
     Configs = {},
     ThemeColors = {
-        ["Limbo"] = Color3.fromHex("#FF00E0"),
-        ["Darker"] = Color3.fromHex("#FF00E0"),
+        ["Limbo"] = Color3.fromHex("#F2F2F2"),
+        ["Darker"] = Color3.fromHex("#F2F2F2"),
+        ["Gray"] = Color3.fromHex("#808080"),
+        ["White"] = Color3.fromHex("#FFFFFF"),
         ["Magenta"] = Color3.fromHex("#FF00E0"),
-        ["Purple"] = Color3.fromHex("#FF00E0"),
     },
     CurrentTheme = "Limbo",
     ThemeElements = {},
@@ -2530,24 +2531,24 @@ function Limbo:CreateWindow(config)
             local frameProps
 
             if value then
-                titleProps = {TextColor3 = themeColor}
+                titleProps = {TextColor3 = Color3.fromHex("#FFFFFF")}
                 circleProps = {
                     Position = UDim2.new(1, -15, 0.5, -7),
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    BackgroundColor3 = Color3.fromHex("#0B0B0B")
                 }
                 frameProps = {
-                    BackgroundColor3 = themeColor,
+                    BackgroundColor3 = Color3.fromHex("#F2F2F2"),
                     BackgroundTransparency = 0
                 }
             else
-                titleProps = {TextColor3 = Color3.fromRGB(230, 230, 230)}
+                titleProps = {TextColor3 = Color3.fromHex("#B5B5B5")}
                 circleProps = {
                     Position = UDim2.new(0, 1, 0.5, -7),
-                    BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+                    BackgroundColor3 = Color3.fromHex("#808080")
                 }
                 frameProps = {
-                    BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-                    BackgroundTransparency = 0.2
+                    BackgroundColor3 = Color3.fromHex("#232323"),
+                    BackgroundTransparency = 0
                 }
             end
 
