@@ -641,6 +641,26 @@ local function MakeNotify(NotifyConfig)
                 NotifyLayout.Name = "NotifyLayout"
                 NotifyLayout.Parent = CoreGui.NotifyGui
 
+                local notifyScale = Instance.new("UIScale")
+                notifyScale.Name = "NotifyUIScale"
+                notifyScale.Scale = 1.0
+                notifyScale.Parent = NotifyLayout
+
+                local function syncNotifyScale()
+                    local cam = workspace.CurrentCamera
+                    if cam then
+                        local vp = cam.ViewportSize
+                        local minDim = math.min(vp.X, vp.Y)
+                        local s = math.clamp(minDim / 600, 0.75, 1.0)
+                        notifyScale.Scale = s
+                    end
+                end
+
+                pcall(function()
+                    workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(syncNotifyScale)
+                    syncNotifyScale()
+                end)
+
                 local Count = 0
                 CoreGui.NotifyGui.NotifyLayout.ChildRemoved:Connect(
                     function()
@@ -2576,6 +2596,9 @@ function Limbo:CreateWindow(config)
         if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
+
+        title = tostring(title or ""):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+        content = tostring(content or ""):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
 
         local Button = Instance.new("Frame")
         Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -5359,7 +5382,7 @@ function Limbo:CreateWindow(config)
         { Title = "Clear Autoload", Callback = doClearAutoload }
     )
 
-    CreateButton(CfgSection, "Reset All Elements", "Reset all elements to default", "rbxassetid://16932740082", function()
+    CreateButton(CfgSection, "Reset All Elements", "Reset all elements to default", "rbxassetid://107150227368485", function()
         for id, element in pairs(AllElements) do
             pcall(function()
                 if element.Type == "Toggle" then
