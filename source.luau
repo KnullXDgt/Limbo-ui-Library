@@ -1,4 +1,7 @@
 local Limbo = {}
+local LIB_VERSION = "2.0.7"
+Limbo.Version = LIB_VERSION
+
 Limbo._resetCallbacks = {}
 
 local UserInputService = game:GetService("UserInputService")
@@ -290,9 +293,12 @@ local ConfigSystem = {
     CurrentConfig = nil,
     Configs = {},
     ThemeColors = {
-        ["Darker"] = Color3.fromRGB(150, 150, 170),
+        ["Limbo"] = Color3.fromHex("#A000FF"),
+        ["Darker"] = Color3.fromHex("#A000FF"),
+        ["Purple"] = Color3.fromHex("#A000FF"),
+        ["Magenta"] = Color3.fromHex("#FF00E0"),
     },
-    CurrentTheme = "Darker",
+    CurrentTheme = "Limbo",
     ThemeElements = {},
     ToggleElements = {},
     SliderElements = {},
@@ -574,7 +580,7 @@ local function MakeNotify(NotifyConfig)
     NotifyConfig.Title = NotifyConfig.Title or "Notification"
     NotifyConfig.Description = NotifyConfig.Description or ""
     NotifyConfig.Content = NotifyConfig.Content or "Content"
-    NotifyConfig.Color = NotifyConfig.Color or Color3.fromRGB(150, 150, 170)
+    NotifyConfig.Color = NotifyConfig.Color or Color3.fromHex("#A000FF")
     NotifyConfig.Time = NotifyConfig.Time or 0.5
     NotifyConfig.Delay = NotifyConfig.Delay or 5
 
@@ -945,7 +951,7 @@ end
 function Limbo:CreateWindow(config)
     config = config or {}
     local Title = config.Title or "Limbo UI"
-    local Theme = config.Theme or "Darker"
+    local Theme = config.Theme or "Limbo"
     local Size = config.Size or UDim2.fromOffset(470, 270)
     local Center = config.Center ~= false
     local Draggable = config.Draggable ~= false
@@ -957,7 +963,7 @@ function Limbo:CreateWindow(config)
     local Badges = config.Badges or {}
     local Icon = ResolveIcon(config.Icon or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420")
     local TitleImage = config.TitleImage or ""
-    local Version = config.Version or ""
+    local Version = config.Version or ("v" .. LIB_VERSION)
     local ShowExecutor = config.ShowExecutor ~= false
     local ConfigData = config.Config or {}
     local Background = config.Background or config.BackgroundImage or "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png"
@@ -1930,33 +1936,42 @@ function Limbo:CreateWindow(config)
     end
 
     local MobileMinimizeButton = nil
-    if MinimizeButton then
+    local enableToggleBtn = config.ToggleButton ~= false or config.MinimizeButton == true
+    if enableToggleBtn then
         MobileMinimizeButton = Instance.new("Frame")
-        MobileMinimizeButton.Name = "MobileMinimizeButton"
-        MobileMinimizeButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        MobileMinimizeButton.BackgroundTransparency = 0.2
+        MobileMinimizeButton.Name = "LimboToggleButton"
+        MobileMinimizeButton.BackgroundColor3 = Color3.fromHex("#141414")
+        MobileMinimizeButton.BackgroundTransparency = 0
         MobileMinimizeButton.BorderSizePixel = 0
-        MobileMinimizeButton.Size = UDim2.new(0, 50, 0, 50)
-        MobileMinimizeButton.Position = UDim2.new(0, 20, 0, 100)
-        MobileMinimizeButton.ZIndex = 100
+        MobileMinimizeButton.Size = UDim2.fromOffset(44, 44)
+        MobileMinimizeButton.Position = UDim2.new(0.015, 0, 0.5, -150)
+        MobileMinimizeButton.ZIndex = 10000
         MobileMinimizeButton.Parent = ScreenGui
 
         local ButtonCorner = Instance.new("UICorner")
-        ButtonCorner.CornerRadius = UDim.new(1, 0)
+        ButtonCorner.CornerRadius = UDim.new(0, 11)
         ButtonCorner.Parent = MobileMinimizeButton
 
         local ButtonStroke = Instance.new("UIStroke")
-        ButtonStroke.Color = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
-        ButtonStroke.Thickness = 0
+        ButtonStroke.Thickness = 1
+        ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        ButtonStroke.Color = Color3.fromHex("#FF00E0")
+        ButtonStroke.Transparency = 0.15
         ButtonStroke.Parent = MobileMinimizeButton
+
+        local ButtonGradient = Instance.new("UIGradient")
+        ButtonGradient.Color = ColorSequence.new(Color3.fromHex("#FF00E0"), Color3.fromHex("#A000FF"))
+        ButtonGradient.Parent = ButtonStroke
 
         local ButtonImage = Instance.new("ImageLabel")
         ButtonImage.Name = "ButtonImage"
-        ButtonImage.Image = MinimizeButtonImage
+        ButtonImage.Image = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420"
         ButtonImage.BackgroundTransparency = 1
-        ButtonImage.Size = UDim2.new(0.7, 0, 0.7, 0)
-        ButtonImage.Position = UDim2.new(0.15, 0, 0.15, 0)
-        ButtonImage.ZIndex = 101
+        ButtonImage.Size = UDim2.fromOffset(30, 30)
+        ButtonImage.AnchorPoint = Vector2.new(0.5, 0.5)
+        ButtonImage.Position = UDim2.fromScale(0.5, 0.5)
+        ButtonImage.ScaleType = Enum.ScaleType.Fit
+        ButtonImage.ZIndex = 10001
         ButtonImage.Parent = MobileMinimizeButton
 
         local ClickDetector = Instance.new("TextButton")
@@ -1964,7 +1979,7 @@ function Limbo:CreateWindow(config)
         ClickDetector.Text = ""
         ClickDetector.BackgroundTransparency = 1
         ClickDetector.Size = UDim2.new(1, 0, 1, 0)
-        ClickDetector.ZIndex = 102
+        ClickDetector.ZIndex = 10002
         ClickDetector.Parent = MobileMinimizeButton
 
         local isDragging = MakeDraggableMobileButton(ClickDetector, MobileMinimizeButton, ScreenGui)
@@ -1981,24 +1996,11 @@ function Limbo:CreateWindow(config)
                 if not isDragging() then
                     DropShadowHolder.Visible = not DropShadowHolder.Visible
 
-                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 45, 0, 45)}):Play(
-
-                    )
+                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.fromOffset(40, 40)}):Play()
                     task.wait(0.1)
-                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 50, 0, 50)}):Play(
-
-                    )
+                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.fromOffset(44, 44)}):Play()
                 end
             end
-        )
-
-        table.insert(
-            ConfigSystem.ThemeElements,
-            {
-                Update = function(color)
-                    ButtonStroke.Color = color
-                end
-            }
         )
     end
 
@@ -5123,6 +5125,19 @@ function Limbo:CreateWindow(config)
         return ConfigSystem:SetTheme(themeName)
     end
     
+    function Window:SetVersion(newVersion)
+        if not newVersion or newVersion == "" then return end
+        Version = tostring(newVersion)
+        Window.Version = Version
+        if Row1 then
+            local vb = Row1:FindFirstChild("VersionBadge")
+            if vb then
+                local lbl = vb:FindFirstChildOfClass("TextLabel")
+                if lbl then lbl.Text = Version end
+            end
+        end
+    end
+
     function Window:SaveConfig(name)
         local configData = {}
         for id, element in pairs(AllElements) do

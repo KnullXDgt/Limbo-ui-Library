@@ -1,4 +1,4 @@
--- Test Template Limbo UI Library (Clean Limbo Theme)
+-- Test Template Limbo UI Library (Full Limbo Theme)
 local Limbo = loadfile("/root/FishitWork/Limbo-ui-Library/source.luau")()
 
 local Window = Limbo:CreateWindow({
@@ -6,7 +6,7 @@ local Window = Limbo:CreateWindow({
     Subtitle              = "Fish It",
     Version               = "v2.0.7",
     ShowExecutor          = true,
-    Theme                 = "Darker",
+    Theme                 = "Limbo",
     Center                = true,
     Draggable             = true,
     Resizable             = true,
@@ -53,8 +53,7 @@ Window:AddButtonGrid(Section,
             Limbo:Notify({
                 Title = "Limbo Hub",
                 Subtitle = "Automation",
-                Content = "Notifikasi dengan Logo Limbo aktif!",
-                Color = Color3.fromRGB(120, 220, 120),
+                Content = "Notifikasi dengan penanda Ungu Limbo aktif!",
                 Delay = 3
             })
         end
@@ -66,7 +65,6 @@ Window:AddButtonGrid(Section,
                 Title = "Config",
                 Description = "Config cleared",
                 Content = "Semua pengaturan berhasil di-reset!",
-                Color = Color3.fromRGB(255, 100, 100),
                 Delay = 3
             })
         end
@@ -91,14 +89,13 @@ end, "Toggle_RealPing")
 
 Window:Show()
 
--- Tampilkan test notif saat awal load
+-- Tampilkan notifikasi awal
 task.delay(0.5, function()
     Limbo:Notify({
         Title = "Limbo Hub",
         Subtitle = "Loaded",
         Description = "Ready",
-        Content = "Welcome to Limbo Hub v2.0.7",
-        Color = Color3.fromRGB(160, 0, 255),
+        Content = "Welcome to Limbo Hub v" .. Limbo.Version,
         Delay = 3
     })
 end)
