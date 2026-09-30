@@ -666,12 +666,14 @@ local function MakeNotify(NotifyConfig)
                     function()
                         Count = 0
                         for i, v in CoreGui.NotifyGui.NotifyLayout:GetChildren() do
-                            TweenService:Create(
-                                v,
-                                TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-                                {Position = UDim2.new(0, 0, 1, -((v.Size.Y.Offset + 12) * Count))}
-                            ):Play()
-                            Count = Count + 1
+                            if v:IsA("Frame") then
+                                TweenService:Create(
+                                    v,
+                                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                                    {Position = UDim2.new(0, 0, 1, -((v.Size.Y.Offset + 12) * Count))}
+                                ):Play()
+                                Count = Count + 1
+                            end
                         end
                     end
                 )
@@ -679,7 +681,9 @@ local function MakeNotify(NotifyConfig)
 
             local NotifyPosHeigh = 0
             for i, v in CoreGui.NotifyGui.NotifyLayout:GetChildren() do
-                NotifyPosHeigh = -(v.Position.Y.Offset) + v.Size.Y.Offset + 12
+                if v:IsA("Frame") then
+                    NotifyPosHeigh = -(v.Position.Y.Offset) + v.Size.Y.Offset + 12
+                end
             end
 
             local NotifyFrame = Instance.new("Frame")
@@ -3207,6 +3211,8 @@ function Limbo:CreateWindow(config)
         ListScroll.BackgroundTransparency = 0.999
         ListScroll.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ListScroll.BorderSizePixel = 0
+        ListScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        ListScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
         ListScroll.Size = UDim2.new(1, -10, 1, -50)
         ListScroll.Position = UDim2.new(0, 5, 0, 40)
         ListScroll.Name = "ListScroll"
