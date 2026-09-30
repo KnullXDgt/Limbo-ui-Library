@@ -12,10 +12,10 @@ local Window = Limbo:CreateWindow({
     Resizable             = true,
     ToggleButton          = true,
     ConfigFolder          = "LimboFishIt",
-    Watermark             = "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png",
-    WatermarkTransparency = 0.94,
+    Watermark             = "rbxassetid://74613200492285",
+    WatermarkTransparency = 0.88,
     WatermarkSize         = 285,
-    Icon                  = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420",
+    Icon                  = "rbxassetid://97957114633547",
 })
 
 -- Create tabs (Sidebar kiri)

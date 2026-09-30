@@ -712,7 +712,7 @@ local function MakeNotify(NotifyConfig)
             TopLayout.Padding = UDim.new(0, 6)
             TopLayout.Parent = Top
 
-            local notifyIconUrl = ResolveIcon(NotifyConfig.Icon or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420")
+            local notifyIconUrl = ResolveIcon(NotifyConfig.Icon or "rbxassetid://97957114633547")
             if notifyIconUrl then
                 local NIcon = Instance.new("ImageLabel")
                 NIcon.Image = notifyIconUrl
@@ -961,14 +961,14 @@ function Limbo:CreateWindow(config)
     local MinimizeButton = config.MinimizeButton or false
     local MinimizeButtonImage = config.MinimizeButton_Image or "rbxassetid://16932740082"
     local Badges = config.Badges or {}
-    local Icon = ResolveIcon(config.Icon or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420")
+    local Icon = ResolveIcon(config.Icon or "rbxassetid://97957114633547")
     local TitleImage = config.TitleImage or ""
     local Version = config.Version or ("v" .. LIB_VERSION)
     local ShowExecutor = config.ShowExecutor ~= false
     local ConfigData = config.Config or {}
-    local Background = config.Background or config.BackgroundImage or "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png"
+    local Background = config.Background or config.BackgroundImage or "rbxassetid://74613200492285"
     local BackgroundImageTransparency = config.BackgroundImageTransparency or 0.88
-    local Watermark = config.Watermark or ""
+    local Watermark = config.Watermark or "rbxassetid://74613200492285"
     local WatermarkTransparency = config.WatermarkTransparency or 0.94
     local WatermarkSize = config.WatermarkSize or 285
 
@@ -1029,7 +1029,7 @@ function Limbo:CreateWindow(config)
     -- No UIStroke on Main squircle image to avoid rectangular black outer corners
 
     -- Background image (customizable, shown only on selected theme)
-    local BgImageId    = config.BackgroundImage       or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420"
+    local BgImageId    = config.BackgroundImage       or "rbxassetid://97957114633547"
     local BgImageTheme = config.BackgroundImage_Theme or "Darker"
 
     local ImageWrapper = Instance.new("Frame")
@@ -1038,12 +1038,30 @@ function Limbo:CreateWindow(config)
     ImageWrapper.Position = UDim2.new(0, 0, 0, 0)
     ImageWrapper.BackgroundTransparency = 1
     ImageWrapper.ClipsDescendants = true
-    ImageWrapper.ZIndex = 0
+    ImageWrapper.ZIndex = 1
     ImageWrapper.Parent = Main
 
     local ImageWrapperCorner = Instance.new("UICorner")
     ImageWrapperCorner.CornerRadius = UDim.new(0, 8)
     ImageWrapperCorner.Parent = ImageWrapper
+
+    -- Background Image (Window-wide)
+    local fullBg = config.BackgroundImage or config.Background
+    if fullBg and typeof(fullBg) == "string" and fullBg ~= "" then
+        local resolvedBg = ResolveIcon(fullBg)
+        if resolvedBg then
+            local FullBgLabel = Instance.new("ImageLabel")
+            FullBgLabel.Name = "WindowBackground"
+            FullBgLabel.Size = UDim2.new(1, 0, 1, 0)
+            FullBgLabel.Position = UDim2.new(0, 0, 0, 0)
+            FullBgLabel.BackgroundTransparency = 1
+            FullBgLabel.Image = resolvedBg
+            FullBgLabel.ImageTransparency = config.BackgroundImageTransparency or 0.85
+            FullBgLabel.ScaleType = Enum.ScaleType.Crop
+            FullBgLabel.ZIndex = 1
+            FullBgLabel.Parent = ImageWrapper
+        end
+    end
 
     -- Resolve Watermark
     local WatermarkAsset = nil
@@ -1067,19 +1085,7 @@ function Limbo:CreateWindow(config)
         end
     end
 
-    if WatermarkAsset then
-        local WMLabel = Instance.new("ImageLabel")
-        WMLabel.Name = "Watermark"
-        WMLabel.Size = UDim2.fromOffset(WatermarkSize, math.floor(WatermarkSize * 496 / 512 + 0.5))
-        WMLabel.Position = UDim2.new(0.5, 0, 1, 7)
-        WMLabel.AnchorPoint = Vector2.new(0.5, 1)
-        WMLabel.BackgroundTransparency = 1
-        WMLabel.Image = WatermarkAsset
-        WMLabel.ImageTransparency = WatermarkTransparency
-        WMLabel.ScaleType = Enum.ScaleType.Fit
-        WMLabel.ZIndex = 0
-        WMLabel.Parent = ImageWrapper
-    end
+
 
     local Top = Instance.new("Frame")
     Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1891,6 +1897,19 @@ function Limbo:CreateWindow(config)
     ContentFrame.Size = UDim2.new(1, -147, 1, -43)
     ContentFrame.Name = "ContentFrame"
     ContentFrame.Parent = Main
+    if WatermarkAsset then
+        local WMLabel = Instance.new("ImageLabel")
+        WMLabel.Name = "Watermark"
+        WMLabel.Size = UDim2.fromOffset(WatermarkSize, math.floor(WatermarkSize * 496 / 512 + 0.5))
+        WMLabel.Position = UDim2.new(0.5, 0, 1, 0)
+        WMLabel.AnchorPoint = Vector2.new(0.5, 1)
+        WMLabel.BackgroundTransparency = 1
+        WMLabel.Image = WatermarkAsset
+        WMLabel.ImageTransparency = (WatermarkTransparency and WatermarkTransparency < 0.94) and WatermarkTransparency or 0.88
+        WMLabel.ScaleType = Enum.ScaleType.Fit
+        WMLabel.ZIndex = 1
+        WMLabel.Parent = ContentFrame
+    end
 
     local ContentCorner = Instance.new("UICorner")
     ContentCorner.CornerRadius = UDim.new(0, 2)
@@ -2014,7 +2033,7 @@ function Limbo:CreateWindow(config)
 
         local ButtonImage = Instance.new("ImageLabel")
         ButtonImage.Name = "ButtonImage"
-        ButtonImage.Image = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420"
+        ButtonImage.Image = "rbxassetid://97957114633547"
         ButtonImage.BackgroundTransparency = 1
         ButtonImage.Size = UDim2.fromOffset(30, 30)
         ButtonImage.AnchorPoint = Vector2.new(0.5, 0.5)
