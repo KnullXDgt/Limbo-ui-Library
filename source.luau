@@ -5521,8 +5521,14 @@ function Limbo:CreateWindow(config)
         return setmetatable(wrapper, mt)
     end
     
-    function Window:CreateTab(tabName, iconId)
-        local container, switchFn = CreateTabButton(tabName, iconId, false)
+    function Window:CreateTab(tabNameOrCfg, iconId)
+        local tabName = tabNameOrCfg
+        local icon = iconId
+        if type(tabNameOrCfg) == "table" then
+            tabName = tabNameOrCfg.Title or tabNameOrCfg.title or "Tab"
+            icon = tabNameOrCfg.Icon or tabNameOrCfg.icon or iconId
+        end
+        local container, switchFn = CreateTabButton(tabName, icon, false)
         if not CurrentTab then
             task.defer(function()
                 if not CurrentTab then
@@ -5533,6 +5539,35 @@ function Limbo:CreateWindow(config)
         return wrapContainer(container)
     end
     Window.AddTab = Window.CreateTab
+    Window.Tab = Window.CreateTab
+
+    function Window:SelectTab(target)
+        if type(target) == "number" then
+            local count = 0
+            for tabName, switchFn in pairs(TabSwitchFns) do
+                count = count + 1
+                if count == target then
+                    switchFn()
+                    break
+                end
+            end
+        elseif type(target) == "string" and TabSwitchFns[target] then
+            TabSwitchFns[target]()
+        end
+    end
+
+    function Window:Open()
+        return Window:Show()
+    end
+
+    function Window:ConfigPanel(container)
+        return wrapContainer(container)
+    end
+
+    Window.OpenButtonMain = {
+        Visible = function() end,
+        Button = { Visible = false }
+    }
     
     function Window:AddParagraph(tabContainer, titleOrConfig, content, buttons)
         return CreateParagraph(tabContainer, titleOrConfig, content, buttons)
@@ -5688,38 +5723,40 @@ function Limbo:CreateWindow(config)
     end
 
     function Window:SaveConfig(name)
-        local configData = {}
+        local autoName = ""
+        pcall(function()
+            if isfile(AutoloadFile) then autoName = readfile(AutoloadFile) end
+        end)
+
+        local configData = {
+            __autoload = (name == autoName),
+            __elements = {}
+        }
         for id, element in pairs(AllElements) do
-            if element.Type == "Toggle" then
-                configData[id] = element.Value
-            elseif element.Type == "Slider" then
-                configData[id] = element.Value
-            elseif element.Type == "Dropdown" then
-                configData[id] = element.Value
-            elseif element.Type == "Input" then
-                configData[id] = element.Value
-            elseif element.Type == "ColorPicker" then
-                configData[id] = {element.Value.R, element.Value.G, element.Value.B}
-            elseif element.Type == "Keybind" then
-                configData[id] = element.Value and element.Value.Name or nil
-            end
+            configData[id] = element.Value
+            configData.__elements[id] = {
+                __type = element.Type,
+                value = element.Value
+            }
         end
         local notifyData = ConfigSystem:SaveConfig(name, configData)
         MakeNotify(notifyData)
     end
     
     function Window:LoadConfig(name)
-        local notifyData, configData = ConfigSystem:LoadConfig(name)
+        local notifyData, rawData = ConfigSystem:LoadConfig(name)
         MakeNotify(notifyData)
-        if configData then
-            for id, val in pairs(configData) do
+        if rawData then
+            local elems = (type(rawData) == "table" and rawData.__elements) or rawData
+            for id, val in pairs(elems) do
+                local actualVal = (type(val) == "table" and val.value ~= nil) and val.value or val
                 if AllElements[id] then
-                    if AllElements[id].Type == "ColorPicker" and type(val) == "table" then
-                        AllElements[id]:Set(Color3.new(val[1], val[2], val[3]))
-                    elseif AllElements[id].Type == "Keybind" and val then
-                        AllElements[id]:Set(Enum.KeyCode[val])
+                    if AllElements[id].Type == "ColorPicker" and type(actualVal) == "table" then
+                        AllElements[id]:Set(Color3.new(actualVal[1], actualVal[2], actualVal[3]))
+                    elseif AllElements[id].Type == "Keybind" and actualVal then
+                        AllElements[id]:Set(Enum.KeyCode[actualVal])
                     else
-                        AllElements[id]:Set(val)
+                        AllElements[id]:Set(actualVal)
                     end
                 end
             end
