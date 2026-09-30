@@ -1258,8 +1258,8 @@ function Limbo:CreateWindow(config)
         if not camera then return end
         local ViewportSize = camera.ViewportSize
         local Margin = 20
-        local WindowWidth = Size.X.Offset > 0 and Size.X.Offset or 470
-        local WindowHeight = Size.Y.Offset > 0 and Size.Y.Offset or 270
+        local WindowWidth = Size.X.Offset > 0 and Size.X.Offset or 560
+        local WindowHeight = Size.Y.Offset > 0 and Size.Y.Offset or 340
 
         local AvailableWidth = ViewportSize.X - (Margin * 2)
         local AvailableHeight = ViewportSize.Y - (Margin * 2)
