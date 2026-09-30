@@ -620,31 +620,34 @@ local function MakeNotify(NotifyConfig)
 
     local NotifyFunction = {}
 
-    spawn(
+    task.spawn(
         function()
-            if not CoreGui:FindFirstChild("NotifyGui") then
-                local NotifyGui = Instance.new("ScreenGui")
-                NotifyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-                NotifyGui.Name = "NotifyGui"
-                NotifyGui.Parent = (gethui and gethui()) or CoreGui
+            local notifyGuiParent = (gethui and gethui()) or CoreGui
+            local notifyGui = notifyGuiParent:FindFirstChild("NotifyGui")
+            if not notifyGui then
+                notifyGui = Instance.new("ScreenGui")
+                notifyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                notifyGui.Name = "NotifyGui"
+                notifyGui.Parent = notifyGuiParent
             end
 
-            if not CoreGui.NotifyGui:FindFirstChild("NotifyLayout") then
-                local NotifyLayout = Instance.new("Frame")
-                NotifyLayout.AnchorPoint = Vector2.new(1, 1)
-                NotifyLayout.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                NotifyLayout.BackgroundTransparency = 0.999
-                NotifyLayout.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                NotifyLayout.BorderSizePixel = 0
-                NotifyLayout.Position = UDim2.new(1, -30, 1, -30)
-                NotifyLayout.Size = UDim2.new(0, 320, 1, 0)
-                NotifyLayout.Name = "NotifyLayout"
-                NotifyLayout.Parent = CoreGui.NotifyGui
+            local notifyLayout = notifyGui:FindFirstChild("NotifyLayout")
+            if not notifyLayout then
+                notifyLayout = Instance.new("Frame")
+                notifyLayout.AnchorPoint = Vector2.new(1, 1)
+                notifyLayout.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                notifyLayout.BackgroundTransparency = 0.999
+                notifyLayout.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                notifyLayout.BorderSizePixel = 0
+                notifyLayout.Position = UDim2.new(1, -30, 1, -30)
+                notifyLayout.Size = UDim2.new(0, 320, 1, 0)
+                notifyLayout.Name = "NotifyLayout"
+                notifyLayout.Parent = notifyGui
 
                 local notifyScale = Instance.new("UIScale")
                 notifyScale.Name = "NotifyUIScale"
                 notifyScale.Scale = 1.0
-                notifyScale.Parent = NotifyLayout
+                notifyScale.Parent = notifyLayout
 
                 local function syncNotifyScale()
                     local cam = workspace.CurrentCamera
@@ -661,11 +664,10 @@ local function MakeNotify(NotifyConfig)
                     syncNotifyScale()
                 end)
 
-                local Count = 0
-                CoreGui.NotifyGui.NotifyLayout.ChildRemoved:Connect(
+                notifyLayout.ChildRemoved:Connect(
                     function()
-                        Count = 0
-                        for i, v in CoreGui.NotifyGui.NotifyLayout:GetChildren() do
+                        local Count = 0
+                        for _, v in ipairs(notifyLayout:GetChildren()) do
                             if v:IsA("Frame") then
                                 TweenService:Create(
                                     v,
@@ -680,7 +682,7 @@ local function MakeNotify(NotifyConfig)
             end
 
             local NotifyPosHeigh = 0
-            for i, v in CoreGui.NotifyGui.NotifyLayout:GetChildren() do
+            for _, v in ipairs(notifyLayout:GetChildren()) do
                 if v:IsA("Frame") then
                     NotifyPosHeigh = -(v.Position.Y.Offset) + v.Size.Y.Offset + 12
                 end
@@ -707,7 +709,7 @@ local function MakeNotify(NotifyConfig)
             NotifyFrame.Size = UDim2.new(1, 0, 0, 150)
             NotifyFrame.Name = "NotifyFrame"
             NotifyFrame.BackgroundTransparency = 1
-            NotifyFrame.Parent = CoreGui.NotifyGui.NotifyLayout
+            NotifyFrame.Parent = notifyLayout
             NotifyFrame.AnchorPoint = Vector2.new(0, 1)
             NotifyFrame.Position = UDim2.new(0, 0, 1, -(NotifyPosHeigh))
 
