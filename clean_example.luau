@@ -1286,6 +1286,12 @@ local SettingsTab = Window:AddTab("Settings", "settings")
 local SettingsSec = SettingsTab:AddSection("Safety & Performance", true)
 SettingsSec:AddToggle("Anti AFK", "Mencegah kick 20 menit dari Roblox", true, function(st) end)
 SettingsSec:AddToggle("Potato Graphics", "Menghapus partikel dan render berat untuk hemat RAM", false, function(st) end)
+SettingsSec:AddKeybind("UI Toggle Key", "Tombol shortcut keyboard buka/tutup UI", Enum.KeyCode.RightControl, function(k) end)
+SettingsSec:AddColorPicker("Custom Accent", "Warna aksen kustom UI", Color3.fromRGB(150, 150, 170), function(c) end)
+SettingsSec:AddButtonGrid(
+    { Title = "Rejoin Server", Callback = function() Window:Notify({Title = "Rejoin", Content = "Rejoining..."}) end },
+    { Title = "Server Hop", Callback = function() Window:Notify({Title = "Hop", Content = "Hopping server..."}) end }
+)
 
 -- 6. Show Window (Instant Orvion Gen 2 style)
 Window:Show()
