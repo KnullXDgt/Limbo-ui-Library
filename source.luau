@@ -3534,9 +3534,10 @@ function Limbo:CreateWindow(config)
             end
             UpdateSelectedDisplay()
 
-            for _, child in ListScroll:GetChildren() do
+            for _, child in ipairs(ListScroll:GetChildren()) do
                 if child:IsA("Frame") and child.Name == "Option" then
-                    local optionName = child.OptionText.Text
+                    local childOptionText = child:FindFirstChild("OptionText")
+                    local optionName = childOptionText and childOptionText.Text
                     local isSelected = false
                     if dropdownData.Multi then
                         isSelected = table.find(dropdownData.Value, optionName) ~= nil
@@ -3544,29 +3545,18 @@ function Limbo:CreateWindow(config)
                         isSelected = dropdownData.Value == optionName
                     end
 
-                    local chooseFrame = child:FindFirstChild("ChooseFrame")
-                    local chooseStroke = chooseFrame and chooseFrame:FindFirstChild("UIStroke")
-                    local optionText = child:FindFirstChild("OptionText")
-
-                    if chooseFrame and chooseStroke and optionText then
-                        if isSelected then
-                            TweenService:Create(chooseStroke, TweenInfo.new(0.2), {Transparency = 0}):Play()
-                            TweenService:Create(chooseFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 1, 0, 12)}):Play()
-                            TweenService:Create(child, TweenInfo.new(0.2), {BackgroundTransparency = 0.935}):Play()
-                            TweenService:Create(
-                                optionText,
-                                TweenInfo.new(0.2),
-                                {TextColor3 = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]}
-                            ):Play()
-                        else
-                            TweenService:Create(chooseStroke, TweenInfo.new(0.2), {Transparency = 0.999}):Play()
-                            TweenService:Create(chooseFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-                            TweenService:Create(child, TweenInfo.new(0.2), {BackgroundTransparency = 0.999}):Play()
-                            TweenService:Create(
-                                optionText,
-                                TweenInfo.new(0.2),
-                                {TextColor3 = Color3.fromRGB(230, 230, 230)}
-                            ):Play()
+                    if isSelected then
+                        child.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        child.BackgroundTransparency = 0.92
+                        if childOptionText then
+                            childOptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            childOptionText.Font = Enum.Font.GothamBold
+                        end
+                    else
+                        child.BackgroundTransparency = 1
+                        if childOptionText then
+                            childOptionText.TextColor3 = Color3.fromRGB(180, 180, 190)
+                            childOptionText.Font = Enum.Font.GothamBold
                         end
                     end
                 end
