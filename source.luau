@@ -2781,7 +2781,10 @@ function Limbo:CreateWindow(config)
         ToggleButton.BackgroundTransparency = 0.999
         ToggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ToggleButton.BorderSizePixel = 0
-        ToggleButton.Size = UDim2.new(1, 0, 1, 0)
+        ToggleButton.AnchorPoint = Vector2.new(1, 0.5)
+        ToggleButton.Position = UDim2.new(1, -6, 0.5, 0)
+        ToggleButton.Size = UDim2.fromOffset(48, 28)
+        ToggleButton.ZIndex = 10
         ToggleButton.Name = "ToggleButton"
         ToggleButton.Parent = Toggle
 
@@ -3082,20 +3085,6 @@ function Limbo:CreateWindow(config)
         DropdownCorner.CornerRadius = UDim.new(0, 4)
         DropdownCorner.Parent = Dropdown
 
-        local DropdownButton = Instance.new("TextButton")
-        DropdownButton.Font = Enum.Font.SourceSans
-        DropdownButton.Text = ""
-        DropdownButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-        DropdownButton.TextSize = 14
-        DropdownButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        DropdownButton.BackgroundTransparency = 0.999
-        DropdownButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        DropdownButton.BorderSizePixel = 0
-        DropdownButton.Size = UDim2.new(1, 0, 1, 0)
-        DropdownButton.ZIndex = 13
-        DropdownButton.Name = "DropdownButton"
-        DropdownButton.Parent = Dropdown
-
         local hasDesc = content and tostring(content) ~= ""
         local cleanDesc = hasDesc and tostring(content):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "") or ""
 
@@ -3109,7 +3098,7 @@ function Limbo:CreateWindow(config)
         DropdownTitle.BackgroundTransparency = 1
         DropdownTitle.BorderSizePixel = 0
         DropdownTitle.Position = hasDesc and UDim2.new(0, 10, 0, 6) or UDim2.new(0, 10, 0.5, -7)
-        DropdownTitle.Size = UDim2.new(1, -150, 0, 14)
+        DropdownTitle.Size = UDim2.new(1, -165, 0, 14)
         DropdownTitle.Name = "DropdownTitle"
         DropdownTitle.Parent = Dropdown
 
@@ -3127,7 +3116,7 @@ function Limbo:CreateWindow(config)
             DropdownContent.BackgroundTransparency = 1
             DropdownContent.BorderSizePixel = 0
             DropdownContent.Position = UDim2.new(0, 10, 0, 22)
-            DropdownContent.Size = UDim2.new(1, -150, 0, 14)
+            DropdownContent.Size = UDim2.new(1, -165, 0, 14)
             DropdownContent.Name = "DropdownContent"
             DropdownContent.Parent = Dropdown
         end
@@ -3144,6 +3133,21 @@ function Limbo:CreateWindow(config)
         SelectOptionsFrame.Size = UDim2.new(0, 148, 0, 30)
         SelectOptionsFrame.Name = "SelectOptionsFrame"
         SelectOptionsFrame.Parent = Dropdown
+
+        local DropdownButton = Instance.new("TextButton")
+        DropdownButton.Font = Enum.Font.SourceSans
+        DropdownButton.Text = ""
+        DropdownButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+        DropdownButton.TextSize = 14
+        DropdownButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        DropdownButton.BackgroundTransparency = 0.999
+        DropdownButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        DropdownButton.BorderSizePixel = 0
+        DropdownButton.Size = UDim2.new(1, 0, 1, 0)
+        DropdownButton.Position = UDim2.new(0, 0, 0, 0)
+        DropdownButton.ZIndex = 15
+        DropdownButton.Name = "DropdownButton"
+        DropdownButton.Parent = SelectOptionsFrame
 
         local FrameCorner = Instance.new("UICorner")
         FrameCorner.CornerRadius = UDim.new(0, 4)
