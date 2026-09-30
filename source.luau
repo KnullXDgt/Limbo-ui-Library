@@ -4963,8 +4963,8 @@ function Limbo:CreateWindow(config)
         end
     end
 
-    -- Section 1 (Pertama): Utilities
-    local UtilSection = CreateCollapsible(ConfigTabContainer, "Utilities", true)
+    -- Section 1 (Pertama): Utilities (Default false / tertutup)
+    local UtilSection = CreateCollapsible(ConfigTabContainer, "Utilities", false)
 
     CreateButton(UtilSection, "Rejoin Server", "Rejoin to Current server", "refresh-cw", function()
         MakeNotify({ Title = "Rejoin", Description = "Connecting", Content = "Rejoining current server...", Delay = 2.5 })
