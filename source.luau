@@ -2743,7 +2743,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         return Button
@@ -2935,7 +2934,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         local toggleFunc = {
@@ -3065,7 +3063,6 @@ function Limbo:CreateWindow(config)
             inputFunc:Set(InputTextBox.Text)
         end)
 
-        task.wait(0.1)
         UpdateContentSize()
 
         if elementId then
@@ -3517,7 +3514,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         local dropdownFunc = {
@@ -3873,7 +3869,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         local sliderFunc = {
@@ -4009,7 +4004,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         local imageBoxFunc = {
@@ -4119,7 +4113,7 @@ function Limbo:CreateWindow(config)
         DividerLine.Parent = Divider
 
         table.insert(
-            ConfigSystem.ThemeElements,
+            ConfigSystem.ThemeElements, 
             {
                 Update = function(color)
                     DividerLine.BackgroundColor3 = color
@@ -4127,7 +4121,6 @@ function Limbo:CreateWindow(config)
             }
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         return Divider
@@ -4588,7 +4581,6 @@ function Limbo:CreateWindow(config)
             end
         )
 
-        task.wait(0.1)
         UpdateContentSize()
 
         local keybindFunc = {
