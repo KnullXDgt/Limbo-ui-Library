@@ -3364,8 +3364,8 @@ function Limbo:CreateWindow(config)
 
         local function CreateOption(optionName)
             local Option = Instance.new("Frame")
-            Option.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-            Option.BackgroundTransparency = 0.2
+            Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Option.BackgroundTransparency = 1
             Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Option.BorderSizePixel = 0
             Option.Size = UDim2.new(1, -6, 0, 28)
@@ -3375,7 +3375,7 @@ function Limbo:CreateWindow(config)
             Option.Parent = ListScroll
 
             local OptionCorner = Instance.new("UICorner")
-            OptionCorner.CornerRadius = UDim.new(0, 5)
+            OptionCorner.CornerRadius = UDim.new(0, 4)
             OptionCorner.Parent = Option
 
             local OptionButton = Instance.new("TextButton")
@@ -3385,7 +3385,7 @@ function Limbo:CreateWindow(config)
             OptionButton.TextSize = 13
             OptionButton.TextXAlignment = Enum.TextXAlignment.Left
             OptionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            OptionButton.BackgroundTransparency = 0.999
+            OptionButton.BackgroundTransparency = 1
             OptionButton.BorderSizePixel = 0
             OptionButton.Size = UDim2.new(1, 0, 1, 0)
             OptionButton.Name = "OptionButton"
@@ -3396,7 +3396,7 @@ function Limbo:CreateWindow(config)
             OptionText.Font = Enum.Font.GothamBold
             OptionText.Text = optionName
             OptionText.TextSize = 12
-            OptionText.TextColor3 = Color3.fromRGB(235, 235, 240)
+            OptionText.TextColor3 = Color3.fromRGB(200, 200, 210)
             OptionText.TextXAlignment = Enum.TextXAlignment.Left
             OptionText.TextYAlignment = Enum.TextYAlignment.Center
             OptionText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -3407,27 +3407,6 @@ function Limbo:CreateWindow(config)
             OptionText.Name = "OptionText"
             OptionText.ZIndex = 55
             OptionText.Parent = Option
-
-            local ChooseFrame = Instance.new("Frame")
-            ChooseFrame.AnchorPoint = Vector2.new(0, 0.5)
-            ChooseFrame.BackgroundColor3 = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
-            ChooseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            ChooseFrame.BorderSizePixel = 0
-            ChooseFrame.Position = UDim2.new(0, 2, 0.5, 0)
-            ChooseFrame.Size = UDim2.new(0, 0, 0, 0)
-            ChooseFrame.Name = "ChooseFrame"
-            ChooseFrame.ZIndex = 56
-            ChooseFrame.Parent = Option
-
-            local ChooseStroke = Instance.new("UIStroke")
-            ChooseStroke.Color = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
-            ChooseStroke.Thickness = 1.6
-            ChooseStroke.Transparency = 0.999
-            ChooseStroke.ZIndex = 57
-            ChooseStroke.Parent = ChooseFrame
-
-            local ChooseCorner = Instance.new("UICorner")
-            ChooseCorner.Parent = ChooseFrame
 
             local optionId = HttpService:GenerateGUID(false)
             ConfigSystem.DropdownOptionFrames[optionId] = {
@@ -3446,19 +3425,14 @@ function Limbo:CreateWindow(config)
                 ConfigSystem.DropdownOptionFrames[optionId].IsSelected = isSelected
 
                 if isSelected then
-                    ChooseFrame.Visible = true
-                    ChooseFrame.Size = UDim2.new(0, 3, 0, 16)
-                    Option.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
-                    Option.BackgroundTransparency = 0
+                    Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Option.BackgroundTransparency = 0.92
                     OptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
                     OptionText.Font = Enum.Font.GothamBold
                 else
-                    ChooseFrame.Visible = false
-                    ChooseFrame.Size = UDim2.new(0, 0, 0, 0)
-                    Option.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
-                    Option.BackgroundTransparency = 0.3
+                    Option.BackgroundTransparency = 1
                     OptionText.TextColor3 = Color3.fromRGB(180, 180, 190)
-                    OptionText.Font = Enum.Font.Gotham
+                    OptionText.Font = Enum.Font.GothamBold
                 end
             end
 
@@ -3477,27 +3451,17 @@ function Limbo:CreateWindow(config)
                         for _, child in ListScroll:GetChildren() do
                             if child:IsA("Frame") and child.Name == "Option" then
                                 local childOptionText = child:FindFirstChild("OptionText")
-                                local childChooseFrame = child:FindFirstChild("ChooseFrame")
                                 local isThis = childOptionText and childOptionText.Text == optionName
                                 if isThis then
-                                    child.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
-                                    child.BackgroundTransparency = 0
+                                    child.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                                    child.BackgroundTransparency = 0.92
                                     childOptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
                                     childOptionText.Font = Enum.Font.GothamBold
-                                    if childChooseFrame then
-                                        childChooseFrame.Visible = true
-                                        childChooseFrame.Size = UDim2.new(0, 3, 0, 16)
-                                    end
                                 else
-                                    child.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
-                                    child.BackgroundTransparency = 0.3
+                                    child.BackgroundTransparency = 1
                                     if childOptionText then
                                         childOptionText.TextColor3 = Color3.fromRGB(180, 180, 190)
-                                        childOptionText.Font = Enum.Font.Gotham
-                                    end
-                                    if childChooseFrame then
-                                        childChooseFrame.Visible = false
-                                        childChooseFrame.Size = UDim2.new(0, 0, 0, 0)
+                                        childOptionText.Font = Enum.Font.GothamBold
                                     end
                                 end
                             end
