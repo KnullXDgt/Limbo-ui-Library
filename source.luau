@@ -327,13 +327,12 @@ local ConfigSystem = {
     CurrentConfig = nil,
     Configs = {},
     ThemeColors = {
-        ["Limbo"] = Color3.fromHex("#F2F2F2"),
-        ["Darker"] = Color3.fromHex("#F2F2F2"),
-        ["Gray"] = Color3.fromHex("#808080"),
-        ["White"] = Color3.fromHex("#FFFFFF"),
+        ["Limbo"] = Color3.fromRGB(150, 150, 170),
+        ["Darker"] = Color3.fromRGB(150, 150, 170),
+        ["Purple"] = Color3.fromHex("#A000FF"),
         ["Magenta"] = Color3.fromHex("#FF00E0"),
     },
-    CurrentTheme = "Limbo",
+    CurrentTheme = "Darker",
     ThemeElements = {},
     ToggleElements = {},
     SliderElements = {},
@@ -1034,6 +1033,7 @@ function Limbo:CreateWindow(config)
     ScreenGui.Parent = (gethui and gethui()) or CoreGui
 
     local DropShadowHolder = Instance.new("Frame")
+    DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
     DropShadowHolder.BackgroundTransparency = 1
     DropShadowHolder.BorderSizePixel = 0
     DropShadowHolder.Size = Size
@@ -1041,6 +1041,10 @@ function Limbo:CreateWindow(config)
     DropShadowHolder.Name = "DropShadowHolder"
     DropShadowHolder.Parent = ScreenGui
     DropShadowHolder.Visible = true
+
+    if Center then
+        DropShadowHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+    end
 
     local UIScaleObj = Instance.new("UIScale")
     UIScaleObj.Scale = 1
@@ -1081,9 +1085,7 @@ function Limbo:CreateWindow(config)
     end
     task.defer(UpdateAutoScale)
 
-    if Center then
-        DropShadowHolder.Position = UDim2.new(0.5, -Size.X.Offset / 2, 0.5, -Size.Y.Offset / 2)
-    end
+    -- Centered via AnchorPoint (0.5, 0.5)
 
     local DropShadow = Instance.new("ImageLabel")
     DropShadow.Image = "rbxassetid://8992230677"
@@ -2333,9 +2335,13 @@ function Limbo:CreateWindow(config)
 
         if btnList and type(btnList) == "table" and #btnList > 0 then
             for idx, btnData in ipairs(btnList) do
+                local btnH = btnData.Height or 28
+                local btnW = btnData.Width or 145
+                local isFull = btnData.FullWidth == true
+
                 local ActionBtn = Instance.new("Frame")
                 ActionBtn.BackgroundColor3 = Color3.fromHex("#2A2A2A")
-                ActionBtn.Size = UDim2.new(1, 0, 0, btnData.Height or 32)
+                ActionBtn.Size = isFull and UDim2.new(1, 0, 0, btnH) or UDim2.fromOffset(btnW, btnH)
                 ActionBtn.BorderSizePixel = 0
                 ActionBtn.LayoutOrder = 10 + idx
                 ActionBtn.Name = "ActionBtn"
@@ -2355,7 +2361,7 @@ function Limbo:CreateWindow(config)
                 TextBtn.Font = Enum.Font.GothamBold
                 TextBtn.Text = btnData.Title or "Button"
                 TextBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
-                TextBtn.TextSize = btnData.TextSize or 13
+                TextBtn.TextSize = btnData.TextSize or 12
                 TextBtn.TextXAlignment = Enum.TextXAlignment.Center
                 TextBtn.TextYAlignment = Enum.TextYAlignment.Center
                 TextBtn.BackgroundTransparency = 1
@@ -2620,29 +2626,30 @@ function Limbo:CreateWindow(config)
         local function ApplyToggleVisual(value, animated)
             CancelToggleTweens()
 
+            local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme] or Color3.fromRGB(150, 150, 170)
             local titleProps
             local circleProps
             local frameProps
 
             if value then
-                titleProps = {TextColor3 = Color3.fromHex("#FFFFFF")}
+                titleProps = {TextColor3 = themeColor}
                 circleProps = {
                     Position = UDim2.new(1, -19, 0.5, 0),
-                    BackgroundColor3 = Color3.fromHex("#0B0B0B")
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 }
                 frameProps = {
-                    BackgroundColor3 = Color3.fromHex("#F2F2F2"),
+                    BackgroundColor3 = themeColor,
                     BackgroundTransparency = 0
                 }
             else
-                titleProps = {TextColor3 = Color3.fromHex("#B5B5B5")}
+                titleProps = {TextColor3 = Color3.fromRGB(230, 230, 230)}
                 circleProps = {
                     Position = UDim2.new(0, 3, 0.5, 0),
-                    BackgroundColor3 = Color3.fromHex("#808080")
+                    BackgroundColor3 = Color3.fromRGB(200, 200, 200)
                 }
                 frameProps = {
-                    BackgroundColor3 = Color3.fromHex("#232323"),
-                    BackgroundTransparency = 0
+                    BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+                    BackgroundTransparency = 0.2
                 }
             end
 
