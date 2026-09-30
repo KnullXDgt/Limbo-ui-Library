@@ -2068,7 +2068,7 @@ function Limbo:CreateWindow(config)
                     OffsetY = OffsetY + 8 + child.Size.Y.Offset
                 end
             end
-            ContentScroll.CanvasSize = UDim2.new(0, 0, 0, OffsetY)
+            ContentScroll.CanvasSize = UDim2.new(0, 0, 0, OffsetY + 60)
         end
     end
 
@@ -2336,8 +2336,9 @@ function Limbo:CreateWindow(config)
         if btnList and type(btnList) == "table" and #btnList > 0 then
             for idx, btnData in ipairs(btnList) do
                 local btnH = btnData.Height or 28
-                local btnW = btnData.Width or 145
                 local isFull = btnData.FullWidth == true
+                local titleW = TextService:GetTextSize(btnData.Title or "Button", btnData.TextSize or 12, Enum.Font.GothamBold, Vector2.new(1000, 1000)).X
+                local btnW = btnData.Width or (titleW + 28)
 
                 local ActionBtn = Instance.new("Frame")
                 ActionBtn.BackgroundColor3 = Color3.fromHex("#2A2A2A")
@@ -2766,17 +2767,19 @@ function Limbo:CreateWindow(config)
         InputTitle.Name = "InputTitle"
         InputTitle.Parent = Input
         if content and content ~= "" then
+            local cleanDesc = tostring(content):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
             local InputContent = Instance.new("TextLabel")
-            InputContent.Font = Enum.Font.Gotham
-            InputContent.Text = content
-            InputContent.TextColor3 = Color3.fromRGB(180, 180, 180)
-            InputContent.TextTransparency = 0.3
+            InputContent.Font = Enum.Font.GothamBold
+            InputContent.Text = cleanDesc
+            InputContent.TextColor3 = Color3.fromRGB(180, 180, 190)
+            InputContent.TextTransparency = 0.35
             InputContent.TextSize = 11
             InputContent.TextXAlignment = Enum.TextXAlignment.Left
-            InputContent.BackgroundTransparency = 0.999
+            InputContent.BackgroundTransparency = 1
             InputContent.BorderSizePixel = 0
-            InputContent.Position = UDim2.new(0, 8, 0, 22)
+            InputContent.Position = UDim2.new(0, 8, 0, 20)
             InputContent.Size = UDim2.new(1, -16, 0, 12)
+            InputContent.TextTruncate = Enum.TextTruncate.AtEnd
             InputContent.Name = "InputContent"
             InputContent.Parent = Input
         end
@@ -2874,51 +2877,43 @@ function Limbo:CreateWindow(config)
         DropdownButton.Name = "DropdownButton"
         DropdownButton.Parent = Dropdown
 
+        local hasDesc = content and tostring(content) ~= ""
+        local cleanDesc = hasDesc and tostring(content):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "") or ""
+
         local DropdownTitle = Instance.new("TextLabel")
         DropdownTitle.Font = Enum.Font.GothamBold
         DropdownTitle.Text = title
         DropdownTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
-        DropdownTitle.TextSize = 14
+        DropdownTitle.TextSize = 13
         DropdownTitle.TextXAlignment = Enum.TextXAlignment.Left
-        DropdownTitle.TextYAlignment = Enum.TextYAlignment.Top
-        DropdownTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        DropdownTitle.BackgroundTransparency = 0.999
-        DropdownTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        DropdownTitle.TextYAlignment = hasDesc and Enum.TextYAlignment.Top or Enum.TextYAlignment.Center
+        DropdownTitle.BackgroundTransparency = 1
         DropdownTitle.BorderSizePixel = 0
-        DropdownTitle.Position = UDim2.new(0, 10, 0, 10)
-        DropdownTitle.Size = UDim2.new(1, -180, 0, 13)
+        DropdownTitle.Position = hasDesc and UDim2.new(0, 10, 0, 6) or UDim2.new(0, 10, 0.5, -7)
+        DropdownTitle.Size = UDim2.new(1, -150, 0, 14)
         DropdownTitle.Name = "DropdownTitle"
         DropdownTitle.Parent = Dropdown
 
-        local DropdownContent = Instance.new("TextLabel")
-        DropdownContent.Font = Enum.Font.GothamBold
-        DropdownContent.Text = content
-        DropdownContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-        DropdownContent.TextSize = 13
-        DropdownContent.TextTransparency = 0.6
-        DropdownContent.TextWrapped = true
-        DropdownContent.TextXAlignment = Enum.TextXAlignment.Left
-        DropdownContent.TextYAlignment = Enum.TextYAlignment.Bottom
-        DropdownContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        DropdownContent.BackgroundTransparency = 0.999
-        DropdownContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        DropdownContent.BorderSizePixel = 0
-        DropdownContent.Position = UDim2.new(0, 10, 0, 23)
-        DropdownContent.Size = UDim2.new(1, -180, 0, 12)
-        DropdownContent.Name = "DropdownContent"
-        DropdownContent.Parent = Dropdown
+        local DropdownContent = nil
+        if hasDesc and cleanDesc ~= "" then
+            DropdownContent = Instance.new("TextLabel")
+            DropdownContent.Font = Enum.Font.GothamBold
+            DropdownContent.Text = cleanDesc
+            DropdownContent.TextColor3 = Color3.fromRGB(180, 180, 190)
+            DropdownContent.TextSize = 11
+            DropdownContent.TextTransparency = 0.35
+            DropdownContent.TextTruncate = Enum.TextTruncate.AtEnd
+            DropdownContent.TextXAlignment = Enum.TextXAlignment.Left
+            DropdownContent.TextYAlignment = Enum.TextYAlignment.Top
+            DropdownContent.BackgroundTransparency = 1
+            DropdownContent.BorderSizePixel = 0
+            DropdownContent.Position = UDim2.new(0, 10, 0, 22)
+            DropdownContent.Size = UDim2.new(1, -150, 0, 14)
+            DropdownContent.Name = "DropdownContent"
+            DropdownContent.Parent = Dropdown
+        end
 
-        local textSize =
-            TextService:GetTextSize(
-            content,
-            12,
-            Enum.Font.GothamBold,
-            Vector2.new(ContentScroll.AbsoluteSize.X - 200, math.huge)
-        )
-
-        DropdownContent.Size = UDim2.new(1, -180, 0, textSize.Y)
-        DropdownContent.TextWrapped = true
-        Dropdown.Size = UDim2.new(1, 0, 0, math.max(46, textSize.Y + 33))
+        Dropdown.Size = UDim2.new(1, 0, 0, hasDesc and 44 or 38)
 
         local SelectOptionsFrame = Instance.new("Frame")
         SelectOptionsFrame.AnchorPoint = Vector2.new(1, 0.5)
@@ -4773,14 +4768,16 @@ function Limbo:CreateWindow(config)
         local isOpen = defaultOpen
 
         local function updateSize()
-            
-
-            local contentH = InnerLayout.AbsoluteContentSize.Y + 8
+            local contentH = InnerLayout.AbsoluteContentSize.Y + 16
             if isOpen then
+                InnerContainer.ClipsDescendants = false
+                SectionFrame.ClipsDescendants = false
                 InnerContainer.Size = UDim2.new(1, 0, 0, contentH)
                 SectionFrame.Size  = UDim2.new(1, 0, 0, 34 + contentH)
                 TweenService:Create(SectionArrow, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = 0}):Play()
             else
+                InnerContainer.ClipsDescendants = true
+                SectionFrame.ClipsDescendants = true
                 InnerContainer.Size = UDim2.new(1, 0, 0, 0)
                 SectionFrame.Size  = UDim2.new(1, 0, 0, 34)
                 TweenService:Create(SectionArrow, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = -90}):Play()
