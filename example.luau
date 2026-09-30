@@ -1,60 +1,128 @@
--- Limbo UI Library - Example Script
--- Load the library
+--[[
+    Limbo UI Library - Official Example Script
+    Repository: https://github.com/KnullXDgt/Limbo-ui-Library
+    Supports both Modern OOP Chaining and Functional API styles.
+]]
+
+-- 1. Load the Library
 local Limbo = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/KnullXDgt/Limbo-ui-Library/main/source.luau"
 ))()
 
--- Create window
+-- 2. Create Window
 local Window = Limbo:CreateWindow({
-    Title          = "Limbo Hub",
-    Subtitle       = "Fish It",
-    Theme          = "Darker",
-    Center         = true,
-    Draggable      = true,
-    Resizable      = true,
-    ToggleButton   = true,
-    ConfigFolder   = "LimboFishIt",
-    -- BackgroundImage = "rbxthumb://type=Asset&id=93432513909214&w=420&h=420",
+    Title                 = "Limbo Hub",
+    Subtitle              = "Official Example",
+    Version               = "v2.0.7",
+    Theme                 = "Darker",
+    Center                = true,
+    Draggable             = true,
+    Resizable             = false,
+    AutoScale             = true,
+    ToggleButton          = true,
+    Watermark             = "rbxassetid://74613200492285",
+    WatermarkTransparency = 0.88,
+    WatermarkSize         = 285,
+    Icon                  = "rbxassetid://97957114633547",
+    ConfigFolder          = "LimboHub",
 })
 
--- Create tabs
-local MainTab = Window:CreateTab("Main")
-local SettingsTab = Window:CreateTab("Settings")
+-- 3. Information Tab (Community & Links)
+local InfoTab = Window:AddTab("Information", "info")
 
--- Add Welcome Card (optional)
-Window:AddWelcomeCard(MainTab)
+InfoTab:AddParagraph({
+    Title = "Welcome to Limbo UI",
+    Desc = "Lightweight, beautiful, and ultra-high-performance UI engine for Roblox scripts. Built with zero CanvasGroup leaks and native C++ sizing.",
+    Buttons = {
+        {
+            Title = "Copy Discord Link",
+            FullWidth = true,
+            Height = 26,
+            Radius = 6,
+            Callback = function()
+                local copy = setclipboard or toclipboard
+                if copy then
+                    copy("https://discord.gg/GtDHsXGJ4g")
+                    Window:Notify({
+                        Title = "Clipboard",
+                        Content = "Discord link copied to clipboard!",
+                        Delay = 2.5
+                    })
+                end
+            end
+        }
+    }
+})
 
--- Collapsible section
-local Section = Window:AddCollapsible(MainTab, "General", true)
+-- 4. Main Tab (Interactive Elements Showcase)
+local MainTab = Window:AddTab("Main", "house")
 
-Window:AddToggle(Section, "Enable Feature", "Toggle the main feature on/off", false, function(state)
-    print("Enable Feature:", state)
+-- Section 1: Auto Fishing / Core Features
+local FeatureSec = MainTab:AddSection("Core Automation", true)
+
+FeatureSec:AddToggle("Auto Cast", "Automatically casts the fishing rod into water", true, function(state)
+    -- Toggle callback
 end)
 
-Window:AddSlider(Section, "Speed", "Movement speed multiplier", 0, 100, 16, function(value)
-    print("Speed:", value)
+FeatureSec:AddToggle("Auto Reel", "Automatically pulls rod when strike detected", true, function(state)
+    -- Toggle callback
 end)
 
-Window:AddInput(Section, "Player Name", "Target player name", "Enter name...", function(value)
-    print("Player Name:", value)
+FeatureSec:AddSlider("Cast Delay", "Cooldown between rod casts (seconds)", 0, 5, 1, function(value)
+    -- Slider callback
 end)
 
-Window:AddDropdown(Section, "Mode", "Select operation mode",
-    {"Fast", "Balanced", "Safe"}, false, "Balanced",
-    function(value)
-        print("Mode:", value)
-    end
+FeatureSec:AddDropdown("Target Species", "Select target species to track or farm", {
+    "1x1x1x1 Shark",
+    "Ancient Whale",
+    "Sunken Kraken",
+    "Golden Megalodon",
+    "Abyssal Maw Angler"
+}, false, "1x1x1x1 Shark", function(selected)
+    -- Dropdown callback
+end)
+
+-- Section 2: Management & Input
+local ActionSec = MainTab:AddSection("Actions & Values", false)
+
+ActionSec:AddInput("Target Count", "Threshold amount before auto-action triggers", "100", function(text)
+    -- Input callback
+end)
+
+ActionSec:AddButton("Instant Action", "Executes an immediate manual task", "mouse-pointer-click", function()
+    Window:Notify({
+        Title = "Action Executed",
+        Content = "Manual task completed successfully!",
+        Delay = 2
+    })
+end)
+
+ActionSec:AddButtonGrid(
+    { Title = "Start All", Callback = function() Window:Notify({Title = "Status", Content = "All systems started"}) end },
+    { Title = "Stop All", Callback = function() Window:Notify({Title = "Status", Content = "All systems stopped"}) end }
 )
 
-Window:AddButtonGrid(Section,
-    { Title = "Start", Callback = function()
-        Limbo:Notify({ Title = "Started", Description = "OK", Content = "Feature started!", Color = Color3.fromRGB(150,150,170), Delay = 3 })
-    end },
-    { Title = "Stop", Callback = function()
-        Limbo:Notify({ Title = "Stopped", Description = "OK", Content = "Feature stopped.", Color = Color3.fromRGB(150,150,170), Delay = 3 })
-    end }
-)
+-- 5. Settings Tab (Customization & Keys)
+local SettingsTab = Window:AddTab("Settings", "settings")
+local SafetySec = SettingsTab:AddSection("Safety & System", true)
 
--- Settings tab
-Window:AddToggle(SettingsTab, "Anti AFK", "Prevent auto-kick", false, function(state) end)
-Window:AddToggle(SettingsTab, "Show FPS", "Display FPS counter", false, function(state) end)
+SafetySec:AddToggle("Anti AFK", "Prevents 20-minute client idle disconnection", true, function(state)
+    -- Anti AFK
+end)
+
+SafetySec:AddKeybind("Toggle UI Key", "Keyboard shortcut to toggle window visibility", Enum.KeyCode.RightControl, function(key)
+    -- Keybind callback
+end)
+
+SafetySec:AddColorPicker("Accent Color", "Custom color accent for UI elements", Color3.fromRGB(150, 150, 170), function(color)
+    -- ColorPicker callback
+end)
+
+-- 6. Show Window (Instant Orvion Gen 2 style)
+Window:Show()
+
+Window:Notify({
+    Title   = "Limbo UI",
+    Content = "Example script loaded successfully!",
+    Delay   = 3,
+})
