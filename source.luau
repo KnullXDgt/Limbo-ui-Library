@@ -885,9 +885,12 @@ function Limbo:CreateWindow(config)
     local MinimizeButton = config.MinimizeButton or false
     local MinimizeButtonImage = config.MinimizeButton_Image or "rbxassetid://16932740082"
     local Badges = config.Badges or {}
-    local Icon = config.Icon or ""
+    local Icon = config.Icon or "rbxthumb://type=Asset&id=93432513909214&w=420&h=420"
     local TitleImage = config.TitleImage or ""
     local ConfigData = config.Config or {}
+    local Watermark = config.Watermark or "https://raw.githubusercontent.com/aleyn6969/limbo/refs/heads/main/assets/limbo-watermark-v2.png"
+    local WatermarkTransparency = config.WatermarkTransparency or 0.94
+    local WatermarkSize = config.WatermarkSize or 285
 
     if ConfigSystem.ThemeColors[Theme] then
         ConfigSystem.CurrentTheme = Theme
@@ -961,6 +964,42 @@ function Limbo:CreateWindow(config)
     local ImageWrapperCorner = Instance.new("UICorner")
     ImageWrapperCorner.CornerRadius = UDim.new(0, 8)
     ImageWrapperCorner.Parent = ImageWrapper
+
+    -- Resolve Watermark
+    local WatermarkAsset = nil
+    if typeof(Watermark) == "string" and Watermark ~= "" then
+        if Watermark:match("^rbxasset") then
+            WatermarkAsset = Watermark
+        elseif Watermark:match("^https?://") then
+            pcall(function()
+                local assetPath = "LimboHUB/assets/.limbo_watermark.png"
+                if makefolder and isfolder and not isfolder("LimboHUB") then makefolder("LimboHUB") end
+                if makefolder and isfolder and not isfolder("LimboHUB/assets") then makefolder("LimboHUB/assets") end
+                if isfile and not isfile(assetPath) then
+                    local reqFn = (syn and syn.request) or (http and http.request) or request or http_request
+                    local body = (game.HttpGet and game:HttpGet(Watermark)) or (reqFn and reqFn({Url = Watermark, Method = "GET"}).Body)
+                    if body and writefile then writefile(assetPath, body) end
+                end
+                if getcustomasset and isfile and isfile(assetPath) then
+                    WatermarkAsset = getcustomasset(assetPath)
+                end
+            end)
+        end
+    end
+
+    if WatermarkAsset then
+        local WMLabel = Instance.new("ImageLabel")
+        WMLabel.Name = "Watermark"
+        WMLabel.Size = UDim2.fromOffset(WatermarkSize, math.floor(WatermarkSize * 496 / 512 + 0.5))
+        WMLabel.Position = UDim2.new(0.5, 0, 1, 7)
+        WMLabel.AnchorPoint = Vector2.new(0.5, 1)
+        WMLabel.BackgroundTransparency = 1
+        WMLabel.Image = WatermarkAsset
+        WMLabel.ImageTransparency = WatermarkTransparency
+        WMLabel.ScaleType = Enum.ScaleType.Fit
+        WMLabel.ZIndex = 0
+        WMLabel.Parent = ImageWrapper
+    end
 
     local ThemeImage = Instance.new("ImageLabel")
     ThemeImage.Name = "ThemeImage"
