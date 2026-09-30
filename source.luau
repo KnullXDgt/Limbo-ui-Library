@@ -2291,16 +2291,25 @@ function Limbo:CreateWindow(config)
         ButtonCorner.CornerRadius = UDim.new(0, 11)
         ButtonCorner.Parent = ToggleBtn
 
+        local activeThemeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme] or Color3.fromRGB(150, 150, 170)
+
         local ButtonStroke = Instance.new("UIStroke")
         ButtonStroke.Thickness = 1
         ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        ButtonStroke.Color = Color3.fromHex("#FF00E0")
+        ButtonStroke.Color = activeThemeColor
         ButtonStroke.Transparency = 0.15
         ButtonStroke.Parent = ToggleBtn
 
         local ButtonGradient = Instance.new("UIGradient")
-        ButtonGradient.Color = ColorSequence.new(Color3.fromHex("#FF00E0"), Color3.fromHex("#FF00E0"))
+        ButtonGradient.Color = ColorSequence.new(activeThemeColor, activeThemeColor)
         ButtonGradient.Parent = ButtonStroke
+
+        table.insert(ConfigSystem.ThemeElements, {
+            Update = function(newColor)
+                ButtonStroke.Color = newColor
+                ButtonGradient.Color = ColorSequence.new(newColor, newColor)
+            end
+        })
 
         local ButtonImage = Instance.new("ImageLabel")
         ButtonImage.Name = "ButtonImage"
