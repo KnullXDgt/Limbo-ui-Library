@@ -995,34 +995,36 @@ function Limbo:CreateWindow(config)
     end
 
     local DropShadow = Instance.new("ImageLabel")
-    DropShadow.Image = "rbxassetid://6015897843"
-    DropShadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
-    DropShadow.ImageTransparency = 0.5
+    DropShadow.Image = "rbxassetid://8992230677"
+    DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    DropShadow.ImageTransparency = 0.6
     DropShadow.ScaleType = Enum.ScaleType.Slice
-    DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
+    DropShadow.SliceCenter = Rect.new(99, 99, 99, 99)
     DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
     DropShadow.BackgroundTransparency = 1
     DropShadow.BorderSizePixel = 0
     DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    DropShadow.Size = UDim2.new(1, 47, 1, 47)
+    DropShadow.Size = UDim2.new(1, 100, 1, 100)
     DropShadow.ZIndex = 0
     DropShadow.Name = "DropShadow"
     DropShadow.Parent = DropShadowHolder
 
-    local Main = Instance.new("Frame")
+    local Main = Instance.new("ImageLabel")
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.Image = "rbxassetid://89641024074289"
+    Main.ImageColor3 = Color3.fromHex("#0B0B0B")
+    Main.ImageTransparency = 0
+    Main.ScaleType = Enum.ScaleType.Slice
+    Main.SliceCenter = Rect.new(460, 460, 460, 460)
+    Main.SliceScale = 0.0258
     Main.BackgroundColor3 = Color3.fromHex("#0B0B0B")
-    Main.BackgroundTransparency = 0
+    Main.BackgroundTransparency = 1
     Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = UDim2.new(1, -47, 1, -47)
+    Main.Size = UDim2.new(1, -100, 1, -100)
     Main.Name = "Main"
     Main.Parent = DropShadow
-
-    local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = Main
 
     local UIStroke = Instance.new("UIStroke")
     UIStroke.Color = Color3.fromHex("#2A2A2A")
@@ -1307,7 +1309,7 @@ function Limbo:CreateWindow(config)
     Close.Parent = Top
 
     local CloseIcon = Instance.new("ImageLabel")
-    CloseIcon.Image = "rbxassetid://9886659671"
+    CloseIcon.Image = "rbxassetid://110786993356448"
     CloseIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     CloseIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     CloseIcon.BackgroundTransparency = 0.999
@@ -1333,7 +1335,7 @@ function Limbo:CreateWindow(config)
     Min.Parent = Top
 
     local MinIcon = Instance.new("ImageLabel")
-    MinIcon.Image = "rbxassetid://9886659276"
+    MinIcon.Image = "rbxassetid://118026365011536"
     MinIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     MinIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     MinIcon.BackgroundTransparency = 0.999
