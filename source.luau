@@ -1092,14 +1092,27 @@ function Limbo:CreateWindow(config)
     Top.Parent = Main
 
     local DecideFrame = Instance.new("Frame")
-    DecideFrame.Name = "DecideFrame"
+    DecideFrame.Name = "HeaderSeparator"
     DecideFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    DecideFrame.BackgroundTransparency = 0.85
-    DecideFrame.Position = UDim2.new(0, 0, 0, 42)
-    DecideFrame.Size = UDim2.new(1, 0, 0, 1)
+    DecideFrame.Position = UDim2.new(0, 10, 0, 42)
+    DecideFrame.Size = UDim2.new(1, -20, 0, 1)
     DecideFrame.BorderSizePixel = 0
     DecideFrame.ZIndex = 2
     DecideFrame.Parent = Main
+
+    local SepCorner = Instance.new("UICorner")
+    SepCorner.CornerRadius = UDim.new(1, 0)
+    SepCorner.Parent = DecideFrame
+
+    local SepGradient = Instance.new("UIGradient")
+    SepGradient.Rotation = 0
+    SepGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromHex("#2E2E2E")),
+        ColorSequenceKeypoint.new(0.28, Color3.fromHex("#4A4A4A")),
+        ColorSequenceKeypoint.new(0.55, Color3.fromHex("#5E5E5E")),
+        ColorSequenceKeypoint.new(1, Color3.fromHex("#3A3A3A")),
+    })
+    SepGradient.Parent = DecideFrame
 
     local function createBadge(text, name)
         local Badge = Instance.new("Frame")
@@ -1935,29 +1948,30 @@ function Limbo:CreateWindow(config)
         MakeDraggable(Top, DropShadowHolder)
     end
 
-    local MobileMinimizeButton = nil
-    local enableToggleBtn = config.ToggleButton ~= false or config.MinimizeButton == true
+    local ToggleBtn = nil
+    local enableToggleBtn = (config.ToggleButton ~= false) or (config.MinimizeButton == true)
+
     if enableToggleBtn then
-        MobileMinimizeButton = Instance.new("Frame")
-        MobileMinimizeButton.Name = "LimboToggleButton"
-        MobileMinimizeButton.BackgroundColor3 = Color3.fromHex("#141414")
-        MobileMinimizeButton.BackgroundTransparency = 0
-        MobileMinimizeButton.BorderSizePixel = 0
-        MobileMinimizeButton.Size = UDim2.fromOffset(44, 44)
-        MobileMinimizeButton.Position = UDim2.new(0.015, 0, 0.5, -150)
-        MobileMinimizeButton.ZIndex = 10000
-        MobileMinimizeButton.Parent = ScreenGui
+        ToggleBtn = Instance.new("Frame")
+        ToggleBtn.Name = "LimboToggleButton"
+        ToggleBtn.BackgroundColor3 = Color3.fromHex("#141414")
+        ToggleBtn.BackgroundTransparency = 0
+        ToggleBtn.BorderSizePixel = 0
+        ToggleBtn.Size = UDim2.fromOffset(44, 44)
+        ToggleBtn.Position = UDim2.new(0.015, 0, 0.1, 0)
+        ToggleBtn.ZIndex = 10000
+        ToggleBtn.Parent = ScreenGui
 
         local ButtonCorner = Instance.new("UICorner")
         ButtonCorner.CornerRadius = UDim.new(0, 11)
-        ButtonCorner.Parent = MobileMinimizeButton
+        ButtonCorner.Parent = ToggleBtn
 
         local ButtonStroke = Instance.new("UIStroke")
         ButtonStroke.Thickness = 1
         ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         ButtonStroke.Color = Color3.fromHex("#FF00E0")
         ButtonStroke.Transparency = 0.15
-        ButtonStroke.Parent = MobileMinimizeButton
+        ButtonStroke.Parent = ToggleBtn
 
         local ButtonGradient = Instance.new("UIGradient")
         ButtonGradient.Color = ColorSequence.new(Color3.fromHex("#FF00E0"), Color3.fromHex("#A000FF"))
@@ -1972,130 +1986,70 @@ function Limbo:CreateWindow(config)
         ButtonImage.Position = UDim2.fromScale(0.5, 0.5)
         ButtonImage.ScaleType = Enum.ScaleType.Fit
         ButtonImage.ZIndex = 10001
-        ButtonImage.Parent = MobileMinimizeButton
-
-        local ClickDetector = Instance.new("TextButton")
-        ClickDetector.Name = "ClickDetector"
-        ClickDetector.Text = ""
-        ClickDetector.BackgroundTransparency = 1
-        ClickDetector.Size = UDim2.new(1, 0, 1, 0)
-        ClickDetector.ZIndex = 10002
-        ClickDetector.Parent = MobileMinimizeButton
-
-        local isDragging = MakeDraggableMobileButton(ClickDetector, MobileMinimizeButton, ScreenGui)
-
-        local lastClick = 0
-        ClickDetector.Activated:Connect(
-            function()
-                local now = workspace.DistributedGameTime
-                if now - lastClick < 0.3 then
-                    return
-                end
-                lastClick = now
-
-                if not isDragging() then
-                    DropShadowHolder.Visible = not DropShadowHolder.Visible
-
-                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.fromOffset(40, 40)}):Play()
-                    task.wait(0.1)
-                    TweenService:Create(MobileMinimizeButton, TweenInfo.new(0.1), {Size = UDim2.fromOffset(44, 44)}):Play()
-                end
-            end
-        )
-    end
-
-    -- Floating toggle button (open/close UI)
-    local ToggleButtonEnabled = config.ToggleButton or false
-    local ToggleButtonImage   = config.ToggleButton_Image or "rbxassetid://121365062523142"
-
-    if ToggleButtonEnabled then
-        local ToggleBtn = Instance.new("Frame")
-        ToggleBtn.Name = "LimboToggleButton"
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-        ToggleBtn.BackgroundTransparency = 0.15
-        ToggleBtn.BorderSizePixel = 0
-        ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
-        ToggleBtn.Position = UDim2.new(0, 15, 0.5, -100)
-        ToggleBtn.ZIndex = 100
-        ToggleBtn.Parent = ScreenGui
-
-        local TBCorner = Instance.new("UICorner")
-        TBCorner.CornerRadius = UDim.new(0, 10)
-        TBCorner.Parent = ToggleBtn
-
-        local TBImg = Instance.new("ImageLabel")
-        TBImg.Image = ToggleButtonImage
-        TBImg.BackgroundTransparency = 1
-        TBImg.Size = UDim2.new(1, 0, 1, 0)
-        TBImg.Position = UDim2.new(0, 0, 0, 0)
-        TBImg.ScaleType = Enum.ScaleType.Fit
-        TBImg.ZIndex = 101
-        TBImg.Active = false      -- jangan intercept input
-        TBImg.Parent = ToggleBtn
+        ButtonImage.Active = false
+        ButtonImage.Parent = ToggleBtn
 
         local TBSurface = Instance.new("Frame", ToggleBtn)
+        TBSurface.Name = "TBSurface"
         TBSurface.BackgroundTransparency = 1
         TBSurface.Size = UDim2.new(1, 0, 1, 0)
-        TBSurface.ZIndex = 102
+        TBSurface.ZIndex = 10002
         TBSurface.Active = true
 
-        -- Drag logic via UserInputService (bukan element.InputChanged)
-        -- -> mouse capture tidak putus saat cursor keluar element
-        local tbDragging = false
-        local tbDragged = false
-        local tbDragStart = nil
-        local tbStartPos = nil
-        local tbClickStart = nil
+        local dragging, dragged, dragStart, startPos = false, false, nil, nil
+        local clickStartPos = nil
 
-        pcall(function() TBSurface.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or
-               input.UserInputType == Enum.UserInputType.Touch then
-                tbDragging = true
-                tbDragged = false
-                tbClickStart = input.Position
-                tbDragStart = input.Position
-                tbStartPos = Vector2.new(ToggleBtn.AbsolutePosition.X, ToggleBtn.AbsolutePosition.Y)
+        TBSurface.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragged = false
+                dragStart = input.Position
+                clickStartPos = input.Position
+                startPos = ToggleBtn.Position
             end
-        end) end)
+        end)
 
-        pcall(function() UserInputService.InputChanged:Connect(function(input)
-            if not tbDragging then return end
-            if input.UserInputType ~= Enum.UserInputType.MouseMovement and
-               input.UserInputType ~= Enum.UserInputType.Touch then return end
-            if not tbDragged and tbClickStart and (input.Position - tbClickStart).Magnitude > 5 then
-                tbDragged = true
+        UserInputService.InputChanged:Connect(function(input)
+            if not dragging then return end
+            if input.UserInputType ~= Enum.UserInputType.MouseMovement
+                and input.UserInputType ~= Enum.UserInputType.Touch then return end
+            local delta = input.Position - dragStart
+            if not dragged and clickStartPos and (input.Position - clickStartPos).Magnitude > 6 then
+                dragged = true
             end
-            if tbDragged and tbDragStart and tbStartPos then
-                local delta = input.Position - tbDragStart
-                local ss = ScreenGui.AbsoluteSize
-                local bs = ToggleBtn.AbsoluteSize
-                local pad = 10
-                ToggleBtn.Position = UDim2.new(0,
-                    math.clamp(tbStartPos.X + delta.X, pad, ss.X - bs.X - pad),
-                    0,
-                    math.clamp(tbStartPos.Y + delta.Y, pad, ss.Y - bs.Y - pad)
-                )
-            end
-        end) end)
+            if not dragged then return end
+            local ss = ScreenGui.AbsoluteSize
+            local bs = ToggleBtn.AbsoluteSize
+            local pad = 10
+            ToggleBtn.Position = UDim2.new(0,
+                math.clamp(startPos.X.Offset + delta.X, pad, ss.X - bs.X - pad),
+                0,
+                math.clamp(startPos.Y.Offset + delta.Y, pad, ss.Y - bs.Y - pad))
+        end)
 
-        pcall(function() TBSurface.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or
-               input.UserInputType == Enum.UserInputType.Touch then
-                if tbDragging then
-                    tbDragging = false
-                    if not tbDragged then
+        local lastClick = 0
+        TBSurface.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                if dragging and not dragged then
+                    local now = workspace.DistributedGameTime
+                    if now - lastClick >= 0.2 then
+                        lastClick = now
                         DropShadowHolder.Visible = not DropShadowHolder.Visible
                     end
-                    tbDragged = false
                 end
+                dragging = false
+                dragged = false
             end
-        end) end)
+        end)
 
-        pcall(function() UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                tbDragging = false
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
             end
-        end) end)
+        end)
     end
 
     -- Element Creation Functions
@@ -5194,6 +5148,11 @@ function Limbo:CreateWindow(config)
         if TabSwitchFns[tabName] then
             TabSwitchFns[tabName]()
         end
+    end
+
+    function Window:Toggle()
+        DropShadowHolder.Visible = not DropShadowHolder.Visible
+        return DropShadowHolder.Visible
     end
 
     function Window:Show()
