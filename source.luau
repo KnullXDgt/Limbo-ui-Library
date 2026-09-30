@@ -988,7 +988,7 @@ function Limbo:CreateWindow(config)
     DropShadowHolder.ZIndex = 0
     DropShadowHolder.Name = "DropShadowHolder"
     DropShadowHolder.Parent = ScreenGui
-    DropShadowHolder.Visible = false
+    DropShadowHolder.Visible = true
 
     if Center then
         DropShadowHolder.Position = UDim2.new(0.5, -Size.X.Offset / 2, 0.5, -Size.Y.Offset / 2)
@@ -4977,7 +4977,15 @@ function Limbo:CreateWindow(config)
     local Window = {}
     
     function Window:CreateTab(tabName, iconId)
-        return CreateTabButton(tabName, iconId, false)
+        local container, switchFn = CreateTabButton(tabName, iconId, false)
+        if not CurrentTab then
+            task.defer(function()
+                if not CurrentTab then
+                    switchFn()
+                end
+            end)
+        end
+        return container
     end
     
     function Window:AddParagraph(tabContainer, title, content)
