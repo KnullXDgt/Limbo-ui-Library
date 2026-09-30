@@ -920,8 +920,8 @@ getgenv().LimboHub = Window
 -- ============================================================
 
 -- Tab 1: Information
-local InfoTab = Window:AddTab("Information", "info")
-InfoTab:AddParagraph({
+local InfoTab = Window:Tab({ Title = "Information", Icon = "info" })
+InfoTab:Paragraph({
     Title = "Join Our Community",
     Desc = "Become part of the Limbo Hub community on Discord for the latest updates, script support, and exclusive releases. Copy the invite link below and join us today!",
     Buttons = {
@@ -946,52 +946,66 @@ InfoTab:AddParagraph({
 })
 
 -- Tab 2: Main Features (Skeleton Lengkap Fish It 2.0.7)
-local MainTab = Window:AddTab("Main", "house")
+local MainTab = Window:Tab({ Title = "Main", Icon = "house" })
 
 -- Section 0: Fish Catalog & Target
-local FishCatalogSec = MainTab:AddSection("Fish Target (872 Fishes)", true)
-FishCatalogSec:AddDropdown("Select Fish Target", "Pilih target ikan dari katalog (872 ikan)", ALL_FISH_NAMES, false, "1x1x1x1 Shark", function(val) end)
+local FishCatalogSec = MainTab:Section({ Title = "Fish Target (872 Fishes)", Opened = true })
+FishCatalogSec:Dropdown({
+    Title = "Select Fish Target",
+    Desc = "Pilih target ikan dari katalog (872 ikan)",
+    Values = ALL_FISH_NAMES,
+    Multi = false,
+    Value = "1x1x1x1 Shark",
+    Callback = function(val) end
+})
 
 -- Section 1: Support Features
-local SupportSec = MainTab:AddSection("Support Features", true)
-SupportSec:AddToggle("Auto Equip Rod", "Otomatis pegang pancingan saat tangan kosong", true, function(state) end)
-SupportSec:AddToggle("Anti Drown", "Mencegah karakter tenggelam dan kehabisan oksigen", true, function(state) end)
-SupportSec:AddToggle("Walk On Water", "Berjalan di atas permukaan air laut", false, function(state) end)
-SupportSec:AddToggle("Freeze Character", "Mengunci posisi karakter agar tidak terseret arus", false, function(state) end)
+local SupportSec = MainTab:Section({ Title = "Support Features", Opened = true })
+SupportSec:Toggle({ Title = "Auto Equip Rod", Desc = "Otomatis pegang pancingan saat tangan kosong", Value = true, Callback = function(state) end })
+SupportSec:Toggle({ Title = "Anti Drown", Desc = "Mencegah karakter tenggelam dan kehabisan oksigen", Value = true, Callback = function(state) end })
+SupportSec:Toggle({ Title = "Walk On Water", Desc = "Berjalan di atas permukaan air laut", Value = false, Callback = function(state) end })
+SupportSec:Toggle({ Title = "Freeze Character", Desc = "Mengunci posisi karakter agar tidak terseret arus", Value = false, Callback = function(state) end })
 
 -- Section 2: Auto Fishing (Legit Mode)
-local FishingSec = MainTab:AddSection("Auto Fishing (Legit)", true)
-FishingSec:AddToggle("Auto Cast", "Otomatis melempar umpan ke air", true, function(state) end)
-FishingSec:AddToggle("Auto Reel", "Otomatis menarik pancingan saat ikan strike", true, function(state) end)
-FishingSec:AddToggle("Auto Shake", "Otomatis menyelesaikan minigame goyangan", true, function(state) end)
-FishingSec:AddSlider("Cast Delay", "Jeda waktu antara lemparan pancing (detik)", 0, 5, 1, function(val) end)
+local FishingSec = MainTab:Section({ Title = "Auto Fishing (Legit)", Opened = true })
+FishingSec:Toggle({ Title = "Auto Cast", Desc = "Otomatis melempar umpan ke air", Value = true, Callback = function(state) end })
+FishingSec:Toggle({ Title = "Auto Reel", Desc = "Otomatis menarik pancingan saat ikan strike", Value = true, Callback = function(state) end })
+FishingSec:Toggle({ Title = "Auto Shake", Desc = "Otomatis menyelesaikan minigame goyangan", Value = true, Callback = function(state) end })
+FishingSec:Slider({ Title = "Cast Delay", Desc = "Jeda waktu antara lemparan pancing (detik)", Min = 0, Max = 5, Value = 1, Callback = function(val) end })
 
 -- Section 3: Instant Catch Mode
-local InstantSec = MainTab:AddSection("Instant Catch (Blatant)", false)
-InstantSec:AddToggle("Instant Catch", "Menangkap ikan langsung seketika saat melempar", false, function(state) end)
-InstantSec:AddSlider("Catch Delay", "Jeda tangkap instan (detik)", 0, 3, 0.5, function(val) end)
+local InstantSec = MainTab:Section({ Title = "Instant Catch (Blatant)", Opened = false })
+InstantSec:Toggle({ Title = "Instant Catch", Desc = "Menangkap ikan langsung seketika saat melempar", Value = false, Callback = function(state) end })
+InstantSec:Slider({ Title = "Catch Delay", Desc = "Jeda tangkap instan (detik)", Min = 0, Max = 3, Value = 0.5, Callback = function(val) end })
 
 -- Section 4: Auto Sell Items
-local SellSec = MainTab:AddSection("Auto Sell Items", false)
-SellSec:AddToggle("Auto Sell", "Otomatis menjual ikan dan hasil tangkapan", false, function(state) end)
-SellSec:AddDropdown("Sell Mode", "Pilih metode penjualan otomatis", {"Delay Mode", "Inventory Count"}, false, "Inventory Count", function(mode) end)
-SellSec:AddInput("Sell Target Count", "Jumlah ikan di tas sebelum auto sell", "100", function(val) end)
+local SellSec = MainTab:Section({ Title = "Auto Sell Items", Opened = false })
+SellSec:Toggle({ Title = "Auto Sell", Desc = "Otomatis menjual ikan dan hasil tangkapan", Value = false, Callback = function(state) end })
+SellSec:Dropdown({ Title = "Sell Mode", Desc = "Pilih metode penjualan otomatis", Values = {"Delay Mode", "Inventory Count"}, Multi = false, Value = "Inventory Count", Callback = function(mode) end })
+SellSec:Input({ Title = "Sell Target Count", Desc = "Jumlah ikan di tas sebelum auto sell", Placeholder = "100", Callback = function(val) end })
 
 -- Section 5: Craft Minigame
-local CraftSec = MainTab:AddSection("Craft Minigame", false)
-CraftSec:AddToggle("Auto Perfect Craft", "Otomatis menyelesaikan minigame craft 100% perfect", false, function(state) end)
-CraftSec:AddSlider("Craft Delay", "Jeda klik perfect craft (detik)", 0.05, 0.5, 0.1, function(val) end)
+local CraftSec = MainTab:Section({ Title = "Craft Minigame", Opened = false })
+CraftSec:Toggle({ Title = "Auto Perfect Craft", Desc = "Otomatis menyelesaikan minigame craft 100% perfect", Value = false, Callback = function(state) end })
+CraftSec:Slider({ Title = "Craft Delay", Desc = "Jeda klik perfect craft (detik)", Min = 0.05, Max = 0.5, Value = 0.1, Callback = function(val) end })
 
 -- Tab 3: Teleport
-local TeleportTab = Window:AddTab("Teleport", "map-pin")
-local WaypointSec = TeleportTab:AddSection("Waypoints", true)
-WaypointSec:AddDropdown("Select Location", "Pilih pulau atau lokasi teleportasi", {
-    "Spawn Point",
-    "Moosewood Island",
-    "Roslit Bay",
-    "Sunken Ship",
-    "Ancient Jungle"
-}, false, "Spawn Point", function(loc) end)
+local TeleportTab = Window:Tab({ Title = "Teleport", Icon = "map-pin" })
+local WaypointSec = TeleportTab:Section({ Title = "Waypoints", Opened = true })
+WaypointSec:Dropdown({
+    Title = "Select Location",
+    Desc = "Pilih pulau atau lokasi teleportasi",
+    Values = {
+        "Spawn Point",
+        "Moosewood Island",
+        "Roslit Bay",
+        "Sunken Ship",
+        "Ancient Jungle"
+    },
+    Multi = false,
+    Value = "Spawn Point",
+    Callback = function(loc) end
+})
 
 -- 5. Show Window (Instant Orvion Gen 2 style)
 Window:Show()
