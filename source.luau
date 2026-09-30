@@ -4220,16 +4220,16 @@ function Limbo:CreateWindow(config)
 
         local ColorPickerFrame = Instance.new("Frame")
         ColorPickerFrame.AnchorPoint = Vector2.new(1, 0)
-        ColorPickerFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        ColorPickerFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 26)
         ColorPickerFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ColorPickerFrame.BorderSizePixel = 0
-        ColorPickerFrame.Position = UDim2.new(1, -12, 0, 35)
-        ColorPickerFrame.Size = UDim2.new(0, 200, 0, 0)
+        ColorPickerFrame.Position = UDim2.new(1, -6, 1, 4)
+        ColorPickerFrame.Size = UDim2.new(0, 200, 0, 215)
         ColorPickerFrame.Name = "ColorPickerFrame"
         ColorPickerFrame.Visible = false
-        ColorPickerFrame.ClipsDescendants = true
-        ColorPickerFrame.ZIndex = 10
-        ColorPickerFrame.Parent = ScreenGui
+        ColorPickerFrame.ClipsDescendants = false
+        ColorPickerFrame.ZIndex = 80
+        ColorPickerFrame.Parent = ColorPicker
 
         local FrameCorner = Instance.new("UICorner")
         FrameCorner.CornerRadius = UDim.new(0, 4)
@@ -4249,7 +4249,7 @@ function Limbo:CreateWindow(config)
         HueFrame.Position = UDim2.new(0, 10, 0, 10)
         HueFrame.Size = UDim2.new(0, 180, 0, 100)
         HueFrame.Name = "HueFrame"
-        HueFrame.ZIndex = 11
+        HueFrame.ZIndex = 81
         HueFrame.Parent = ColorPickerFrame
 
         local HueGradient = Instance.new("UIGradient")
@@ -4278,7 +4278,7 @@ function Limbo:CreateWindow(config)
         SatValFrame.Position = UDim2.new(0, 10, 0, 120)
         SatValFrame.Size = UDim2.new(0, 180, 0, 80)
         SatValFrame.Name = "SatValFrame"
-        SatValFrame.ZIndex = 11
+        SatValFrame.ZIndex = 81
         SatValFrame.Parent = ColorPickerFrame
 
         local SatValGradient = Instance.new("UIGradient")
@@ -4303,7 +4303,7 @@ function Limbo:CreateWindow(config)
         HueSlider.Position = UDim2.new(0, 0, 0.5, 0)
         HueSlider.Size = UDim2.new(0, 4, 1, 0)
         HueSlider.Name = "HueSlider"
-        HueSlider.ZIndex = 12
+        HueSlider.ZIndex = 82
         HueSlider.Parent = HueFrame
 
         local HueSliderCorner = Instance.new("UICorner")
@@ -4323,7 +4323,7 @@ function Limbo:CreateWindow(config)
         SatValCursor.Position = UDim2.new(0.5, 0, 0.5, 0)
         SatValCursor.Size = UDim2.new(0, 8, 0, 8)
         SatValCursor.Name = "SatValCursor"
-        SatValCursor.ZIndex = 12
+        SatValCursor.ZIndex = 82
         SatValCursor.Parent = SatValFrame
 
         local SatValCursorCorner = Instance.new("UICorner")
@@ -4427,16 +4427,10 @@ function Limbo:CreateWindow(config)
         local function ToggleColorPicker()
             ColorPickerData.Open = not ColorPickerData.Open
             if ColorPickerData.Open then
-                local pickerAbsPos = ColorPicker.AbsolutePosition
-                local pickerAbsSize = ColorPicker.AbsoluteSize
-                ColorPickerFrame.Position =
-                    UDim2.new(0, pickerAbsPos.X + pickerAbsSize.X - 212, 0, pickerAbsPos.Y + pickerAbsSize.Y + 5)
-
+                ColorPickerFrame.Position = UDim2.new(1, -6, 1, 4)
+                ColorPickerFrame.Size = UDim2.new(0, 200, 0, 215)
                 ColorPickerFrame.Visible = true
-                TweenService:Create(ColorPickerFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 200, 0, 210)}):Play()
             else
-                TweenService:Create(ColorPickerFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 200, 0, 0)}):Play()
-                task.wait(0.5)
                 ColorPickerFrame.Visible = false
             end
         end
