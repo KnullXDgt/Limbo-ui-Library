@@ -293,10 +293,10 @@ local ConfigSystem = {
     CurrentConfig = nil,
     Configs = {},
     ThemeColors = {
-        ["Limbo"] = Color3.fromHex("#A000FF"),
-        ["Darker"] = Color3.fromHex("#A000FF"),
-        ["Purple"] = Color3.fromHex("#A000FF"),
+        ["Limbo"] = Color3.fromHex("#FF00E0"),
+        ["Darker"] = Color3.fromHex("#FF00E0"),
         ["Magenta"] = Color3.fromHex("#FF00E0"),
+        ["Purple"] = Color3.fromHex("#A000FF"),
     },
     CurrentTheme = "Limbo",
     ThemeElements = {},
@@ -1116,6 +1116,28 @@ function Limbo:CreateWindow(config)
     })
     SepGradient.Parent = DecideFrame
 
+    -- Vertical divider between Sidebar tabs and Content panel (PaneSeparator)
+    local PaneSeparator = Instance.new("Frame")
+    PaneSeparator.Name = "PaneSeparator"
+    PaneSeparator.Size = UDim2.new(0, 1, 1, -54)
+    PaneSeparator.Position = UDim2.new(0, 134, 0, 48)
+    PaneSeparator.BackgroundColor3 = Color3.fromHex("#242424")
+    PaneSeparator.BackgroundTransparency = 0.45
+    PaneSeparator.BorderSizePixel = 0
+    PaneSeparator.ZIndex = 2
+    PaneSeparator.Parent = Main
+
+    local PaneSepGradient = Instance.new("UIGradient")
+    PaneSepGradient.Rotation = 90
+    PaneSepGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1),
+        NumberSequenceKeypoint.new(0.14, 0.25),
+        NumberSequenceKeypoint.new(0.5, 0),
+        NumberSequenceKeypoint.new(0.86, 0.25),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    PaneSepGradient.Parent = PaneSeparator
+
     local function createBadge(text, name)
         local Badge = Instance.new("Frame")
         Badge.Name = name or "Badge"
@@ -1876,6 +1898,20 @@ function Limbo:CreateWindow(config)
     local ContentCorner = Instance.new("UICorner")
     ContentCorner.CornerRadius = UDim.new(0, 2)
     ContentCorner.Parent = ContentFrame
+
+    if WatermarkAsset then
+        local WMLabel = Instance.new("ImageLabel")
+        WMLabel.Name = "Watermark"
+        WMLabel.Size = UDim2.fromOffset(WatermarkSize, math.floor(WatermarkSize * 496 / 512 + 0.5))
+        WMLabel.Position = UDim2.new(0.5, 0, 1, 0)
+        WMLabel.AnchorPoint = Vector2.new(0.5, 1)
+        WMLabel.BackgroundTransparency = 1
+        WMLabel.Image = WatermarkAsset
+        WMLabel.ImageTransparency = WatermarkTransparency or 0.94
+        WMLabel.ScaleType = Enum.ScaleType.Fit
+        WMLabel.ZIndex = 0
+        WMLabel.Parent = ContentFrame
+    end
 
     ContentScroll = Instance.new("ScrollingFrame")
     ContentScroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
