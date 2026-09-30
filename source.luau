@@ -2826,21 +2826,8 @@ function Limbo:CreateWindow(config)
         table.insert(ConfigSystem.ToggleElements, Toggle)
 
         local state = defaultValue or false
-        local activeTweens = {}
-
-        local function CancelToggleTweens()
-            for i = 1, #activeTweens do
-                local tween = activeTweens[i]
-                if tween then
-                    pcall(function() tween:Cancel() end)
-                end
-            end
-            table.clear(activeTweens)
-        end
 
         local function ApplyToggleVisual(value, animated)
-            CancelToggleTweens()
-
             local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme] or Color3.fromHex("#FF00E0")
             local titleProps
             local circleProps
@@ -2869,18 +2856,10 @@ function Limbo:CreateWindow(config)
             end
 
             if animated then
-                local tweenInfo = TweenInfo.new(
-                    0.18,
-                    Enum.EasingStyle.Quad,
-                    Enum.EasingDirection.Out
-                )
-                activeTweens[1] = TweenService:Create(ToggleTitle, tweenInfo, titleProps)
-                activeTweens[2] = TweenService:Create(ToggleCircle, tweenInfo, circleProps)
-                activeTweens[3] = TweenService:Create(FeatureFrame, tweenInfo, frameProps)
-
-                for i = 1, #activeTweens do
-                    activeTweens[i]:Play()
-                end
+                local tweenInfo = TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                TweenService:Create(ToggleTitle, tweenInfo, titleProps):Play()
+                TweenService:Create(ToggleCircle, tweenInfo, circleProps):Play()
+                TweenService:Create(FeatureFrame, tweenInfo, frameProps):Play()
             else
                 for property, value2 in pairs(titleProps) do
                     ToggleTitle[property] = value2
