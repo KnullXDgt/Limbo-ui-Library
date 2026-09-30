@@ -2803,11 +2803,11 @@ function Limbo:CreateWindow(config)
         FrameStroke.Parent = FeatureFrame
 
         local ToggleCircle = Instance.new("Frame")
-        ToggleCircle.AnchorPoint = Vector2.new(0, 0.5)
+        ToggleCircle.AnchorPoint = Vector2.new(0.5, 0.5)
         ToggleCircle.BackgroundColor3 = defaultValue and Color3.fromHex("#0B0B0B") or Color3.fromHex("#808080")
         ToggleCircle.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ToggleCircle.BorderSizePixel = 0
-        ToggleCircle.Position = defaultValue and UDim2.new(1, -19, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)
+        ToggleCircle.Position = defaultValue and UDim2.new(1, -11, 0.5, 0) or UDim2.new(0, 11, 0.5, 0)
         ToggleCircle.Size = UDim2.fromOffset(16, 16)
         ToggleCircle.Name = "ToggleCircle"
         ToggleCircle.Parent = FeatureFrame
@@ -2834,37 +2834,36 @@ function Limbo:CreateWindow(config)
         local function ApplyToggleVisual(value, animated)
             CancelToggleTweens()
 
-            local themeColor = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme] or Color3.fromRGB(150, 150, 170)
             local titleProps
             local circleProps
             local frameProps
 
             if value then
-                titleProps = {TextColor3 = themeColor}
+                titleProps = {TextColor3 = Color3.fromRGB(240, 240, 240)}
                 circleProps = {
-                    Position = UDim2.new(1, -19, 0.5, 0),
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Position = UDim2.new(1, -11, 0.5, 0),
+                    BackgroundColor3 = Color3.fromHex("#0B0B0B")
                 }
                 frameProps = {
-                    BackgroundColor3 = themeColor,
+                    BackgroundColor3 = Color3.fromHex("#F2F2F2"),
                     BackgroundTransparency = 0
                 }
             else
                 titleProps = {TextColor3 = Color3.fromRGB(230, 230, 230)}
                 circleProps = {
-                    Position = UDim2.new(0, 3, 0.5, 0),
-                    BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+                    Position = UDim2.new(0, 11, 0.5, 0),
+                    BackgroundColor3 = Color3.fromHex("#808080")
                 }
                 frameProps = {
-                    BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-                    BackgroundTransparency = 0.2
+                    BackgroundColor3 = Color3.fromHex("#232323"),
+                    BackgroundTransparency = 0
                 }
             end
 
             if animated then
                 local tweenInfo = TweenInfo.new(
-                    0.22,
-                    Enum.EasingStyle.Back,
+                    0.18,
+                    Enum.EasingStyle.Quad,
                     Enum.EasingDirection.Out
                 )
                 activeTweens[1] = TweenService:Create(ToggleTitle, tweenInfo, titleProps)
