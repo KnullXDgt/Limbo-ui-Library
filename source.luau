@@ -1170,7 +1170,7 @@ function Limbo:CreateWindow(config)
     config = config or {}
     local Title = config.Title or "Limbo UI"
     local Theme = config.Theme or "Limbo"
-    local Size = config.Size or UDim2.fromOffset(470, 270)
+    local Size = config.Size or UDim2.fromOffset(560, 340)
     local Center = config.Center ~= false
     local Draggable = config.Draggable ~= false
     local Resizable = config.Resizable or config.Resize or false
@@ -2207,6 +2207,8 @@ function Limbo:CreateWindow(config)
     ContentScroll.BorderColor3 = Color3.fromRGB(0, 0, 0)
     ContentScroll.BorderSizePixel = 0
     ContentScroll.ClipsDescendants = true
+    ContentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    ContentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
     ContentScroll.Position = UDim2.new(0, 8, 0, 6)
     ContentScroll.Size = UDim2.new(1, -16, 1, -12)
     ContentScroll.Name = "ContentScroll"
@@ -3274,63 +3276,54 @@ function Limbo:CreateWindow(config)
         local function ToggleDropdown()
             dropdownData.Open = not dropdownData.Open
             if dropdownData.Open then
-                local cfW    = ContentFrame.AbsoluteSize.X
-                local halfCF = math.floor(cfW / 2)
-                local rightW = cfW - halfCF - 4
-                local targetH = math.floor(Main.AbsoluteSize.Y - 16)
-                DropdownList.Position = UDim2.new(0, 138 + halfCF + rightW, 0, 8)
-                DropdownList.Size = UDim2.new(0, 0, 0, targetH)
-                DropdownList.Visible = true
-                TweenService:Create(DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0, rightW, 0, targetH),
-                    Position = UDim2.new(0, 138 + halfCF, 0, 8)
-                }):Play()
                 -- Close any other open dropdown first
                 if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
+
+                DropdownList.Position = UDim2.new(1, -10, 0, 46)
+                DropdownList.Size = UDim2.new(0, 0, 1, -52)
+                DropdownList.ZIndex = 50
+                DropdownList.Visible = true
+
+                TweenService:Create(DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 175, 1, -52),
+                    Position = UDim2.new(1, -185, 0, 46)
+                }):Play()
 
                 -- Stores close fn for this dropdown
                 Limbo._activeDropdownClose = function()
                     if not dropdownData.Open then return end
                     dropdownData.Open = false
                     ResetSearch()
-                    DropdownList.Visible = false
                     Limbo._activeDropdownClose = nil
-                    if csConn then csConn:Disconnect(); csConn = nil end
-                    local dOvr = Main:FindFirstChild("DropOverlay")
-                    if dOvr then dOvr:Destroy() end
+                    TweenService:Create(DropdownList, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
+                        Size = UDim2.new(0, 0, 1, -52),
+                        Position = UDim2.new(1, -10, 0, 46)
+                    }):Play()
+                    task.delay(0.15, function()
+                        DropdownList.Visible = false
+                        if csConn then csConn:Disconnect(); csConn = nil end
+                        local dOvr = Main:FindFirstChild("DropOverlay")
+                        if dOvr then dOvr:Destroy() end
+                    end)
                 end
 
                 -- Transparent overlay: blocks other UI + auto-closes on tap
                 local overlay = Instance.new("TextButton")
-                    overlay.Name = "DropOverlay"
-                    overlay.BackgroundTransparency = 1
-                    overlay.BorderSizePixel = 0
-                    overlay.Size = UDim2.new(1, 0, 1, 0)
-                    overlay.ZIndex = 9
-                    overlay.Text = ""
-                    overlay.AutoButtonColor = false
-                    overlay.Parent = Main
-                    csConn = overlay.Activated:Connect(function()
-                        if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
-                    end)
-
-
-            else
-                local cfW3 = ContentFrame.AbsoluteSize.X
-                local halfCF3 = math.floor(cfW3 / 2)
-                local rightW3 = cfW3 - halfCF3 - 4
-                ResetSearch()
-                Limbo._activeDropdownClose = nil
-                TweenService:Create(DropdownList, TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
-                    Size = UDim2.new(0, 0, 0, DropdownList.Size.Y.Offset),
-                    Position = UDim2.new(0, 138 + halfCF3 + rightW3, 0, 8)
-                }):Play()
-                task.delay(0.18, function()
-                    DropdownList.Visible = false
-                    if csConn then csConn:Disconnect(); csConn = nil end
-                    local dOvr = Main:FindFirstChild("DropOverlay")
-                    if dOvr then dOvr:Destroy() end
+                overlay.Name = "DropOverlay"
+                overlay.BackgroundTransparency = 1
+                overlay.BorderSizePixel = 0
+                overlay.Size = UDim2.new(1, 0, 1, 0)
+                overlay.ZIndex = 49
+                overlay.Text = ""
+                overlay.AutoButtonColor = false
+                overlay.Parent = Main
+                csConn = overlay.Activated:Connect(function()
+                    if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
                 end)
+            else
+                if Limbo._activeDropdownClose then
+                    Limbo._activeDropdownClose()
+                end
             end
         end
 
@@ -3751,20 +3744,21 @@ function Limbo:CreateWindow(config)
         if showKnob then
             SliderCircle = Instance.new("Frame")
             SliderCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-            SliderCircle.BackgroundColor3 = ConfigSystem.ThemeColors[ConfigSystem.CurrentTheme]
+            SliderCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             SliderCircle.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SliderCircle.BorderSizePixel = 0
             SliderCircle.Position = UDim2.new(0.5, 0, 0.5, 0)
-            SliderCircle.Size = UDim2.new(0, 12, 0, 12)
+            SliderCircle.Size = UDim2.fromOffset(14, 14)
+            SliderCircle.ZIndex = 10
             SliderCircle.Name = "SliderCircle"
             SliderCircle.Parent = SliderFrame
 
             local CircleCorner = Instance.new("UICorner")
-            CircleCorner.CornerRadius = UDim.new(0, 6)
+            CircleCorner.CornerRadius = UDim.new(1, 0)
             CircleCorner.Parent = SliderCircle
 
             local CircleStroke = Instance.new("UIStroke")
-            CircleStroke.Color = Color3.fromRGB(255, 255, 255)
+            CircleStroke.Color = Color3.fromHex("#333333")
             CircleStroke.Thickness = 1
             CircleStroke.Parent = SliderCircle
         end
@@ -4893,11 +4887,18 @@ function Limbo:CreateWindow(config)
 
         local SectionFrame = Instance.new("Frame")
         SectionFrame.BackgroundTransparency = 1
-        SectionFrame.Size = UDim2.new(1, 0, 0, 34)
+        SectionFrame.Size = UDim2.new(1, 0, 0, 0)
+        SectionFrame.AutomaticSize = Enum.AutomaticSize.Y
         SectionFrame.BorderSizePixel = 0
-        SectionFrame.ClipsDescendants = true
+        SectionFrame.ClipsDescendants = false
         SectionFrame.Name = "Collapsible"
         SectionFrame.Parent = tabContainer
+
+        local SecLayout = Instance.new("UIListLayout")
+        SecLayout.FillDirection = Enum.FillDirection.Vertical
+        SecLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        SecLayout.Padding = UDim.new(0, 4)
+        SecLayout.Parent = SectionFrame
 
         local HeaderBtn = Instance.new("TextButton")
         HeaderBtn.BackgroundTransparency = 1
@@ -4908,6 +4909,7 @@ function Limbo:CreateWindow(config)
         HeaderBtn.TextSize = 14
         HeaderBtn.TextXAlignment = Enum.TextXAlignment.Left
         HeaderBtn.BorderSizePixel = 0
+        HeaderBtn.LayoutOrder = 1
         HeaderBtn.Name = "HeaderBtn"
         HeaderBtn.Parent = SectionFrame
 
@@ -4924,10 +4926,12 @@ function Limbo:CreateWindow(config)
 
         local InnerContainer = Instance.new("Frame")
         InnerContainer.BackgroundTransparency = 1
-        InnerContainer.Position = UDim2.new(0, 0, 0, 34)
         InnerContainer.Size = UDim2.new(1, 0, 0, 0)
+        InnerContainer.AutomaticSize = Enum.AutomaticSize.Y
         InnerContainer.BorderSizePixel = 0
-        InnerContainer.ClipsDescendants = true
+        InnerContainer.ClipsDescendants = false
+        InnerContainer.Visible = defaultOpen
+        InnerContainer.LayoutOrder = 2
         InnerContainer.Name = "InnerContainer"
         InnerContainer.Parent = SectionFrame
 
@@ -4936,32 +4940,12 @@ function Limbo:CreateWindow(config)
         InnerLayout.Padding = UDim.new(0, 5)
         InnerLayout.Parent = InnerContainer
 
-
-
         local isOpen = defaultOpen
 
         local function updateSize()
-            local contentH = InnerLayout.AbsoluteContentSize.Y + 16
-            if isOpen then
-                InnerContainer.ClipsDescendants = false
-                SectionFrame.ClipsDescendants = false
-                InnerContainer.Size = UDim2.new(1, 0, 0, contentH)
-                SectionFrame.Size  = UDim2.new(1, 0, 0, 34 + contentH)
-                TweenService:Create(SectionArrow, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = 0}):Play()
-            else
-                InnerContainer.ClipsDescendants = true
-                SectionFrame.ClipsDescendants = true
-                InnerContainer.Size = UDim2.new(1, 0, 0, 0)
-                SectionFrame.Size  = UDim2.new(1, 0, 0, 34)
-                TweenService:Create(SectionArrow, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = -90}):Play()
-            end
-            task.wait(0.01)
-            UpdateContentSize()
+            InnerContainer.Visible = isOpen
+            TweenService:Create(SectionArrow, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = isOpen and 0 or -90}):Play()
         end
-
-        InnerLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            if isOpen then updateSize() end
-        end)
 
         HeaderBtn.Activated:Connect(function()
             if Limbo._activeDropdownClose then Limbo._activeDropdownClose() end
@@ -5075,6 +5059,7 @@ function Limbo:CreateWindow(config)
         local TabContentContainer = Instance.new("Frame")
         TabContentContainer.BackgroundTransparency = 1
         TabContentContainer.Size = UDim2.new(1, 0, 0, 0)
+        TabContentContainer.AutomaticSize = Enum.AutomaticSize.Y
         TabContentContainer.Visible = false
         TabContentContainer.LayoutOrder = isConfigTab and 999 or TabCount
         TabContentContainer.Name = tabName .. "Content"
@@ -5089,15 +5074,8 @@ function Limbo:CreateWindow(config)
         ContainerPad.PaddingLeft = UDim.new(0, 4)
         ContainerPad.PaddingRight = UDim.new(0, 4)
         ContainerPad.PaddingTop = UDim.new(0, 4)
-        ContainerPad.PaddingBottom = UDim.new(0, 10)
+        ContainerPad.PaddingBottom = UDim.new(0, 16)
         ContainerPad.Parent = TabContentContainer
-
-        Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
-            function()
-                TabContentContainer.Size = UDim2.new(1, 0, 0, Layout.AbsoluteContentSize.Y)
-                ContentScroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
-            end
-        )
 
         TabContents[tabName] = TabContentContainer
         TabContentContainer:SetAttribute("LimboTabName", tabName)
