@@ -5414,6 +5414,38 @@ function Limbo:CreateWindow(config)
         function wrapper:AddKeybind(title, content, defaultKey, callback, elementId)
             return CreateKeybind(rawFrame, title, content, defaultKey, callback, elementId)
         end
+        function wrapper:AddButtonGrid(btn1Config, btn2Config)
+            return CreateButtonGrid(rawFrame, btn1Config, btn2Config)
+        end
+        function wrapper:AddImageBox(title, content, imageId, size, callback, elementId)
+            return CreateImageBox(rawFrame, title, content, imageId, size, callback, elementId)
+        end
+        function wrapper:AddLineSlider(title, content, minValue, maxValue, defaultValue, callback, elementId)
+            return CreateSlider(rawFrame, title, content, minValue, maxValue, defaultValue, callback, elementId, false)
+        end
+        function wrapper:AddMultiDropdown(title, content, options, defaultValue, callback, elementId)
+            return CreateDropdown(rawFrame, title, content, options, true, defaultValue, callback, elementId)
+        end
+
+        -- Aliases for Create...
+        wrapper.CreateSection       = wrapper.AddSection
+        wrapper.CreateCollapsible   = wrapper.AddSection
+        wrapper.CreateToggle        = wrapper.AddToggle
+        wrapper.CreateSlider        = wrapper.AddSlider
+        wrapper.CreateLineSlider    = wrapper.AddLineSlider
+        wrapper.CreateDropdown      = wrapper.AddDropdown
+        wrapper.CreateMultiDropdown = wrapper.AddMultiDropdown
+        wrapper.CreateInput         = wrapper.AddInput
+        wrapper.CreateButton        = wrapper.AddButton
+        wrapper.CreateButtonGrid    = wrapper.AddButtonGrid
+        wrapper.CreateParagraph     = wrapper.AddParagraph
+        wrapper.CreateSingleButton  = wrapper.AddSingleButton
+        wrapper.CreateTextHeader    = wrapper.AddTextHeader
+        wrapper.CreateWelcomeCard   = wrapper.AddWelcomeCard
+        wrapper.CreateDivider       = wrapper.AddDivider
+        wrapper.CreateColorPicker   = wrapper.AddColorPicker
+        wrapper.CreateKeybind       = wrapper.AddKeybind
+        wrapper.CreateImageBox      = wrapper.AddImageBox
 
         local mt = {
             __index = function(t, k)
