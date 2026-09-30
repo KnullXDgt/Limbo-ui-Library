@@ -2107,74 +2107,185 @@ function Limbo:CreateWindow(config)
     end
 
     -- Element Creation Functions
-    local function CreateParagraph(tabContainer, title, content)
+    local function CreateSingleButton(tabContainer, title, callback)
+        if not tabContainer or not tabContainer:IsA("Frame") then return end
+
+        local BtnFrame = Instance.new("Frame")
+        BtnFrame.BackgroundColor3 = Color3.fromHex("#1C1C1C")
+        BtnFrame.BackgroundTransparency = 0
+        BtnFrame.BorderSizePixel = 0
+        BtnFrame.Size = UDim2.new(1, 0, 0, 36)
+        BtnFrame.Name = "SingleButton"
+        BtnFrame.Parent = tabContainer
+
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 6)
+        Corner.Parent = BtnFrame
+
+        local Stroke = Instance.new("UIStroke")
+        Stroke.Color = Color3.fromHex("#2E2E2E")
+        Stroke.Thickness = 1
+        Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        Stroke.Parent = BtnFrame
+
+        local TextBtn = Instance.new("TextButton")
+        TextBtn.Font = Enum.Font.GothamBold
+        TextBtn.Text = title or "Button"
+        TextBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+        TextBtn.TextSize = 13
+        TextBtn.TextXAlignment = Enum.TextXAlignment.Center
+        TextBtn.TextYAlignment = Enum.TextYAlignment.Center
+        TextBtn.BackgroundTransparency = 1
+        TextBtn.Size = UDim2.new(1, 0, 1, 0)
+        TextBtn.Parent = BtnFrame
+
+        TextBtn.MouseEnter:Connect(function()
+            TweenService:Create(BtnFrame, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromHex("#262626")}):Play()
+        end)
+        TextBtn.MouseLeave:Connect(function()
+            TweenService:Create(BtnFrame, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromHex("#1C1C1C")}):Play()
+        end)
+
+        TextBtn.MouseButton1Down:Connect(function()
+            TweenService:Create(BtnFrame, TweenInfo.new(0.06), {Size = UDim2.new(1, -4, 0, 34)}):Play()
+        end)
+        TextBtn.MouseButton1Up:Connect(function()
+            TweenService:Create(BtnFrame, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 36)}):Play()
+        end)
+
+        TextBtn.Activated:Connect(function()
+            CircleClick(TextBtn, Mouse.X, Mouse.Y)
+            if callback then callback() end
+        end)
+
+        UpdateContentSize()
+        return BtnFrame
+    end
+
+    local function CreateParagraph(tabContainer, titleOrConfig, content, buttons)
         if not tabContainer or not tabContainer:IsA("Frame") then
             return
         end
 
+        local title = ""
+        local desc = ""
+        local btnList = buttons
+
+        if type(titleOrConfig) == "table" then
+            title = titleOrConfig.Title or ""
+            desc = titleOrConfig.Desc or titleOrConfig.Content or ""
+            btnList = titleOrConfig.Buttons or btnList
+        else
+            title = tostring(titleOrConfig or "")
+            desc = tostring(content or "")
+        end
+
         local Paragraph = Instance.new("Frame")
-        Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Paragraph.BackgroundTransparency = 0.935
-        Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Paragraph.BackgroundColor3 = Color3.fromHex("#1C1C1C")
+        Paragraph.BackgroundTransparency = 0
         Paragraph.BorderSizePixel = 0
-        Paragraph.Size = UDim2.new(1, 0, 0, 46)
+        Paragraph.Size = UDim2.new(1, 0, 0, 50)
         Paragraph.Name = "Paragraph"
         Paragraph.Parent = tabContainer
 
         local ParagraphCorner = Instance.new("UICorner")
-        ParagraphCorner.CornerRadius = UDim.new(0, 4)
+        ParagraphCorner.CornerRadius = UDim.new(0, 6)
         ParagraphCorner.Parent = Paragraph
+
+        local ParagraphStroke = Instance.new("UIStroke")
+        ParagraphStroke.Color = Color3.fromHex("#282828")
+        ParagraphStroke.Thickness = 1
+        ParagraphStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        ParagraphStroke.Parent = Paragraph
+
+        local Pad = Instance.new("UIPadding")
+        Pad.PaddingLeft = UDim.new(0, 12)
+        Pad.PaddingRight = UDim.new(0, 12)
+        Pad.PaddingTop = UDim.new(0, 10)
+        Pad.PaddingBottom = UDim.new(0, 10)
+        Pad.Parent = Paragraph
+
+        local VList = Instance.new("UIListLayout")
+        VList.FillDirection = Enum.FillDirection.Vertical
+        VList.Padding = UDim.new(0, 8)
+        VList.SortOrder = Enum.SortOrder.LayoutOrder
+        VList.Parent = Paragraph
 
         local ParagraphTitle = Instance.new("TextLabel")
         ParagraphTitle.Font = Enum.Font.GothamBold
         ParagraphTitle.Text = title
-        ParagraphTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+        ParagraphTitle.TextColor3 = Color3.fromRGB(240, 240, 240)
         ParagraphTitle.TextSize = 14
         ParagraphTitle.TextXAlignment = Enum.TextXAlignment.Left
-        ParagraphTitle.TextYAlignment = Enum.TextYAlignment.Top
-        ParagraphTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        ParagraphTitle.BackgroundTransparency = 0.999
-        ParagraphTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        ParagraphTitle.BorderSizePixel = 0
-        ParagraphTitle.Position = UDim2.new(0, 10, 0, 10)
-        ParagraphTitle.Size = UDim2.new(1, -20, 0, 13)
+        ParagraphTitle.BackgroundTransparency = 1
+        ParagraphTitle.Size = UDim2.new(1, 0, 0, 16)
+        ParagraphTitle.LayoutOrder = 1
         ParagraphTitle.Name = "ParagraphTitle"
         ParagraphTitle.Parent = Paragraph
 
         local ParagraphContent = Instance.new("TextLabel")
-        ParagraphContent.Font = Enum.Font.GothamBold
-        ParagraphContent.Text = content
-        ParagraphContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-        ParagraphContent.TextSize = 13
-        ParagraphContent.TextTransparency = 0.6
+        ParagraphContent.Font = Enum.Font.Gotham
+        ParagraphContent.Text = desc
+        ParagraphContent.TextColor3 = Color3.fromRGB(180, 180, 190)
+        ParagraphContent.TextSize = 12
+        ParagraphContent.TextTransparency = 0.2
         ParagraphContent.TextXAlignment = Enum.TextXAlignment.Left
-        ParagraphContent.TextYAlignment = Enum.TextYAlignment.Bottom
-        ParagraphContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        ParagraphContent.BackgroundTransparency = 0.999
-        ParagraphContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        ParagraphContent.BorderSizePixel = 0
-        ParagraphContent.Position = UDim2.new(0, 10, 0, 23)
+        ParagraphContent.TextYAlignment = Enum.TextYAlignment.Top
+        ParagraphContent.BackgroundTransparency = 1
+        ParagraphContent.Size = UDim2.new(1, 0, 0, 0)
+        ParagraphContent.AutomaticSize = Enum.AutomaticSize.Y
+        ParagraphContent.TextWrapped = true
+        ParagraphContent.LayoutOrder = 2
         ParagraphContent.Name = "ParagraphContent"
         ParagraphContent.Parent = Paragraph
 
-        local scrollWidth = ContentScroll.AbsoluteSize.X
-        local textWidth = scrollWidth > 0 and (scrollWidth - 40) or 290
-        local textSize =
-            TextService:GetTextSize(
-            content,
-            12,
-            Enum.Font.GothamBold,
-            Vector2.new(textWidth, math.huge)
-        )
+        if btnList and type(btnList) == "table" and #btnList > 0 then
+            for idx, btnData in ipairs(btnList) do
+                local ActionBtn = Instance.new("Frame")
+                ActionBtn.BackgroundColor3 = Color3.fromHex("#2A2A2A")
+                ActionBtn.Size = UDim2.new(1, 0, 0, btnData.Height or 32)
+                ActionBtn.BorderSizePixel = 0
+                ActionBtn.LayoutOrder = 10 + idx
+                ActionBtn.Name = "ActionBtn"
+                ActionBtn.Parent = Paragraph
 
-        ParagraphContent.Size = UDim2.new(1, -20, 0, textSize.Y)
-        ParagraphContent.TextWrapped = true
-        ParagraphContent.AutomaticSize = Enum.AutomaticSize.Y
-        Paragraph.Size = UDim2.new(1, 0, 0, math.max(46, textSize.Y + 50))
+                local btnCorner = Instance.new("UICorner")
+                btnCorner.CornerRadius = UDim.new(0, btnData.Radius or 6)
+                btnCorner.Parent = ActionBtn
+
+                local btnStroke = Instance.new("UIStroke")
+                btnStroke.Color = Color3.fromHex("#383838")
+                btnStroke.Thickness = 1
+                btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                btnStroke.Parent = ActionBtn
+
+                local TextBtn = Instance.new("TextButton")
+                TextBtn.Font = Enum.Font.GothamBold
+                TextBtn.Text = btnData.Title or "Button"
+                TextBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+                TextBtn.TextSize = btnData.TextSize or 13
+                TextBtn.TextXAlignment = Enum.TextXAlignment.Center
+                TextBtn.TextYAlignment = Enum.TextYAlignment.Center
+                TextBtn.BackgroundTransparency = 1
+                TextBtn.Size = UDim2.new(1, 0, 1, 0)
+                TextBtn.Parent = ActionBtn
+
+                TextBtn.MouseEnter:Connect(function()
+                    TweenService:Create(ActionBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromHex("#333333")}):Play()
+                end)
+                TextBtn.MouseLeave:Connect(function()
+                    TweenService:Create(ActionBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromHex("#2A2A2A")}):Play()
+                end)
+
+                TextBtn.Activated:Connect(function()
+                    CircleClick(TextBtn, Mouse.X, Mouse.Y)
+                    if btnData.Callback then btnData.Callback() end
+                end)
+            end
+        end
+
         Paragraph.AutomaticSize = Enum.AutomaticSize.Y
-
         UpdateContentSize()
-
         return Paragraph
     end
 
@@ -5007,8 +5118,12 @@ function Limbo:CreateWindow(config)
         return container
     end
     
-    function Window:AddParagraph(tabContainer, title, content)
-        return CreateParagraph(tabContainer, title, content)
+    function Window:AddParagraph(tabContainer, titleOrConfig, content, buttons)
+        return CreateParagraph(tabContainer, titleOrConfig, content, buttons)
+    end
+
+    function Window:AddSingleButton(tabContainer, title, callback)
+        return CreateSingleButton(tabContainer, title, callback)
     end
 
     function Window:AddTextHeader(tabContainer, title)
