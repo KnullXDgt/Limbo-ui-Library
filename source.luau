@@ -2318,7 +2318,7 @@ function Limbo:CreateWindow(config)
         ParagraphTitle.Parent = Paragraph
 
         local ParagraphContent = Instance.new("TextLabel")
-        ParagraphContent.Font = Enum.Font.Gotham
+        ParagraphContent.Font = Enum.Font.GothamBold
         ParagraphContent.Text = desc
         ParagraphContent.TextColor3 = Color3.fromRGB(180, 180, 190)
         ParagraphContent.TextSize = 12
@@ -2541,7 +2541,7 @@ function Limbo:CreateWindow(config)
 
         if hasContent then
             ToggleContent = Instance.new("TextLabel")
-            ToggleContent.Font = Enum.Font.Gotham
+            ToggleContent.Font = Enum.Font.GothamBold
             ToggleContent.Text = content
             ToggleContent.TextColor3 = Color3.fromRGB(180, 180, 190)
             ToggleContent.TextSize = 11
