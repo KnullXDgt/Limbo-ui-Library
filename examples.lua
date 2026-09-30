@@ -1,54 +1,38 @@
---[[
-    ========================================================================
-    LIMBO UI LIBRARY - OFFICIAL COMPREHENSIVE DEVELOPER EXAMPLES
-    ========================================================================
-    Target: AI Engineers, Scripters, and Automation Developers.
-    Architecture: Pure Lua Fluent OOP (Tab -> Section -> Elements).
-    Zero wrapper metatables. Ultra-lightweight memory footprint (~30 MB).
-    
-    This file demonstrates EVERY component, method, event callback,
-    and dynamic API available in Limbo UI Library.
-]]
+-- Limbo UI Library - Developer Examples
+-- Architecture: Pure Lua Fluent OOP (Tab -> Section -> Elements)
+-- Zero wrapper metatables. Ultra-lightweight memory footprint (~30 MB).
+-- This file demonstrates every component, method, event callback, and dynamic API.
 
--- ========================================================================
--- STEP 1: INITIALIZE & LOAD THE LIBRARY
--- ========================================================================
+-- Step 1: Initialize & Load The Library
 local Limbo = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/KnullXDgt/Limbo-ui-Library/main/source.luau"
 ))()
 
--- ========================================================================
--- STEP 2: CREATE WINDOW
--- ========================================================================
+-- Step 2: Create Window
 -- Configuration options passed as a single clean table.
 local Window = Limbo:CreateWindow({
-    Title                 = "Limbo Hub",                 -- Main window header title
-    Subtitle              = "Game Automation",           -- Subtitle next to title
-    Version               = "v2.0.0",                    -- Version badge in header
-    Theme                 = "Darker",                    -- Default palette: "Darker", "Limbo", "Monochrome"
-    Center                = true,                        -- Center on screen on first spawn
-    Draggable             = true,                        -- Allow user to drag window
-    Resizable             = false,                       -- Set to true if free resizing is desired
-    AutoScale             = true,                        -- Auto-scale UI based on mobile/desktop screen size
-    ToggleButton          = true,                        -- Show quick-toggle floating bubble button on mobile
-    ConfigFolder          = "LimboConfig",               -- Folder path in executor storage for configs
-    Watermark             = "rbxassetid://74613200492285",-- Optional watermark logo asset ID
-    WatermarkTransparency = 0.94,                        -- Watermark opacity (0 = visible, 1 = invisible)
+    Title                 = "Limbo Hub",
+    Subtitle              = "Game Automation",
+    Version               = "v2.0.0",
+    Theme                 = "Darker",
+    Center                = true,
+    Draggable             = true,
+    Resizable             = false,
+    AutoScale             = true,
+    ToggleButton          = true,
+    ConfigFolder          = "LimboConfig",
+    Watermark             = "rbxassetid://74613200492285",
+    WatermarkTransparency = 0.94,
 })
 
--- ========================================================================
--- STEP 3: TABS CREATION
--- ========================================================================
--- Create tabs using Window:Tab({ Title = "...", Icon = "..." })
+-- Step 3: Tabs Creation
 -- Icon uses Lucide icon aliases directly (e.g. "house", "info", "settings", "map-pin", "scroll-text")
 local InfoTab       = Window:Tab({ Title = "Information", Icon = "info" })
 local MainTab       = Window:Tab({ Title = "Main",        Icon = "house" })
 local TeleportTab   = Window:Tab({ Title = "Teleport",    Icon = "map-pin" })
 local ElementsTab   = Window:Tab({ Title = "All Elements",Icon = "layers" })
 
--- ========================================================================
--- STEP 4: INFORMATION TAB (Paragraph with Action Buttons)
--- ========================================================================
+-- Step 4: Information Tab (Paragraph with Action Buttons)
 -- Dynamic Paragraph: supports live updates (:SetTitle, :SetDesc, :Set) and action buttons
 local CommunityCard = InfoTab:Paragraph({
     Title   = "Join Our Community",
@@ -56,9 +40,9 @@ local CommunityCard = InfoTab:Paragraph({
     Buttons = {
         {
             Title     = "Copy Discord Link",
-            FullWidth = true,                            -- Spans full width of the paragraph card
-            Height    = 26,                              -- Sleek compact button height (standard 26px)
-            Radius    = 6,                               -- Corner radius
+            FullWidth = true,
+            Height    = 26,
+            Radius    = 6,
             Callback  = function()
                 local copy = setclipboard or toclipboard
                 if copy then
@@ -80,19 +64,17 @@ local StatusTracker = InfoTab:Paragraph({
     Desc  = "Status: Waiting for game data (0/1)...",
 })
 
--- Demonstrating dynamic updates:
+-- Dynamic updates:
 -- StatusTracker:SetDesc("Status: In Progress (1/2)")
 -- StatusTracker:SetTitle("Updated Title")
 -- StatusTracker:Set("Short syntax updates desc directly")
 
--- ========================================================================
--- STEP 5: MAIN TAB (Sections, Toggles, Sliders, Dropdowns)
--- ========================================================================
+-- Step 5: Main Tab (Sections, Toggles, Sliders, Dropdowns)
 
 -- Section 1: Support Automation (Collapsible)
 local SupportSec = MainTab:Section({
     Title  = "Support Features",
-    Opened = true,                                       -- true = expanded by default, false = collapsed
+    Opened = true,
 })
 
 -- Toggle Component:
@@ -104,11 +86,11 @@ local AutoEquipToggle = SupportSec:Toggle({
     Callback = function(state)
         print("[Toggle Callback] Auto Equip Rod:", state)
     end,
-    Flag     = "Toggle_AutoEquipRod",                    -- Unique ID used for saving in JSON config
+    Flag     = "Toggle_AutoEquipRod",
 })
 
 -- Programmatically updating a Toggle:
--- AutoEquipToggle:Set(false)                            -- Safely animates to false and updates state
+-- AutoEquipToggle:Set(false)
 
 SupportSec:Toggle({
     Title    = "Anti Drown",
@@ -133,7 +115,7 @@ local CastDelaySlider = FishingSec:Slider({
     Desc     = "Interval between consecutive cast actions (seconds)",
     Min      = 0,
     Max      = 5,
-    Value    = 1.5,                                      -- Supports floating decimal numbers
+    Value    = 1.5,
     Callback = function(val)
         print("[Slider Callback] Cast Delay:", val)
     end,
@@ -158,16 +140,16 @@ local ModeDropdown = FishingSec:Dropdown({
 })
 
 -- Programmatically updating Dropdown:
--- ModeDropdown:Set("Fast Catch")                        -- Updates displayed value and list highlight
--- ModeDropdown:Select("Instant Blatant")                 -- Alias to :Set()
--- ModeDropdown:Refresh({ "Option A", "Option B" }, "Option A") -- Replaces entire option list dynamically
+-- ModeDropdown:Set("Fast Catch")
+-- ModeDropdown:Select("Instant Blatant")
+-- ModeDropdown:Refresh({ "Option A", "Option B" }, "Option A")
 
 -- Multi-Select Dropdown Component:
 local WeatherDropdown = FishingSec:Dropdown({
     Title    = "Target Weather",
     Desc     = "Select multiple weather conditions to trigger alerts",
     Values   = { "Clear", "Storm", "Fog", "Wind", "Eclipse" },
-    Multi    = true,                                     -- Allows multiple choices simultaneously
+    Multi    = true,
     Value    = { "Storm", "Wind" },
     Callback = function(selectedList)
         print("[Multi-Dropdown Callback] Active weathers:", table.concat(selectedList, ", "))
@@ -175,9 +157,7 @@ local WeatherDropdown = FishingSec:Dropdown({
     Flag     = "Dropdown_TargetWeather",
 })
 
--- ========================================================================
--- STEP 6: TELEPORT TAB & HORIZONTAL BUTTONS (HStack Grid)
--- ========================================================================
+-- Step 6: Teleport Tab & Horizontal Buttons (HStack Grid)
 local WaypointSec = TeleportTab:Section({
     Title  = "Island Teleports",
     Opened = true,
@@ -196,7 +176,7 @@ local LocationDropdown = WaypointSec:Dropdown({
 })
 
 -- HStack Component:
--- Creates an automatic horizontal row where added buttons share row width equally!
+-- Creates an automatic horizontal row where added buttons share row width equally
 -- 2 buttons = 50% - 50%
 -- 3 buttons = 33% - 33% - 33%
 local ActionRow = WaypointSec:HStack()
@@ -221,7 +201,7 @@ ActionRow:Button({
             "Roslit Bay",
             "Ancient Jungle",
             "Sunken Ship",
-            "Secret Cave"                                -- Added new island
+            "Secret Cave"
         }, "Spawn Island")
         Window:Notify({
             Title   = "Locations",
@@ -231,9 +211,7 @@ ActionRow:Button({
     end,
 })
 
--- ========================================================================
--- STEP 7: ALL ELEMENTS TAB (Input, Keybind, ColorPicker, Divider)
--- ========================================================================
+-- Step 7: All Elements Tab (Input, Keybind, ColorPicker, Divider)
 local MiscSec = ElementsTab:Section({
     Title  = "Miscellaneous Controls",
     Opened = true,
@@ -265,7 +243,7 @@ local ToggleKeybind = MiscSec:Keybind({
 local AccentColorPicker = MiscSec:ColorPicker({
     Title        = "Custom Accent Color",
     Desc         = "Expand RGB sliders to pick theme color",
-    Default      = Color3.fromRGB(255, 0, 224),           -- Neon Magenta
+    Default      = Color3.fromRGB(255, 0, 224),
     Callback     = function(color)
         print("[ColorPicker Callback] New color:", color)
     end,
@@ -285,9 +263,7 @@ MiscSec:SingleButton("Execute Deep Diagnostic", function()
     })
 end)
 
--- ========================================================================
--- STEP 8: SHOW WINDOW & GLOBAL NOTIFICATIONS
--- ========================================================================
+-- Step 8: Show Window & Global Notifications
 -- Show Window (Hidden by default until all tabs finish constructing)
 Window:Show()
 
@@ -295,13 +271,13 @@ Window:Show()
 Window:Notify({
     Title   = "Limbo HUB",
     Content = "Fish It Automation Suite Loaded Successfully!",
-    Icon    = "rbxassetid://97957114633547",              -- Limbo Hub Logo
+    Icon    = "rbxassetid://97957114633547",
     Delay   = 3.5,
 })
 
 -- Quick Reference to Window Methods:
--- Window:SelectTab(1)                                   -- Switch to Tab index 1
--- Window:SelectTab("Main")                              -- Switch to Tab named "Main"
--- Window:Toggle()                                       -- Hide or show entire window
--- Window:SetTheme("Darker")                             -- Change theme palette
--- Window:Destroy()                                      -- Completely remove UI and clean connections
+-- Window:SelectTab(1)
+-- Window:SelectTab("Main")
+-- Window:Toggle()
+-- Window:SetTheme("Darker")
+-- Window:Destroy()
